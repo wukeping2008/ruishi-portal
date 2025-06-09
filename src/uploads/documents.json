@@ -1,0 +1,16 @@
+[
+  {
+    "doc_id": "2025_Roadshow.pdf_4afefeff",
+    "filename": "2025_Roadshow.pdf",
+    "content": "公司机密 -非经许可勿传\n\n公司机密 -非经许可勿传\n\n•\n•\n•\n•\n\n\n\n//初始化任务\nJY5500AITask aiTask = new  JY5500AITask (0);\n//配置参数\naiTask.AddChannel( 0,-10,10, AITerminal .RSE );\naiTask.Mode =AIMode .Finite;\naiTask.SampleRate =100000 ; \naiTask.SamplesToAcquire =10000 ;\n//启动任务\ndouble [] data = new double [10000]\naiTask. Start( );\n//读取数据\naiTask. ReadData( refdata, -1);\n//停止任务\naiTask.Stop();\n\n•\n•\n•\n•\n•\n•\n•\n•\n•\n\n\n1\n2\n3\n4\n•\n•\n•\n•\n\n•\n•\n•\n•\n•\n•\n\n\n•\n•\n➢\n➢\n➢\n•\n➢\n➢\n➢\n➢\n\n•\n➢\n➢\n➢\n➢\n•\n➢\n➢\n➢\n➢\n➢\n➢\n•\n➢\n➢\n•\n➢\n➢\n➢\n•\n➢\n➢\n•\n➢\n➢\n•\n➢\n➢\n\n•\n➢\n➢\n•\n➢\n➢\n•\n➢\n➢\n➢\n\n公司机密 -非经许可勿传\n\n公司机密 -非经许可勿传\n•\n•\n➢\n➢\n➢\n➢\n➢\n➢\n•\n➢\n➢\n➢\n➢\n➢\n\n公司机密 -非经许可勿传\n➢\n➢\n◆\n\n•\n•\n•\n•\n•\n•\n•\n•\n➢\n➢\n➢\n➢\n➢\n\n•\n•\n•\n•\n•\n•\n•\n\n◆\n➢\n\n\n•\n•\n•\n•\n•\n•\n•\n•\n•\n\n\n•\n•\n•\n•\n•\n•\n•\n•\n•\n•\n\n常见噪声\n\n\n\n•\n•\n•\n•\n•\n•\n•\n•\n•\n•\n\n\n•\n•\n•\n•\n➢\n➢\n\n+\n-\n+\n-\n⚫\n⚫\n⚫ADC\nADCPXIe -6316 Block Digram\nIsolator\nIsolator⚫\n⚫\n⚫AI-CH0\nAI-CH1\nDigital Communication300V MaxLithium battery pack\n+\n-ADC IsolatorAI-CH9+\n+\n+-\n-\n-Com\nComCom\n\n•\n•\n•\n•\n•\n◆\n•\n•\n•\n•\n•\n•\n•\n•\n•\n•\n•\n•\n•\n•\n•\n•\n•\n\n•\n➢\n➢\n➢\n➢\n•\n➢\n➢\n➢\n\n\n•\n•\n•\n\n•\n•\n•\n•\n•\n•\n•\n•\n•\n•\n•\n•\n\n\n简仪科技在固件上实现的高速数字化仪（ 9817/9823/9824/9827 ）实时频谱分析功能，是将\n数据采集与频域分析完美融合， 无需耗损 CPU和GPU算力即可完成海量信号频谱分析 。\n•\n•\n•\n➢\n➢\n➢\n•\n•\n\n•\n•\n➢\n➢\n➢\n➢\n➢\n•\n➢\n➢\n➢\n\n•\n➢\n➢\n•\n➢\n➢\n\n•\n➢\n➢\n➢\n•\n➢\n➢\n➢\n•\n➢\n\n•\n•\n•\n•\n•\n•\n•\n•\n•\n•\n•\n•\n•\n\n•\n➢\n➢\n➢\n➢\n➢",
+    "doc_type": "general",
+    "upload_time": "2025-06-05T22:24:34.246266"
+  },
+  {
+    "doc_id": "-.pdf_b915ee6f",
+    "filename": "-.pdf",
+    "content": "www.jytek.com  \n \n上海简仪科技有限公司  \n上海浦东芳春路 300号3幢 (201203)  \n021-50475899  \n上海简仪科技有限公司  \n \n⚫ \n⚫ \n\n \n \n \n \nwww.jytek.com  \n \n上海简仪科技有限公司  \n上海浦东芳春路 300号3幢 (201203)  \n021-50475899  \n⚫ \n⚫ \n\n \n \n \n \nwww.jytek.com  \n \n上海简仪科技有限公司  \n上海浦东芳春路 300号3幢 (201203)  \n021-50475899  \n简仪科技的资质与 技术概述  \n⚫ \n⚫ \n⚫ \n⚫ \n⚫ \n⚫ \n⚫ \n\n \n \n \n \nwww.jytek.com  \n \n上海简仪科技有限公司  \n上海浦东芳春路 300号3幢 (201203)  \n021-50475899  \n⚫ \n⚫ \n⚫ \n◼ \n◼ \n⚫ \n◼ \n◼ \n◼ \n⚫ \n◼ \n◼ \n◼ \n◼ \n◼ \n\n \n \n \n \nwww.jytek.com  \n \n上海简仪科技有限公司  \n上海浦东芳春路 300号3幢 (201203)  \n021-50475899  \n⚫ \n⚫ \n⚫",
+    "doc_type": "general",
+    "upload_time": "2025-06-05T22:24:44.129491"
+  }
+]

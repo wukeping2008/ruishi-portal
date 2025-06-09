@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="home.title">锐视测控平台 - 简仪科技JYTEK专业PXI测控解决方案</title>
+    <meta name="i18n-title" content="home.title">
+    <meta name="description" content="简仪科技锐视测控平台，专业的PXI模块化测控解决方案提供商，提供数据采集、信号发生、自动化测试等专业产品和服务">
+    <meta name="keywords" content="简仪科技,JYTEK,锐视测控,PXI,模块化仪器,数据采集,自动化测试,国产自主可控">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom styles -->
+    <style>
+        :root {
+            --jytek-red: #c41e3a;
+            --jytek-dark-red: #8b1538;
+            --jytek-light-gray: #f5f5f5;
+            --jytek-dark-gray: #333333;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+        }
+        
+        .jytek-gradient {
+            background: linear-gradient(135deg, var(--jytek-red), var(--jytek-dark-red));
+        }
+        
+        .jytek-red {
+            color: var(--jytek-red);
+        }
+        
+        .bg-jytek-red {
+            background-color: var(--jytek-red);
+        }
+        
+        .hover-jytek-red:hover {
+            background-color: var(--jytek-dark-red);
+        }
+        
+        .hero-pattern {
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 0%, transparent 50%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .typing-animation {
+            border-right: 2px solid var(--jytek-red);
+            animation: typing 3s steps(30) infinite;
+        }
+        
+        @keyframes typing {
+            0%, 50% { border-color: var(--jytek-red); }
+            51%, 100% { border-color: transparent; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo and Brand -->
+                <div class="flex items-center space-x-4">
+                    <div class="bg-jytek-red text-white px-3 py-2 rounded font-bold text-lg">
+                        JYTEK
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-800" data-i18n="nav.brand">锐视测控平台</h1>
+                        <p class="text-sm text-gray-600" data-i18n="nav.tagline">简仪科技专业测控解决方案</p>
+                    </div>
+                </div>
+                
+                <!-- Navigation Links -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#home" class="text-gray-700 hover:text-red-600 font-medium" data-i18n="nav.home">首页</a>
+                    <a href="ruishi-platform.html" class="text-gray-700 hover:text-red-600 font-medium" data-i18n="nav.platform">锐视测控平台</a>
+                    <a href="#products" class="text-gray-700 hover:text-red-600 font-medium" data-i18n="nav.products">产品中心</a>
+                    <button onclick="showSolutionBuilder()" class="text-gray-700 hover:text-red-600 font-medium" data-i18n="nav.solutions">解决方案</button>
+                    <button onclick="showKnowledgeBase()" class="text-gray-700 hover:text-red-600 font-medium" data-i18n="nav.support">知识库</button>
+                    
+                    <!-- Language Switcher -->
+                    <div class="language-switcher flex items-center space-x-1 bg-gray-100 rounded-lg p-1">
+                        <button data-lang="zh" onclick="switchLanguage('zh')" class="px-3 py-1 text-sm rounded-md transition-colors">
+                            中文
+                        </button>
+                        <button data-lang="en" onclick="switchLanguage('en')" class="px-3 py-1 text-sm rounded-md transition-colors">
+                            EN
+                        </button>
+                    </div>
+                    
+                    <a href="https://www.jytek.com" target="_blank" rel="noopener" class="bg-jytek-red hover-jytek-red text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                        <i class="fas fa-external-link-alt mr-2"></i><span data-i18n="nav.contact">官网</span>
+                    </a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-gray-700" id="mobile-menu-btn">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="py-4 space-y-2">
+                    <a href="#home" class="block text-gray-700 hover:text-red-600 py-2">首页</a>
+                    <a href="ruishi-platform.html" class="block text-gray-700 hover:text-red-600 py-2">锐视测控平台</a>
+                    <a href="#products" class="block text-gray-700 hover:text-red-600 py-2">产品中心</a>
+                    <button onclick="showSolutionBuilder()" class="block text-gray-700 hover:text-red-600 py-2 w-full text-left">解决方案</button>
+                    <button onclick="showKnowledgeBase()" class="block text-gray-700 hover:text-red-600 py-2 w-full text-left">知识库</button>
+                    <a href="https://www.jytek.com" target="_blank" class="block bg-jytek-red text-white px-4 py-2 rounded-lg mt-2">官网</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="bg-gray-50 py-20">
+        <div class="container mx-auto px-4 text-center">
+            <div class="max-w-4xl mx-auto">
+                <h1 class="text-5xl md:text-6xl font-bold mb-6 text-gray-800" data-i18n="home.hero.title">
+                    锐视测控平台
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 text-gray-700" data-i18n="home.hero.subtitle">
+                    开源测控生态圈
+                </p>
+                <p class="text-lg mb-12 text-gray-600 max-w-2xl mx-auto" data-i18n="home.hero.description">
+                    集成先进AI技术，提供智能问答、产品推荐、方案配置等专业服务
+                    <br>让PXI测控技术咨询变得更加高效和便捷
+                </p>
+                
+                <!-- AI Search Box -->
+                <div class="max-w-2xl mx-auto mb-8">
+                    <div class="bg-white rounded-lg shadow-xl p-6">
+                        <h3 class="text-gray-800 text-lg font-semibold mb-4" data-i18n="home.aiSearch.title">
+                            <i class="fas fa-robot text-red-600 mr-2"></i>
+                            AI智能问答助手
+                        </h3>
+                        <div class="flex">
+                            <input 
+                                type="text" 
+                                id="ai-search-input"
+                                data-i18n="home.aiSearch.placeholder"
+                                placeholder="请输入您的PXI技术问题，例如：如何选择合适的数据采集模块？"
+                                class="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-gray-800"
+                            >
+                            <button 
+                                id="ai-search-btn"
+                                class="bg-jytek-red hover-jytek-red text-white px-6 py-3 rounded-r-lg font-medium transition-colors"
+                            >
+                                <i class="fas fa-search mr-2"></i><span data-i18n="home.aiSearch.button">提问</span>
+                            </button>
+                        </div>
+                        <div class="mt-3 text-sm text-gray-600">
+                            <span class="typing-animation" data-i18n="home.aiSearch.waiting">AI正在等待您的问题...</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button onclick="showProductCenter()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-all">
+                        <i class="fas fa-microchip mr-2"></i>产品中心
+                    </button>
+                    <button onclick="showSolutionBuilder()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-all">
+                        <i class="fas fa-cogs mr-2"></i>方案配置
+                    </button>
+                    <button onclick="showKnowledgeBase()" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-all">
+                        <i class="fas fa-book mr-2"></i>技术文档
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4" data-i18n="home.features.title">平台特色</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto" data-i18n="home.features.subtitle">
+                    基于AI技术的智能化PXI测控解决方案平台
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- AI智能问答 -->
+                <div class="text-center card-hover bg-gray-50 p-6 rounded-lg">
+                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-robot text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3" data-i18n="home.features.ai.title">AI智能问答</h3>
+                    <p class="text-gray-600" data-i18n="home.features.ai.desc">
+                        专业的PXI技术AI助手，提供24/7智能技术咨询和解决方案推荐
+                    </p>
+                </div>
+                
+                <!-- 产品智能推荐 -->
+                <div class="text-center card-hover bg-gray-50 p-6 rounded-lg">
+                    <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-search text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3" data-i18n="home.features.recommendation.title">产品智能推荐</h3>
+                    <p class="text-gray-600" data-i18n="home.features.recommendation.desc">
+                        基于需求分析的智能产品推荐，快速找到最适合的PXI模块和解决方案
+                    </p>
+                </div>
+                
+                <!-- 方案自动配置 -->
+                <div class="text-center card-hover bg-gray-50 p-6 rounded-lg">
+                    <div class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-cogs text-purple-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3" data-i18n="home.features.solution.title">方案自动配置</h3>
+                    <p class="text-gray-600" data-i18n="home.features.solution.desc">
+                        智能的系统配置工具，根据应用需求自动生成最优的PXI系统方案
+                    </p>
+                </div>
+                
+                <!-- 知识库检索 -->
+                <div class="text-center card-hover bg-gray-50 p-6 rounded-lg">
+                    <div class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-database text-red-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3" data-i18n="home.features.knowledge.title">知识库检索</h3>
+                    <p class="text-gray-600" data-i18n="home.features.knowledge.desc">
+                        海量技术文档智能检索，快速获取产品手册、应用笔记和技术规格
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Categories -->
+    <section id="products" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4" data-i18n="home.products.title">产品分类</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto" data-i18n="home.products.subtitle">
+                    专业的PXI模块化仪器产品线，满足各种测控应用需求
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="product-categories">
+                <!-- 产品分类将通过JavaScript动态加载 -->
+                <div class="text-center">
+                    <div class="animate-pulse">
+                        <div class="bg-gray-300 h-48 rounded-lg mb-4"></div>
+                        <div class="bg-gray-300 h-4 rounded mb-2"></div>
+                        <div class="bg-gray-300 h-4 rounded w-3/4 mx-auto"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hot Questions -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4" data-i18n="home.hotQuestions.title">热门问题</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto" data-i18n="home.hotQuestions.subtitle">
+                    用户最关心的PXI技术问题和解答
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-4">
+                    <div class="bg-gray-50 p-6 rounded-lg card-hover cursor-pointer" onclick="askQuestion(getCurrentLanguage() === 'zh' ? '如何选择合适的PXI数据采集模块？' : 'How to choose the right PXI data acquisition module?')">
+                        <h3 class="font-semibold text-gray-800 mb-2">
+                            <i class="fas fa-question-circle text-blue-600 mr-2"></i>
+                            <span data-i18n="home.hotQuestions.q1.title">如何选择合适的PXI数据采集模块？</span>
+                        </h3>
+                        <p class="text-gray-600 text-sm" data-i18n="home.hotQuestions.q1.desc">了解数据采集模块的关键参数和选型要点</p>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-6 rounded-lg card-hover cursor-pointer" onclick="askQuestion(getCurrentLanguage() === 'zh' ? 'PXI系统的同步和触发机制是什么？' : 'What are the synchronization and triggering mechanisms of PXI systems?')">
+                        <h3 class="font-semibold text-gray-800 mb-2">
+                            <i class="fas fa-question-circle text-green-600 mr-2"></i>
+                            <span data-i18n="home.hotQuestions.q2.title">PXI系统的同步和触发机制是什么？</span>
+                        </h3>
+                        <p class="text-gray-600 text-sm" data-i18n="home.hotQuestions.q2.desc">深入了解PXI系统的时钟同步和触发原理</p>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-6 rounded-lg card-hover cursor-pointer" onclick="askQuestion(getCurrentLanguage() === 'zh' ? '锐视测控平台如何与PXI模块通信？' : 'How does SeeSharp Platform communicate with PXI modules?')">
+                        <h3 class="font-semibold text-gray-800 mb-2">
+                            <i class="fas fa-question-circle text-purple-600 mr-2"></i>
+                            <span data-i18n="home.hotQuestions.q3.title">锐视测控平台如何与PXI模块通信？</span>
+                        </h3>
+                        <p class="text-gray-600 text-sm" data-i18n="home.hotQuestions.q3.desc">学习简仪科技自主软件平台的驱动程序开发和API使用</p>
+                    </div>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="bg-gray-50 p-6 rounded-lg card-hover cursor-pointer" onclick="askQuestion(getCurrentLanguage() === 'zh' ? 'PXI机箱如何选型和配置？' : 'How to select and configure PXI chassis?')">
+                        <h3 class="font-semibold text-gray-800 mb-2">
+                            <i class="fas fa-question-circle text-red-600 mr-2"></i>
+                            <span data-i18n="home.hotQuestions.q4.title">PXI机箱如何选型和配置？</span>
+                        </h3>
+                        <p class="text-gray-600 text-sm" data-i18n="home.hotQuestions.q4.desc">了解PXI机箱的规格、插槽和扩展能力</p>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-6 rounded-lg card-hover cursor-pointer" onclick="askQuestion(getCurrentLanguage() === 'zh' ? '自动化测试系统如何设计？' : 'How to design automated test systems?')">
+                        <h3 class="font-semibold text-gray-800 mb-2">
+                            <i class="fas fa-question-circle text-yellow-600 mr-2"></i>
+                            <span data-i18n="home.hotQuestions.q5.title">自动化测试系统如何设计？</span>
+                        </h3>
+                        <p class="text-gray-600 text-sm" data-i18n="home.hotQuestions.q5.desc">学习自动化测试系统的架构设计和实现</p>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-6 rounded-lg card-hover cursor-pointer" onclick="askQuestion(getCurrentLanguage() === 'zh' ? 'PXI系统的成本如何估算？' : 'How to estimate the cost of PXI systems?')">
+                        <h3 class="font-semibold text-gray-800 mb-2">
+                            <i class="fas fa-question-circle text-indigo-600 mr-2"></i>
+                            <span data-i18n="home.hotQuestions.q6.title">PXI系统的成本如何估算？</span>
+                        </h3>
+                        <p class="text-gray-600 text-sm" data-i18n="home.hotQuestions.q6.desc">了解PXI系统的成本构成和预算规划</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="bg-jytek-red text-white px-3 py-2 rounded font-bold">
+                            JYTEK
+                        </div>
+                        <div>
+                            <h3 class="font-bold">简仪科技</h3>
+                            <p class="text-sm text-gray-400">锐视测控平台</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        专业的PXI模块化测控解决方案提供商，致力于为客户提供高质量的测试测量产品和服务。
+                    </p>
+                    <a href="https://www.jytek.com" target="_blank" class="text-red-400 hover:text-red-300">
+                        <i class="fas fa-external-link-alt mr-2"></i>
+                        访问官网 www.jytek.com
+                    </a>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="font-bold mb-4">快速链接</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#home" class="hover:text-white">首页</a></li>
+                        <li><a href="#products" class="hover:text-white">产品中心</a></li>
+                        <li><a href="#solutions" class="hover:text-white">解决方案</a></li>
+                        <li><a href="#knowledge" class="hover:text-white">知识库</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Products -->
+                <div>
+                    <h4 class="font-bold mb-4">主要产品</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">数据采集模块</a></li>
+                        <li><a href="#" class="hover:text-white">信号发生器</a></li>
+                        <li><a href="#" class="hover:text-white">数字I/O模块</a></li>
+                        <li><a href="#" class="hover:text-white">射频测试设备</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div>
+                    <h4 class="font-bold mb-4">联系我们</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li>
+                            <i class="fas fa-globe mr-2"></i>
+                            <a href="https://www.jytek.com" target="_blank" class="hover:text-white">www.jytek.com</a>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope mr-2"></i>
+                            技术支持
+                        </li>
+                        <li>
+                            <i class="fas fa-phone mr-2"></i>
+                            销售咨询
+                        </li>
+                        <li>
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            产品演示
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 简仪科技 JYTEK. 保留所有权利. | 锐视测控平台 - 专业PXI测控解决方案</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/i18n.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

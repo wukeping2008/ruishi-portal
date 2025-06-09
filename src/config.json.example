@@ -1,0 +1,23 @@
+{
+  "claude": {
+    "api_key": "your-claude-api-key-here",
+    "default_model": "claude-3-sonnet-20240229"
+  },
+  "gemini": {
+    "api_key": "your-gemini-api-key-here",
+    "default_model": "gemini-1.5-flash"
+  },
+  "volcesDeepseek": {
+    "api_key": "your-volces-deepseek-api-key-here",
+    "url": "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
+    "model": "deepseek-r1-250528",
+    "max_tokens": 16191
+  },
+  "qwen-plus": {
+    "api_key": "your-qwen-plus-api-key-here",
+    "url": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+    "model": "qwen-plus-2025-04-28",
+    "max_tokens": 16191
+  },
+  "default_provider": "claude"
+}

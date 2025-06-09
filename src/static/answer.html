@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI回答 - 锐视测控平台</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- MathJax for LaTeX rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for interactive charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom styles -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+        
+        :root {
+            --primary-color: #0a2342;
+            --secondary-color: #126872;
+            --accent-color: #2ca58d;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f5f7fa;
+        }
+        
+        .answer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .answer-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .answer-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px;
+        }
+        
+        .answer-content {
+            padding: 30px;
+            line-height: 1.8;
+        }
+        
+        .module-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .module-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .module-header {
+            background: var(--accent-color);
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+        }
+        
+        .module-content {
+            padding: 20px;
+        }
+        
+        .knowledge-item, .experiment-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .knowledge-item:hover, .experiment-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .simulation-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+            overflow: hidden;
+        }
+        
+        .simulation-header {
+            background: var(--secondary-color);
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+        }
+        
+        .simulation-content {
+            padding: 20px;
+            min-height: 400px;
+            background: #f8f9fa;
+        }
+        
+        .back-button {
+            background: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .rating-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .rating-button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+        
+        .rating-helpful {
+            background: #28a745;
+            color: white;
+        }
+        
+        .rating-helpful:hover {
+            background: #218838;
+        }
+        
+        .rating-unhelpful {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .rating-unhelpful:hover {
+            background: #c82333;
+        }
+        
+        /* Parameter control styles */
+        .parameter-control {
+            margin-bottom: 15px;
+        }
+        
+        .parameter-slider {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .parameter-value {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        /* Chart container */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+        
+        /* Loading spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .module-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .answer-container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="bg-red-600 text-white px-3 py-2 rounded font-bold text-lg mr-3">
+                    JYTEK
+                </div>
+                <div>
+                    <span class="text-xl font-bold text-gray-800">锐视测控平台</span>
+                    <p class="text-sm text-gray-600">简仪科技专业测控解决方案</p>
+                </div>
+            </div>
+            <a href="/" class="back-button">
+                <i class="fas fa-arrow-left mr-2"></i>
+                返回首页
+            </a>
+        </div>
+    </nav>
+
+    <div class="answer-container">
+        <!-- Question Display -->
+        <div class="answer-card">
+            <div class="answer-header">
+                <h1 class="text-2xl font-bold mb-2">问题</h1>
+                <p id="question-text" class="text-lg opacity-90">正在加载问题...</p>
+            </div>
+        </div>
+
+        <!-- Answer Display -->
+        <div class="answer-card">
+            <div class="answer-header">
+                <h2 class="text-xl font-bold">
+                    <i class="fas fa-lightbulb mr-2"></i>
+                    智能回答
+                </h2>
+            </div>
+            <div class="answer-content">
+                <div id="answer-content" class="prose max-w-none">
+                    <div class="flex items-center justify-center py-8">
+                        <i class="fas fa-spinner fa-spin text-2xl text-blue-500 mr-3"></i>
+                        <span>正在生成回答...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="rating-section">
+                <h4 class="text-lg font-semibold mb-3">这个回答有帮助吗？</h4>
+                <button class="rating-button rating-helpful" onclick="rateAnswer(true)">
+                    <i class="fas fa-thumbs-up mr-2"></i>有帮助
+                </button>
+                <button class="rating-button rating-unhelpful" onclick="rateAnswer(false)">
+                    <i class="fas fa-thumbs-down mr-2"></i>需改进
+                </button>
+            </div>
+        </div>
+
+        <!-- Knowledge and Experiments Grid -->
+        <div class="module-grid">
+            <!-- Related Knowledge -->
+            <div class="module-card">
+                <div class="module-header">
+                    <i class="fas fa-book mr-2"></i>
+                    相关知识点
+                </div>
+                <div class="module-content">
+                    <div id="knowledge-list">
+                        <div class="flex items-center justify-center py-8">
+                            <div class="loading-spinner mr-3"></div>
+                            <span>AI正在分析相关知识点...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommended Experiments -->
+            <div class="module-card">
+                <div class="module-header">
+                    <i class="fas fa-flask mr-2"></i>
+                    推荐实验
+                </div>
+                <div class="module-content">
+                    <div id="experiment-list">
+                        <div class="flex items-center justify-center py-8">
+                            <div class="loading-spinner mr-3"></div>
+                            <span>AI正在生成推荐实验...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Simulation -->
+        <div class="simulation-container">
+            <div class="simulation-header">
+                <i class="fas fa-cogs mr-2"></i>
+                <span id="simulation-title">交互式仿真实验</span>
+            </div>
+            <div class="simulation-content">
+                <div id="simulation-area" class="text-center">
+                    <div class="py-20">
+                        <div class="loading-spinner mx-auto mb-4"></div>
+                        <h3 class="text-xl font-semibold text-gray-600 mb-2">AI正在设计交互式仿真...</h3>
+                        <p class="text-gray-500">请稍候，系统正在根据问题内容生成专属的仿真实验</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Global variables
+        let currentQuestion = '';
+        let currentAnswer = null;
+        let currentSimulation = null;
+        let simulationChart = null;
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadQuestionAndAnswer();
+            initMathJax();
+            initCodeHighlighting();
+        });
+
+        // Load question and answer from URL parameters or localStorage
+        function loadQuestionAndAnswer() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const question = urlParams.get('q') || localStorage.getItem('currentQuestion');
+            
+            if (question) {
+                currentQuestion = question;
+                document.getElementById('question-text').textContent = question;
+                
+                // 尝试从localStorage获取已有的回答
+                const storedAnswer = localStorage.getItem('currentAnswer');
+                if (storedAnswer) {
+                    try {
+                        const answerData = JSON.parse(storedAnswer);
+                        console.log('Using stored answer:', answerData);
+                        currentAnswer = answerData;
+                        displayAnswer(answerData);
+                        generateRelatedContentWithAI(question, answerData.content);
+                        // 清除localStorage中的数据
+                        localStorage.removeItem('currentAnswer');
+                        localStorage.removeItem('currentQuestion');
+                        return;
+                    } catch (error) {
+                        console.error('Error parsing stored answer:', error);
+                    }
+                }
+                
+                // 如果没有存储的回答，则重新获取
+                fetchAnswer(question);
+            } else {
+                window.location.href = '/';
+            }
+        }
+
+        // Fetch answer from API
+        function fetchAnswer(question) {
+            fetch('/api/llm/ask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    question: question,
+                    provider: null,
+                    model: null,
+                    options: {}
+                })
+            })
+            .then(response => {
+                console.log('API Response status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('API Response data:', data);
+                currentAnswer = data;
+                
+                // 检查响应是否包含内容
+                if (data.content) {
+                    displayAnswer(data);
+                    // Generate related content using AI
+                    generateRelatedContentWithAI(question, data.content);
+                } else if (data.error) {
+                    // 显示错误信息
+                    document.getElementById('answer-content').innerHTML = 
+                        `<div class="text-red-600"><i class="fas fa-exclamation-triangle mr-2"></i>错误：${data.error}</div>`;
+                } else {
+                    // 显示通用错误
+                    document.getElementById('answer-content').innerHTML = 
+                        '<div class="text-red-600"><i class="fas fa-exclamation-triangle mr-2"></i>未收到有效回答，请稍后重试</div>';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching answer:', error);
+                document.getElementById('answer-content').innerHTML = 
+                    '<div class="text-red-600"><i class="fas fa-exclamation-triangle mr-2"></i>网络错误，请检查连接后重试</div>';
+            });
+        }
+
+        // Display answer content
+        function displayAnswer(answerData) {
+            const answerContent = document.getElementById('answer-content');
+            
+            // Format the content with proper line breaks and styling
+            let formattedContent = answerData.content.replace(/\n/g, '<br>');
+            
+            // Add some basic formatting for better readability
+            formattedContent = formattedContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            formattedContent = formattedContent.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            
+            answerContent.innerHTML = `<div class="prose max-w-none">${formattedContent}</div>`;
+            
+            // Re-render MathJax if available
+            if (window.MathJax) {
+                MathJax.typesetPromise([answerContent]).catch((err) => console.log(err.message));
+            }
+            
+            // Re-highlight code if available
+            if (window.hljs) {
+                answerContent.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+            }
+        }
+
+        // Generate related content using AI
+        function generateRelatedContentWithAI(question, answer) {
+            fetch('/api/llm/generate-related-content', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    question: question,
+                    answer: answer
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayKnowledgePoints(data.knowledge_points);
+                    displayExperiments(data.experiments);
+                    displaySimulation(data.simulation);
+                } else {
+                    console.error('Failed to generate related content:', data.error);
+                    showFallbackContent();
+                }
+            })
+            .catch(error => {
+                console.error('Error generating related content:', error);
+                showFallbackContent();
+            });
+        }
+
+        // Display knowledge points
+        function displayKnowledgePoints(knowledgePoints) {
+            const knowledgeList = document.getElementById('knowledge-list');
+            knowledgeList.innerHTML = '';
+            
+            if (knowledgePoints && knowledgePoints.length > 0) {
+                knowledgePoints.forEach(knowledge => {
+                    const item = document.createElement('div');
+                    item.className = 'knowledge-item';
+                    item.innerHTML = `
+                        <span>${knowledge.title}</span>
+                        <i class="fas fa-chevron-right text-blue-500"></i>
+                    `;
+                    item.onclick = () => showKnowledgeModal(knowledge.title, knowledge.description);
+                    knowledgeList.appendChild(item);
+                });
+            } else {
+                knowledgeList.innerHTML = '<p class="text-gray-500">暂无相关知识点</p>';
+            }
+        }
+
+        // Display experiments
+        function displayExperiments(experiments) {
+            const experimentList = document.getElementById('experiment-list');
+            experimentList.innerHTML = '';
+            
+            if (experiments && experiments.length > 0) {
+                experiments.forEach(experiment => {
+                    const item = document.createElement('div');
+                    item.className = 'experiment-item';
+                    item.innerHTML = `
+                        <span>${experiment.title}</span>
+                        <i class="fas fa-play-circle text-green-500"></i>
+                    `;
+                    item.onclick = () => openDynamicSimulation(experiment);
+                    experimentList.appendChild(item);
+                });
+            } else {
+                experimentList.innerHTML = '<p class="text-gray-500">暂无推荐实验</p>';
+            }
+        }
+
+        // Display simulation
+        function displaySimulation(simulation) {
+            if (simulation && simulation.title) {
+                currentSimulation = simulation;
+                document.getElementById('simulation-title').textContent = simulation.title;
+                createDynamicSimulation(simulation);
+            } else {
+                // Show default message
+                document.getElementById('simulation-area').innerHTML = `
+                    <div class="py-20 text-center">
+                        <i class="fas fa-circuit-board text-6xl text-gray-400 mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-600 mb-2">选择上方实验开始仿真</h3>
+                        <p class="text-gray-500">点击推荐实验中的任意一个来启动交互式仿真</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Create dynamic simulation based on AI-generated design
+        function createDynamicSimulation(simulation) {
+            const simulationArea = document.getElementById('simulation-area');
+            
+            let parametersHTML = '';
+            if (simulation.parameters && simulation.parameters.length > 0) {
+                parametersHTML = simulation.parameters.map((param, index) => {
+                    if (param.type === 'slider') {
+                        return `
+                            <div class="parameter-control">
+                                <label class="block text-sm font-medium mb-1">
+                                    ${param.name} (<span id="param-${index}-value">${param.default}</span> ${param.unit || ''})
+                                </label>
+                                <input type="range" 
+                                       id="param-${index}" 
+                                       class="parameter-slider" 
+                                       min="${param.min}" 
+                                       max="${param.max}" 
+                                       value="${param.default}"
+                                       oninput="updateParameter(${index}, this.value)">
+                            </div>
+                        `;
+                    }
+                    return '';
+                }).join('');
+            }
+
+            let outputsHTML = '';
+            if (simulation.outputs && simulation.outputs.length > 0) {
+                outputsHTML = simulation.outputs.map((output, index) => {
+                    if (output.type === 'chart') {
+                        return `
+                            <div class="chart-container">
+                                <canvas id="chart-${index}"></canvas>
+                            </div>
+                        `;
+                    } else if (output.type === 'value') {
+                        return `
+                            <div class="bg-gray-50 p-4 rounded mb-4">
+                                <h4 class="font-semibold">${output.name}</h4>
+                                <div id="value-${index}" class="text-2xl font-bold text-blue-600">--</div>
+                                <p class="text-sm text-gray-600">${output.description}</p>
+                            </div>
+                        `;
+                    }
+                    return '';
+                }).join('');
+            }
+
+            simulationArea.innerHTML = `
+                <div class="bg-white rounded-lg p-6">
+                    <h3 class="text-xl font-bold mb-4">${simulation.title}</h3>
+                    <p class="text-gray-600 mb-6">${simulation.description || ''}</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-semibold mb-4">参数控制</h4>
+                            ${parametersHTML}
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-4">仿真结果</h4>
+                            ${outputsHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Initialize charts and calculations
+            initializeSimulation(simulation);
+        }
+
+        // Initialize simulation with charts and real-time updates
+        function initializeSimulation(simulation) {
+            if (simulation.outputs) {
+                simulation.outputs.forEach((output, index) => {
+                    if (output.type === 'chart') {
+                        initializeChart(index, output);
+                    }
+                });
+            }
+            
+            // Initial calculation
+            updateSimulation();
+        }
+
+        // Initialize a chart
+        function initializeChart(index, output) {
+            const ctx = document.getElementById(`chart-${index}`);
+            if (ctx) {
+                simulationChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: output.name,
+                            data: [],
+                            borderColor: 'rgb(75, 192, 192)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: output.description || output.name
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Update parameter value and recalculate
+        function updateParameter(index, value) {
+            document.getElementById(`param-${index}-value`).textContent = value;
+            updateSimulation();
+        }
+
+        // Update simulation calculations and charts
+        function updateSimulation() {
+            if (!currentSimulation || !currentSimulation.parameters) return;
+
+            // Get current parameter values
+            const params = {};
+            currentSimulation.parameters.forEach((param, index) => {
+                const element = document.getElementById(`param-${index}`);
+                if (element) {
+                    params[param.name] = parseFloat(element.value);
+                }
+            });
+
+            // Perform calculations based on simulation type
+            if (currentSimulation.type === 'pid-control') {
+                updatePIDSimulation(params);
+            } else if (currentSimulation.type === 'circuit-analysis') {
+                updateCircuitSimulation(params);
+            } else {
+                // Generic simulation update
+                updateGenericSimulation(params);
+            }
+        }
+
+        // Update PID control simulation
+        function updatePIDSimulation(params) {
+            const kp = params['比例增益'] || params['Kp'] || 1;
+            const ki = params['积分增益'] || params['Ki'] || 0.1;
+            const kd = params['微分增益'] || params['Kd'] || 0.01;
+
+            // Generate PID response data
+            const timeData = [];
+            const responseData = [];
+            const setpointData = [];
+            const errorData = [];
+
+            let error = 1; // Initial error
+            let integral = 0;
+            let previousError = 0;
+
+            for (let t = 0; t <= 10; t += 0.1) {
+                timeData.push(t.toFixed(1));
+                
+                // PID calculation
+                integral += error * 0.1;
+                const derivative = (error - previousError) / 0.1;
+                const output = kp * error + ki * integral + kd * derivative;
+                
+                // Simple plant model (first-order system)
+                const response = 1 - Math.exp(-output * t / 5);
+                responseData.push(response);
+                setpointData.push(1); // Setpoint = 1
+                
+                error = 1 - response;
+                errorData.push(error);
+                previousError = error;
+            }
+
+            // Update chart
+            if (simulationChart) {
+                simulationChart.data.labels = timeData;
+                simulationChart.data.datasets = [
+                    {
+                        label: '系统响应',
+                        data: responseData,
+                        borderColor: 'rgb(75, 192, 192)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    },
+                    {
+                        label: '设定值',
+                        data: setpointData,
+                        borderColor: 'rgb(255, 99, 132)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    },
+                    {
+                        label: '误差',
+                        data: errorData,
+                        borderColor: 'rgb(255, 205, 86)',
+                        backgroundColor: 'rgba(255, 205, 86, 0.2)',
+                    }
+                ];
+                simulationChart.update();
+            }
+
+            // Update value displays
+            const steadyStateError = Math.abs(error);
+            const valueElement = document.getElementById('value-0');
+            if (valueElement) {
+                valueElement.textContent = `${(steadyStateError * 100).toFixed(2)}%`;
+            }
+        }
+
+        // Update generic simulation
+        function updateGenericSimulation(params) {
+            // Generate some sample data based on parameters
+            const timeData = [];
+            const outputData = [];
+
+            for (let t = 0; t <= 10; t += 0.1) {
+                timeData.push(t.toFixed(1));
+                
+                // Simple mathematical function using first parameter
+                const firstParam = Object.values(params)[0] || 1;
+                const output = Math.sin(t * firstParam / 10) * Math.exp(-t / 10);
+                outputData.push(output);
+            }
+
+            // Update chart if available
+            if (simulationChart) {
+                simulationChart.data.labels = timeData;
+                simulationChart.data.datasets[0].data = outputData;
+                simulationChart.update();
+            }
+        }
+
+        // Open dynamic simulation from experiment click
+        function openDynamicSimulation(experiment) {
+            // Create a simple simulation based on experiment type
+            const simulation = {
+                title: experiment.title,
+                type: experiment.type,
+                description: experiment.description,
+                parameters: [
+                    { name: '参数1', type: 'slider', min: 0, max: 100, default: 50, unit: '' },
+                    { name: '参数2', type: 'slider', min: 0, max: 10, default: 5, unit: '' }
+                ],
+                outputs: [
+                    { name: '输出曲线', type: 'chart', description: '实时输出曲线' }
+                ]
+            };
+
+            currentSimulation = simulation;
+            document.getElementById('simulation-title').textContent = simulation.title;
+            createDynamicSimulation(simulation);
+        }
+
+        // Show fallback content if AI generation fails
+        function showFallbackContent() {
+            document.getElementById('knowledge-list').innerHTML = 
+                '<p class="text-gray-500">相关知识点生成失败，请稍后重试</p>';
+            document.getElementById('experiment-list').innerHTML = 
+                '<p class="text-gray-500">推荐实验生成失败，请稍后重试</p>';
+            document.getElementById('simulation-area').innerHTML = `
+                <div class="py-20 text-center">
+                    <i class="fas fa-exclamation-triangle text-6xl text-gray-400 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-600 mb-2">仿真生成失败</h3>
+                    <p class="text-gray-500">请稍后重试或联系技术支持</p>
+                </div>
+            `;
+        }
+
+        // Rate answer
+        function rateAnswer(isHelpful) {
+            if (!currentAnswer) return;
+            
+            fetch('/api/llm/rate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    answer_id: currentAnswer.id || 'unknown',
+                    rating: isHelpful ? 'helpful' : 'unhelpful'
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    showNotification('感谢您的反馈！', 'success');
+                } else {
+                    showNotification('反馈提交失败，请稍后再试', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error rating answer:', error);
+                showNotification('反馈提交失败，请稍后再试', 'error');
+            });
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = 'fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 transition-all duration-300';
+            
+            switch (type) {
+                case 'success':
+                    notification.classList.add('bg-green-500', 'text-white');
+                    break;
+                case 'error':
+                    notification.classList.add('bg-red-500', 'text-white');
+                    break;
+                default:
+                    notification.classList.add('bg-blue-500', 'text-white');
+            }
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Initialize MathJax
+        function initMathJax() {
+            if (window.MathJax) {
+                window.MathJax = {
+                    tex: {
+                        inlineMath: [['$', '$'], ['\\(', '\\)']],
+                        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                        processEscapes: true,
+                        processEnvironments: true
+                    },
+                    options: {
+                        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+                    }
+                };
+            }
+        }
+
+        // Initialize code highlighting
+        function initCodeHighlighting() {
+            if (window.hljs) {
+                document.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+            }
+        }
+
+        // Show knowledge modal with AI-generated content
+        function showKnowledgeModal(knowledgeTitle, knowledgeDescription) {
+            // Create modal
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="fixed inset-0 bg-black opacity-50"></div>
+                <div class="bg-white rounded-lg shadow-xl z-10 w-full max-w-5xl max-h-[95vh] overflow-y-auto relative">
+                    <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-10" id="close-knowledge-modal">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                    
+                    <!-- Header -->
+                    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6">
+                        <h2 class="text-3xl font-bold mb-2">${knowledgeTitle}</h2>
+                        <p class="text-blue-100">${knowledgeDescription || '深入了解相关概念和应用'}</p>
+                    </div>
+                    
+                    <!-- Content -->
+                    <div class="p-6">
+                        <!-- AI Generated Detailed Content -->
+                        <div class="mb-8">
+                            <div class="bg-white rounded-lg border border-gray-200">
+                                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                                    <h3 class="text-xl font-bold text-gray-800">
+                                        <i class="fas fa-lightbulb mr-2 text-yellow-500"></i>
+                                        详细解释
+                                    </h3>
+                                </div>
+                                <div class="p-6">
+                                    <div id="knowledge-detailed-content" class="prose max-w-none">
+                                        <div class="flex items-center justify-center py-8">
+                                            <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600 mr-3"></div>
+                                            <span class="text-gray-600">AI正在生成${knowledgeTitle}的详细解释...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Related Content Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <!-- Sub Knowledge Points -->
+                            <div class="bg-blue-50 rounded-lg border border-blue-200">
+                                <div class="bg-blue-100 px-4 py-3 border-b border-blue-200">
+                                    <h3 class="text-lg font-bold text-blue-800">
+                                        <i class="fas fa-sitemap mr-2"></i>相关概念
+                                    </h3>
+                                </div>
+                                <div class="p-4">
+                                    <div id="knowledge-sub-concepts" class="space-y-3">
+                                        <div class="flex items-center justify-center py-4">
+                                            <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-600 mr-2"></div>
+                                            <span class="text-gray-600">加载中...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Practical Applications -->
+                            <div class="bg-green-50 rounded-lg border border-green-200">
+                                <div class="bg-green-100 px-4 py-3 border-b border-green-200">
+                                    <h3 class="text-lg font-bold text-green-800">
+                                        <i class="fas fa-cogs mr-2"></i>实际应用
+                                    </h3>
+                                </div>
+                                <div class="p-4">
+                                    <div id="knowledge-applications" class="space-y-3">
+                                        <div class="flex items-center justify-center py-4">
+                                            <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-green-600 mr-2"></div>
+                                            <span class="text-gray-600">加载中...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Examples and Exercises -->
+                        <div class="bg-purple-50 rounded-lg border border-purple-200 mb-8">
+                            <div class="bg-purple-100 px-4 py-3 border-b border-purple-200">
+                                <h3 class="text-lg font-bold text-purple-800">
+                                    <i class="fas fa-calculator mr-2"></i>示例与练习
+                                </h3>
+                            </div>
+                            <div class="p-4">
+                                <div id="knowledge-examples" class="space-y-4">
+                                    <div class="flex items-center justify-center py-6">
+                                        <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-purple-600 mr-2"></div>
+                                        <span class="text-gray-600">AI正在生成相关示例...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="flex justify-center space-x-4">
+                            <button onclick="askDetailedQuestion('${knowledgeTitle}')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                                <i class="fas fa-question-circle mr-2"></i>深入提问
+                            </button>
+                            <button onclick="findRelatedExperiments('${knowledgeTitle}')" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                                <i class="fas fa-flask mr-2"></i>相关实验
+                            </button>
+                            <button onclick="generatePracticeProblems('${knowledgeTitle}')" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                                <i class="fas fa-pencil-alt mr-2"></i>练习题目
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add to document
+            document.body.appendChild(modal);
+            
+            // Close modal events
+            document.getElementById('close-knowledge-modal').addEventListener('click', function() {
+                document.body.removeChild(modal);
+            });
+            
+            // Click background to close modal
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    document.body.removeChild(modal);
+                }
+            });
+            
+            // Generate detailed knowledge content
+            generateDetailedKnowledgeContent(knowledgeTitle, knowledgeDescription);
+        }
+
+        // Generate detailed knowledge content using AI
+        function generateDetailedKnowledgeContent(knowledgeTitle, knowledgeDescription) {
+            // Generate detailed explanation
+            const detailedQuestion = `请详细解释"${knowledgeTitle}"这个概念，包括其定义、原理、重要性和在实际中的应用。请用通俗易懂的语言解释，并提供具体的例子。`;
+            
+            fetch('/api/llm/ask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    question: detailedQuestion,
+                    provider: null,
+                    model: null,
+                    options: {}
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayDetailedKnowledgeContent(data.content);
+            })
+            .catch(error => {
+                console.error('Error generating detailed knowledge content:', error);
+                document.getElementById('knowledge-detailed-content').innerHTML = 
+                    '<p class="text-red-600">详细内容生成失败，请稍后重试</p>';
+            });
+            
+            // Generate related content
+            const relatedContentQuestion = `关于"${knowledgeTitle}"，请生成相关的概念、实际应用和示例练习。`;
+            
+            fetch('/api/llm/generate-related-content', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    question: relatedContentQuestion,
+                    answer: `${knowledgeTitle}是一个重要的概念，需要深入理解其原理和应用。`
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayKnowledgeRelatedContent(data);
+                } else {
+                    showKnowledgeContentError();
+                }
+            })
+            .catch(error => {
+                console.error('Error generating knowledge related content:', error);
+                showKnowledgeContentError();
+            });
+        }
+
+        // Display detailed knowledge content
+        function displayDetailedKnowledgeContent(content) {
+            const contentContainer = document.getElementById('knowledge-detailed-content');
+            
+            // Format the content
+            let formattedContent = content.replace(/\n/g, '<br>');
+            formattedContent = formattedContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            formattedContent = formattedContent.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            
+            contentContainer.innerHTML = `<div class="prose max-w-none text-gray-700 leading-relaxed">${formattedContent}</div>`;
+            
+            // Re-render MathJax if available
+            if (window.MathJax) {
+                MathJax.typesetPromise([contentContainer]).catch((err) => console.log(err.message));
+            }
+        }
+
+        // Display knowledge related content
+        function displayKnowledgeRelatedContent(data) {
+            // Display sub concepts
+            const subConceptsContainer = document.getElementById('knowledge-sub-concepts');
+            if (data.knowledge_points && data.knowledge_points.length > 0) {
+                subConceptsContainer.innerHTML = '';
+                data.knowledge_points.forEach(concept => {
+                    const item = document.createElement('div');
+                    item.className = 'bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-blue-100';
+                    item.innerHTML = `
+                        <div class="flex items-center justify-between">
+                            <span class="font-medium text-blue-800">${concept.title}</span>
+                            <i class="fas fa-chevron-right text-blue-500"></i>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-1">${concept.description || ''}</p>
+                    `;
+                    item.onclick = () => askDetailedQuestion(concept.title);
+                    subConceptsContainer.appendChild(item);
+                });
+            } else {
+                subConceptsContainer.innerHTML = '<p class="text-gray-500">暂无相关概念</p>';
+            }
+            
+            // Display applications
+            const applicationsContainer = document.getElementById('knowledge-applications');
+            if (data.experiments && data.experiments.length > 0) {
+                applicationsContainer.innerHTML = '';
+                data.experiments.forEach(application => {
+                    const item = document.createElement('div');
+                    item.className = 'bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-green-100';
+                    item.innerHTML = `
+                        <div class="flex items-center justify-between">
+                            <span class="font-medium text-green-800">${application.title}</span>
+                            <i class="fas fa-external-link-alt text-green-500"></i>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-1">${application.description || ''}</p>
+                    `;
+                    item.onclick = () => findRelatedExperiments(application.title);
+                    applicationsContainer.appendChild(item);
+                });
+            } else {
+                applicationsContainer.innerHTML = '<p class="text-gray-500">暂无实际应用</p>';
+            }
+            
+            // Display examples
+            const examplesContainer = document.getElementById('knowledge-examples');
+            if (data.simulation && data.simulation.title) {
+                examplesContainer.innerHTML = `
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-purple-100">
+                        <h4 class="text-lg font-bold text-purple-800 mb-2">${data.simulation.title}</h4>
+                        <p class="text-gray-600 mb-4">${data.simulation.description || ''}</p>
+                        <div class="flex justify-center">
+                            <button onclick="generatePracticeProblems('${data.simulation.title}')" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
+                                <i class="fas fa-play mr-2"></i>开始练习
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                examplesContainer.innerHTML = `
+                    <div class="text-gray-500 text-center py-4">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        暂无相关示例
+                    </div>
+                `;
+            }
+        }
+
+        // Show knowledge content error
+        function showKnowledgeContentError() {
+            document.getElementById('knowledge-sub-concepts').innerHTML = 
+                '<p class="text-red-600">相关概念生成失败</p>';
+            document.getElementById('knowledge-applications').innerHTML = 
+                '<p class="text-red-600">实际应用生成失败</p>';
+            document.getElementById('knowledge-examples').innerHTML = 
+                '<p class="text-red-600">示例生成失败</p>';
+        }
+
+        // Ask detailed question about knowledge point
+        function askDetailedQuestion(topic) {
+            const question = `请详细解释${topic}的相关概念、原理和应用，并提供具体的例子和计算方法`;
+            window.open(`/static/answer.html?q=${encodeURIComponent(question)}`, '_blank');
+        }
+
+        // Find related experiments
+        function findRelatedExperiments(topic) {
+            const question = `请推荐与${topic}相关的实验项目，包括实验目的、步骤、所需设备和预期结果`;
+            window.open(`/static/answer.html?q=${encodeURIComponent(question)}`, '_blank');
+        }
+
+        // Generate practice problems
+        function generatePracticeProblems(topic) {
+            const question = `请为${topic}生成一些练习题目，包括基础题、应用题和综合题，并提供详细的解答步骤`;
+            window.open(`/static/answer.html?q=${encodeURIComponent(question)}`, '_blank');
+        }
+    </script>
+</body>
+</html>

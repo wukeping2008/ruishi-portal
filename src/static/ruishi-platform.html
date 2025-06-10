@@ -8,117 +8,785 @@
     <meta name="description" content="锐视测控平台是简仪科技自主研发的基于C#/.NET的开源测控软件平台，集成AI技术，支持MISD方法，提供完整的PXI测控解决方案">
     <meta name="keywords" content="锐视测控平台,SeeSharp Platform,简仪科技,JYTEK,AI测控,MISD,开源测控,C#测控,PXI软件">
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js for data visualization -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
         :root {
-            --jytek-red: #c41e3a;
-            --jytek-dark-red: #8b1538;
-            --jytek-blue: #1e40af;
-            --jytek-green: #059669;
+            /* 主色调 - 受Apple启发的柔和色彩 */
+            --primary-bg: #fafafa;
+            --secondary-bg: #ffffff;
+            --accent-bg: #f5f5f7;
+            --card-bg: #ffffff;
+            
+            /* 文字颜色 - 高对比度但不刺眼 */
+            --text-primary: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --text-accent: #007aff;
+            --text-muted: #86868b;
+            
+            /* 品牌色 - 温和的蓝色系 */
+            --brand-primary: #007aff;
+            --brand-secondary: #5856d6;
+            --brand-accent: #34c759;
+            
+            /* 渐变色 - 柔和不刺眼 */
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-subtle: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            
+            /* 阴影 - 微妙的深度 */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+            
+            /* 边框 */
+            --border-light: rgba(0, 0, 0, 0.05);
+            --border-medium: rgba(0, 0, 0, 0.1);
+            
+            /* 圆角 */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
         
         body {
-            font-family: 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
-        .jytek-gradient {
-            background: linear-gradient(135deg, var(--jytek-red), var(--jytek-dark-red));
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
         
-        .hero-pattern {
-            background-image: 
-                radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 0%, transparent 50%);
-        }
-        
-        .card-hover {
+        /* 导航栏 */
+        .navbar {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
             transition: all 0.3s ease;
+            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 3px rgba(0, 0, 0, 0.05);
         }
         
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        .nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
         }
         
-        .code-block {
-            background: #1e293b;
-            color: #e2e8f0;
-            border-radius: 8px;
-            padding: 1rem;
-            font-family: 'Courier New', monospace;
-            overflow-x: auto;
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .nav-logo {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 16px;
+        }
+        
+        .nav-info h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .nav-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+        
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.2s ease;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+        
+        .nav-cta {
+            background: var(--brand-primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-cta:hover {
+            background: #0056cc;
+            transform: translateY(-1px);
+        }
+        
+        /* 语言切换器样式 */
+        .language-switcher {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: var(--radius-md);
+            padding: 4px;
+            display: flex;
+            gap: 4px;
+        }
+        
+        .language-switcher button {
+            background: none;
+            border: none;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+        }
+        
+        .language-switcher button.active {
+            background: var(--brand-primary);
+            color: white;
+        }
+        
+        .language-switcher button:hover:not(.active) {
+            background: rgba(0, 122, 255, 0.1);
+            color: var(--brand-primary);
+        }
+        
+        /* Hero区域 */
+        .hero {
+            background: var(--gradient-hero);
+            color: white;
+            padding: 120px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255,255,255,0.08) 0%, transparent 50%);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-title {
+            font-size: clamp(48px, 8vw, 72px);
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+        
+        .hero-subtitle {
+            font-size: clamp(20px, 3vw, 32px);
+            margin-bottom: 24px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .hero-description {
+            font-size: 18px;
+            max-width: 800px;
+            margin: 0 auto 48px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.7;
+        }
+        
+        .hero-badges {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 48px;
+        }
+        
+        .hero-badge {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 20px;
+            border-radius: var(--radius-lg);
+            color: white;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .hero-actions {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-primary {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-primary);
+            padding: 16px 32px;
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 14px 30px;
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        /* 特性区域 */
+        .features {
+            padding: 120px 0;
+            background: var(--secondary-bg);
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+        
+        .section-title {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+        
+        .section-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+        }
+        
+        .feature-card {
+            background: var(--card-bg);
+            padding: 40px 32px;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+        
+        .feature-card.ai::before { background: var(--gradient-primary); }
+        .feature-card.misd::before { background: var(--gradient-accent); }
+        .feature-card.opensource::before { background: var(--gradient-secondary); }
+        .feature-card.dotnet::before { background: var(--gradient-subtle); }
+        .feature-card.signal::before { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); }
+        .feature-card.autonomous::before { background: linear-gradient(135deg, #feca57 0%, #ff9ff3 100%); }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--border-medium);
+        }
+        
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 24px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+        
+        .feature-icon.ai { background: var(--gradient-primary); }
+        .feature-icon.misd { background: var(--gradient-accent); }
+        .feature-icon.opensource { background: var(--gradient-secondary); }
+        .feature-icon.dotnet { background: var(--gradient-subtle); color: var(--text-primary); }
+        .feature-icon.signal { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); }
+        .feature-icon.autonomous { background: linear-gradient(135deg, #feca57 0%, #ff9ff3 100%); }
+        
+        .feature-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+        
+        .feature-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        
+        .feature-list li {
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .feature-list li i {
+            color: var(--brand-primary);
+            width: 16px;
+        }
+        
+        .feature-effect {
+            background: var(--accent-bg);
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        /* MISD演示区域 */
+        .misd-demo {
+            padding: 120px 0;
+            background: var(--accent-bg);
         }
         
         .misd-flow {
-            position: relative;
-        }
-        
-        .misd-flow::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--jytek-blue), var(--jytek-green));
-            z-index: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 32px;
+            margin-bottom: 80px;
         }
         
         .misd-step {
+            background: var(--card-bg);
+            padding: 32px 24px;
+            border-radius: var(--radius-xl);
+            text-align: center;
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
             position: relative;
-            z-index: 1;
-            background: white;
         }
         
-        .ai-animation {
-            animation: aiPulse 2s infinite;
+        .misd-step:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
         }
         
-        @keyframes aiPulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.05); }
+        .misd-step-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+        
+        .misd-step:nth-child(1) .misd-step-icon { background: var(--gradient-primary); }
+        .misd-step:nth-child(2) .misd-step-icon { background: var(--gradient-accent); }
+        .misd-step:nth-child(3) .misd-step-icon { background: var(--gradient-secondary); }
+        .misd-step:nth-child(4) .misd-step-icon { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); }
+        
+        .misd-step h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .misd-step p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .code-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+        
+        .code-block {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+        }
+        
+        .code-header {
+            background: var(--accent-bg);
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .code-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .code-content {
+            padding: 20px;
+            background: #1e293b;
+            color: #e2e8f0;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+        
+        .code-footer {
+            padding: 16px 20px;
+            background: var(--accent-bg);
+        }
+        
+        .code-footer.traditional {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        
+        .code-footer.misd {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+        
+        /* AI Agent区域 */
+        .ai-agent {
+            padding: 120px 0;
+            background: var(--secondary-bg);
+        }
+        
+        .ai-demo-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: start;
+        }
+        
+        .ai-terminal {
+            background: #1e293b;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .ai-terminal-header {
+            background: #334155;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .terminal-dot.red { background: #ef4444; }
+        .terminal-dot.yellow { background: #eab308; }
+        .terminal-dot.green { background: #22c55e; }
+        
+        .terminal-title {
+            color: #e2e8f0;
+            font-size: 14px;
+            margin-left: 12px;
+        }
+        
+        .ai-chat {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .ai-message {
+            margin-bottom: 16px;
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+        
+        .ai-message.user {
+            flex-direction: row-reverse;
+        }
+        
+        .ai-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .ai-avatar.bot { background: var(--gradient-primary); }
+        .ai-avatar.user { background: var(--gradient-accent); }
+        
+        .ai-message-content {
+            background: #374151;
+            color: #e5e7eb;
+            padding: 12px 16px;
+            border-radius: var(--radius-lg);
+            max-width: 80%;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .ai-input-container {
+            padding: 20px;
+            border-top: 1px solid #374151;
+            display: flex;
+            gap: 12px;
+        }
+        
+        .ai-input {
+            flex: 1;
+            background: #374151;
+            border: 1px solid #4b5563;
+            color: #e5e7eb;
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+        }
+        
+        .ai-input:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+        }
+        
+        .ai-send-btn {
+            background: var(--brand-primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .ai-send-btn:hover {
+            background: #0056cc;
+        }
+        
+        .ai-capabilities {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .ai-capability {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-light);
+        }
+        
+        .ai-capability h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .ai-capability p {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+        
+        .ai-capability-example {
+            background: var(--accent-bg);
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--text-primary);
+            color: white;
+            padding: 80px 0 40px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+        
+        .footer-section h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .footer-section p,
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            line-height: 1.8;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero {
+                padding: 80px 0;
+            }
+            
+            .features,
+            .misd-demo,
+            .ai-agent {
+                padding: 80px 0;
+            }
+            
+            .hero-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .code-comparison {
+                grid-template-columns: 1fr;
+            }
+            
+            .ai-demo-container {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-50">
+<body>
     <!-- Navigation -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center py-4">
-                <div class="flex items-center space-x-4">
-                    <div class="bg-red-600 text-white px-3 py-2 rounded font-bold text-lg">
-                        JYTEK
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-bold text-gray-800" data-i18n="nav.brand">锐视测控平台</h1>
-                        <p class="text-sm text-gray-600" data-i18n="platform.subtitle">AI增强的开源测控解决方案</p>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <div class="nav-logo">SeeSharp</div>
+                    <div class="nav-info">
+                        <h1 data-i18n="nav.brand">锐视测控平台</h1>
+                        <p data-i18n="platform.subtitle">AI增强的开源测控解决方案</p>
                     </div>
                 </div>
                 
-                <div class="hidden md:flex items-center space-x-6">
-                    <a href="index.html" class="text-gray-700 hover:text-red-600 font-medium" data-i18n="platform.nav.backHome">返回首页</a>
-                    <a href="#features" class="text-gray-700 hover:text-red-600 font-medium" data-i18n="platform.nav.features">核心特性</a>
-                    <a href="#misd" class="text-gray-700 hover:text-red-600 font-medium" data-i18n="platform.nav.misd">MISD方法</a>
-                    <a href="#ai-agent" class="text-gray-700 hover:text-red-600 font-medium" data-i18n="platform.nav.aiAgent">AI Agent</a>
-                    
-                    <!-- Language Switcher -->
-                    <div class="language-switcher flex items-center space-x-1 bg-gray-100 rounded-lg p-1">
-                        <button data-lang="zh" onclick="switchLanguage('zh')" class="px-3 py-1 text-sm rounded-md transition-colors">
-                            中文
-                        </button>
-                        <button data-lang="en" onclick="switchLanguage('en')" class="px-3 py-1 text-sm rounded-md transition-colors">
-                            EN
-                        </button>
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link" data-i18n="platform.nav.backHome">返回首页</a>
+                    <a href="#features" class="nav-link" data-i18n="platform.nav.features">核心特性</a>
+                    <a href="#misd" class="nav-link" data-i18n="platform.nav.misd">MISD方法</a>
+                    <a href="#ai-agent" class="nav-link" data-i18n="platform.nav.aiAgent">AI Agent</a>
+                    <a href="knowledge.html" class="nav-link">知识库</a>
+                    <div class="language-switcher">
+                        <button data-lang="zh" onclick="switchLanguage('zh')">中文</button>
+                        <button data-lang="en" onclick="switchLanguage('en')">EN</button>
                     </div>
-                    
-                    <a href="#download" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                        <i class="fas fa-download mr-2"></i><span data-i18n="platform.nav.tryNow">立即体验</span>
+                    <a href="#download" class="nav-cta">
+                        <i class="fas fa-download"></i>
+                        <span data-i18n="platform.nav.tryNow">立即体验</span>
                     </a>
                 </div>
             </div>
@@ -126,49 +794,51 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white py-20">
-        <div class="container mx-auto px-4 text-center">
-            <div class="max-w-4xl mx-auto">
-                <h1 class="text-5xl md:text-6xl font-bold mb-6 text-white" data-i18n="platform.hero.title">
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title" data-i18n="platform.hero.title">
                     锐视测控平台
-                    <span class="block text-3xl md:text-4xl mt-2 text-yellow-300">SeeSharp Platform</span>
                 </h1>
-                <p class="text-xl md:text-2xl mb-8 text-gray-100 font-semibold" data-i18n="platform.hero.subtitle">
-                    基于C#/.NET的AI增强开源测控解决方案
+                <p class="hero-subtitle" data-i18n="platform.hero.subtitle">
+                    SeeSharp Platform
                 </p>
-                <p class="text-lg mb-12 max-w-3xl mx-auto leading-relaxed text-gray-200" data-i18n="platform.hero.description">
-                    集成先进AI技术、MISD方法和开源生态，为PXI模块化仪器提供完整的软件开发环境。
-                    <span class="text-yellow-300 font-bold">减少70%编程量</span>，<span class="text-green-300 font-bold">调试时间从30分钟缩短至2分钟</span>，让测控开发变得更加高效和智能。
+                <p class="hero-description" data-i18n="platform.hero.description">
+                    基于C#/.NET的AI增强开源测控解决方案。集成先进AI技术、MISD方法和开源生态，为PXI模块化仪器提供完整的软件开发环境。
+                    <strong>减少70%编程量</strong>，<strong>调试时间从30分钟缩短至2分钟</strong>。
                 </p>
                 
-                <div class="flex flex-wrap justify-center gap-4 mb-12">
-                    <div class="bg-white bg-opacity-20 backdrop-blur-sm rounded-lg px-6 py-3 text-white">
-                        <i class="fas fa-robot text-2xl mb-2 text-blue-300"></i>
-                        <p class="font-bold text-white" data-i18n="platform.features.ai.badge">AI增强</p>
+                <div class="hero-badges">
+                    <div class="hero-badge">
+                        <i class="fas fa-robot"></i>
+                        <span data-i18n="platform.features.ai.badge">AI增强</span>
                     </div>
-                    <div class="bg-white bg-opacity-20 backdrop-blur-sm rounded-lg px-6 py-3 text-white">
-                        <i class="fas fa-code-branch text-2xl mb-2 text-green-300"></i>
-                        <p class="font-bold text-white" data-i18n="platform.features.opensource.badge">开源生态</p>
+                    <div class="hero-badge">
+                        <i class="fas fa-code-branch"></i>
+                        <span data-i18n="platform.features.opensource.badge">开源生态</span>
                     </div>
-                    <div class="bg-white bg-opacity-20 backdrop-blur-sm rounded-lg px-6 py-3 text-white">
-                        <i class="fas fa-microchip text-2xl mb-2 text-purple-300"></i>
-                        <p class="font-bold text-white" data-i18n="platform.features.misd.badge">MISD方法</p>
+                    <div class="hero-badge">
+                        <i class="fas fa-microchip"></i>
+                        <span data-i18n="platform.features.misd.badge">MISD方法</span>
                     </div>
-                    <div class="bg-white bg-opacity-20 backdrop-blur-sm rounded-lg px-6 py-3 text-white">
-                        <i class="fas fa-shield-alt text-2xl mb-2 text-red-300"></i>
-                        <p class="font-bold text-white" data-i18n="platform.features.autonomous.badge">自主可控</p>
+                    <div class="hero-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span data-i18n="platform.features.autonomous.badge">自主可控</span>
                     </div>
                 </div>
                 
-                <div class="flex flex-wrap justify-center gap-4">
-                    <button onclick="scrollToSection('features')" class="bg-white text-red-600 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors">
-                        <i class="fas fa-star mr-2"></i><span data-i18n="platform.hero.cta1">核心特性</span>
+                <div class="hero-actions">
+                    <button onclick="scrollToSection('features')" class="btn-primary">
+                        <i class="fas fa-star"></i>
+                        <span data-i18n="platform.hero.cta1">核心特性</span>
                     </button>
-                    <button onclick="scrollToSection('misd')" class="border-2 border-white text-white px-8 py-3 rounded-lg font-bold hover:bg-white hover:text-red-600 transition-colors">
-                        <i class="fas fa-cogs mr-2"></i><span data-i18n="platform.hero.cta2">MISD演示</span>
+                    <button onclick="scrollToSection('misd')" class="btn-secondary">
+                        <i class="fas fa-cogs"></i>
+                        <span data-i18n="platform.hero.cta2">MISD演示</span>
                     </button>
-                    <button onclick="startAIDemo()" class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-bold transition-colors">
-                        <i class="fas fa-play mr-2"></i><span data-i18n="platform.hero.cta3">AI演示</span>
+                    <button onclick="startAIDemo()" class="btn-secondary">
+                        <i class="fas fa-play"></i>
+                        <span data-i18n="platform.hero.cta3">AI演示</span>
                     </button>
                 </div>
             </div>
@@ -176,112 +846,112 @@
     </section>
 
     <!-- Core Features -->
-    <section id="features" class="py-20 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-gray-800 mb-4" data-i18n="platform.coreFeatures.title">核心技术特性</h2>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto" data-i18n="platform.coreFeatures.subtitle">
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title" data-i18n="platform.coreFeatures.title">核心技术特性</h2>
+                <p class="section-subtitle" data-i18n="platform.coreFeatures.subtitle">
                     锐视测控平台融合了最新的AI技术、开源理念和工程实践，为测控开发提供革命性的解决方案
                 </p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="features-grid">
                 <!-- AI技术集成 -->
-                <div class="card-hover bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-xl">
-                    <div class="bg-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 ai-animation">
-                        <i class="fas fa-brain text-white text-2xl"></i>
+                <div class="feature-card ai">
+                    <div class="feature-icon ai">
+                        <i class="fas fa-brain"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center" data-i18n="platform.coreFeatures.ai.title">AI技术集成</h3>
-                    <ul class="space-y-3 text-gray-700">
-                        <li><i class="fas fa-check text-blue-600 mr-2"></i><span data-i18n="platform.coreFeatures.ai.feature1">内置AI Agent智能助手</span></li>
-                        <li><i class="fas fa-check text-blue-600 mr-2"></i><span data-i18n="platform.coreFeatures.ai.feature2">自动代码生成和优化</span></li>
-                        <li><i class="fas fa-check text-blue-600 mr-2"></i><span data-i18n="platform.coreFeatures.ai.feature3">智能参数调优</span></li>
-                        <li><i class="fas fa-check text-blue-600 mr-2"></i><span data-i18n="platform.coreFeatures.ai.feature4">实时错误检测和修复</span></li>
+                    <h3 class="feature-title" data-i18n="platform.coreFeatures.ai.title">AI技术集成</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i><span data-i18n="platform.coreFeatures.ai.feature1">内置AI Agent智能助手</span></li>
+                        <li><i class="fas fa-check"></i><span data-i18n="platform.coreFeatures.ai.feature2">自动代码生成和优化</span></li>
+                        <li><i class="fas fa-check"></i><span data-i18n="platform.coreFeatures.ai.feature3">智能参数调优</span></li>
+                        <li><i class="fas fa-check"></i><span data-i18n="platform.coreFeatures.ai.feature4">实时错误检测和修复</span></li>
                     </ul>
-                    <div class="mt-6 p-4 bg-blue-200 rounded-lg">
-                        <p class="text-sm font-semibold text-blue-800" data-i18n="platform.coreFeatures.ai.effect">效果：减少70%编程量</p>
+                    <div class="feature-effect">
+                        <span data-i18n="platform.coreFeatures.ai.effect">效果：减少70%编程量</span>
                     </div>
                 </div>
                 
                 <!-- MISD方法 -->
-                <div class="card-hover bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-xl">
-                    <div class="bg-green-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-sitemap text-white text-2xl"></i>
+                <div class="feature-card misd">
+                    <div class="feature-icon misd">
+                        <i class="fas fa-sitemap"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center" data-i18n="platform.features.misd.title">MISD方法</h3>
-                    <ul class="space-y-3 text-gray-700">
-                        <li><i class="fas fa-check text-green-600 mr-2"></i><span data-i18n="platform.features.misd.desc">模块仪器软件词典方法，通过统一的硬件API语法树，让AI理解底层硬件，实现智能代码生成</span></li>
+                    <h3 class="feature-title" data-i18n="platform.features.misd.title">MISD方法</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i><span data-i18n="platform.features.misd.desc">模块仪器软件词典方法，通过统一的硬件API语法树，让AI理解底层硬件，实现智能代码生成</span></li>
                     </ul>
-                    <div class="mt-6 p-4 bg-green-200 rounded-lg">
-                        <p class="text-sm font-semibold text-green-800" data-i18n="platform.stats.debugging">调试时间缩短至2分钟</p>
+                    <div class="feature-effect">
+                        <span data-i18n="platform.stats.debugging">调试时间缩短至2分钟</span>
                     </div>
                 </div>
                 
                 <!-- 开源生态 -->
-                <div class="card-hover bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-xl">
-                    <div class="bg-purple-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-code-branch text-white text-2xl"></i>
+                <div class="feature-card opensource">
+                    <div class="feature-icon opensource">
+                        <i class="fas fa-code-branch"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">开源生态</h3>
-                    <ul class="space-y-3 text-gray-700">
-                        <li><i class="fas fa-check text-purple-600 mr-2"></i>完全开源透明</li>
-                        <li><i class="fas fa-check text-purple-600 mr-2"></i>自由定制扩展</li>
-                        <li><i class="fas fa-check text-purple-600 mr-2"></i>社区协作开发</li>
-                        <li><i class="fas fa-check text-purple-600 mr-2"></i>丰富的插件生态</li>
+                    <h3 class="feature-title">开源生态</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i>完全开源透明</li>
+                        <li><i class="fas fa-check"></i>自由定制扩展</li>
+                        <li><i class="fas fa-check"></i>社区协作开发</li>
+                        <li><i class="fas fa-check"></i>丰富的插件生态</li>
                     </ul>
-                    <div class="mt-6 p-4 bg-purple-200 rounded-lg">
-                        <p class="text-sm font-semibold text-purple-800">优势：源码透明，自由定制</p>
+                    <div class="feature-effect">
+                        优势：源码透明，自由定制
                     </div>
                 </div>
                 
                 <!-- .NET框架 -->
-                <div class="card-hover bg-gradient-to-br from-indigo-50 to-indigo-100 p-8 rounded-xl">
-                    <div class="bg-indigo-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-layer-group text-white text-2xl"></i>
+                <div class="feature-card dotnet">
+                    <div class="feature-icon dotnet">
+                        <i class="fas fa-layer-group"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">.NET框架</h3>
-                    <ul class="space-y-3 text-gray-700">
-                        <li><i class="fas fa-check text-indigo-600 mr-2"></i>基于Microsoft .NET</li>
-                        <li><i class="fas fa-check text-indigo-600 mr-2"></i>C#主要开发语言</li>
-                        <li><i class="fas fa-check text-indigo-600 mr-2"></i>跨平台兼容性</li>
-                        <li><i class="fas fa-check text-indigo-600 mr-2"></i>丰富的类库支持</li>
+                    <h3 class="feature-title">.NET框架</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i>基于Microsoft .NET</li>
+                        <li><i class="fas fa-check"></i>C#主要开发语言</li>
+                        <li><i class="fas fa-check"></i>跨平台兼容性</li>
+                        <li><i class="fas fa-check"></i>丰富的类库支持</li>
                     </ul>
-                    <div class="mt-6 p-4 bg-indigo-200 rounded-lg">
-                        <p class="text-sm font-semibold text-indigo-800">支持：Windows/Linux</p>
+                    <div class="feature-effect">
+                        支持：Windows/Linux
                     </div>
                 </div>
                 
                 <!-- 信号处理 -->
-                <div class="card-hover bg-gradient-to-br from-red-50 to-red-100 p-8 rounded-xl">
-                    <div class="bg-red-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-wave-square text-white text-2xl"></i>
+                <div class="feature-card signal">
+                    <div class="feature-icon signal">
+                        <i class="fas fa-wave-square"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">信号处理</h3>
-                    <ul class="space-y-3 text-gray-700">
-                        <li><i class="fas fa-check text-red-600 mr-2"></i>SeeSharpTools SDK</li>
-                        <li><i class="fas fa-check text-red-600 mr-2"></i>FFT傅里叶变换</li>
-                        <li><i class="fas fa-check text-red-600 mr-2"></i>滤波器设计</li>
-                        <li><i class="fas fa-check text-red-600 mr-2"></i>ScottPlot可视化</li>
+                    <h3 class="feature-title">信号处理</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i>SeeSharpTools SDK</li>
+                        <li><i class="fas fa-check"></i>FFT傅里叶变换</li>
+                        <li><i class="fas fa-check"></i>滤波器设计</li>
+                        <li><i class="fas fa-check"></i>ScottPlot可视化</li>
                     </ul>
-                    <div class="mt-6 p-4 bg-red-200 rounded-lg">
-                        <p class="text-sm font-semibold text-red-800">功能：实时信号处理</p>
+                    <div class="feature-effect">
+                        功能：实时信号处理
                     </div>
                 </div>
                 
                 <!-- 自主可控 -->
-                <div class="card-hover bg-gradient-to-br from-yellow-50 to-yellow-100 p-8 rounded-xl">
-                    <div class="bg-yellow-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-shield-alt text-white text-2xl"></i>
+                <div class="feature-card autonomous">
+                    <div class="feature-icon autonomous">
+                        <i class="fas fa-shield-alt"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">自主可控</h3>
-                    <ul class="space-y-3 text-gray-700">
-                        <li><i class="fas fa-check text-yellow-600 mr-2"></i>国产自主研发</li>
-                        <li><i class="fas fa-check text-yellow-600 mr-2"></i>技术完全可控</li>
-                        <li><i class="fas fa-check text-yellow-600 mr-2"></i>本土化支持</li>
-                        <li><i class="fas fa-check text-yellow-600 mr-2"></i>安全可靠</li>
+                    <h3 class="feature-title">自主可控</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i>国产自主研发</li>
+                        <li><i class="fas fa-check"></i>技术完全可控</li>
+                        <li><i class="fas fa-check"></i>本土化支持</li>
+                        <li><i class="fas fa-check"></i>安全可靠</li>
                     </ul>
-                    <div class="mt-6 p-4 bg-yellow-200 rounded-lg">
-                        <p class="text-sm font-semibold text-yellow-800">保障：技术安全可控</p>
+                    <div class="feature-effect">
+                        保障：技术安全可控
                     </div>
                 </div>
             </div>
@@ -289,56 +959,58 @@
     </section>
 
     <!-- MISD Method Demo -->
-    <section id="misd" class="py-20 bg-gray-100">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-gray-800 mb-4">MISD方法演示</h2>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+    <section id="misd" class="misd-demo">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">MISD方法演示</h2>
+                <p class="section-subtitle">
                     模块仪器软件词典（MISD）方法通过统一的硬件API语法树，让AI能够"理解"硬件，自动生成优化代码
                 </p>
             </div>
             
             <!-- MISD Flow -->
-            <div class="misd-flow flex flex-wrap justify-center items-center gap-8 mb-16">
-                <div class="misd-step bg-white p-6 rounded-xl shadow-lg text-center max-w-xs">
-                    <div class="bg-blue-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-search text-white"></i>
+            <div class="misd-flow">
+                <div class="misd-step">
+                    <div class="misd-step-icon">
+                        <i class="fas fa-search"></i>
                     </div>
-                    <h3 class="font-bold text-gray-800 mb-2">硬件识别</h3>
-                    <p class="text-sm text-gray-600">自动识别连接的PXI模块</p>
+                    <h3>硬件识别</h3>
+                    <p>自动识别连接的PXI模块</p>
                 </div>
                 
-                <div class="misd-step bg-white p-6 rounded-xl shadow-lg text-center max-w-xs">
-                    <div class="bg-green-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-sitemap text-white"></i>
+                <div class="misd-step">
+                    <div class="misd-step-icon">
+                        <i class="fas fa-sitemap"></i>
                     </div>
-                    <h3 class="font-bold text-gray-800 mb-2">语法树构建</h3>
-                    <p class="text-sm text-gray-600">构建标准化API语法树</p>
+                    <h3>语法树构建</h3>
+                    <p>构建标准化API语法树</p>
                 </div>
                 
-                <div class="misd-step bg-white p-6 rounded-xl shadow-lg text-center max-w-xs">
-                    <div class="bg-purple-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-brain text-white"></i>
+                <div class="misd-step">
+                    <div class="misd-step-icon">
+                        <i class="fas fa-brain"></i>
                     </div>
-                    <h3 class="font-bold text-gray-800 mb-2">AI分析</h3>
-                    <p class="text-sm text-gray-600">AI分析硬件能力和需求</p>
+                    <h3>AI分析</h3>
+                    <p>AI分析硬件能力和需求</p>
                 </div>
                 
-                <div class="misd-step bg-white p-6 rounded-xl shadow-lg text-center max-w-xs">
-                    <div class="bg-red-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-code text-white"></i>
+                <div class="misd-step">
+                    <div class="misd-step-icon">
+                        <i class="fas fa-code"></i>
                     </div>
-                    <h3 class="font-bold text-gray-800 mb-2">代码生成</h3>
-                    <p class="text-sm text-gray-600">自动生成优化代码</p>
+                    <h3>代码生成</h3>
+                    <p>自动生成优化代码</p>
                 </div>
             </div>
             
             <!-- Code Example -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-4">传统开发方式</h3>
-                    <div class="code-block">
-                        <pre><code>// 传统方式：手动配置和编程
+            <div class="code-comparison">
+                <div class="code-block">
+                    <div class="code-header">
+                        <h3>传统开发方式</h3>
+                    </div>
+                    <div class="code-content">
+// 传统方式：手动配置和编程
 DAQmxCreateTask("", &taskHandle);
 DAQmxCreateAIVoltageChan(taskHandle, "Dev1/ai0", "", 
     DAQmx_Val_Cfg_Default, -10.0, 10.0, 
@@ -347,20 +1019,20 @@ DAQmxCfgSampClkTiming(taskHandle, "", 10000.0,
     DAQmx_Val_Rising, DAQmx_Val_FiniteSamps, 1000);
 DAQmxStartTask(taskHandle);
 // ... 大量手动配置代码
-// 调试时间：30分钟+</code></pre>
+// 调试时间：30分钟+
                     </div>
-                    <div class="mt-4 p-4 bg-red-100 rounded-lg">
-                        <p class="text-red-800 font-semibold">
-                            <i class="fas fa-exclamation-triangle mr-2"></i>
-                            问题：代码复杂、调试困难、容易出错
-                        </p>
+                    <div class="code-footer traditional">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        问题：代码复杂、调试困难、容易出错
                     </div>
                 </div>
                 
-                <div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-4">MISD + AI方式</h3>
-                    <div class="code-block">
-                        <pre><code>// MISD + AI方式：智能生成
+                <div class="code-block">
+                    <div class="code-header">
+                        <h3>MISD + AI方式</h3>
+                    </div>
+                    <div class="code-content">
+// MISD + AI方式：智能生成
 using SeeSharpTools.JY.AI;
 
 var aiAgent = new AIAgent();
@@ -374,13 +1046,11 @@ var device = new JYDevice("USB-1601");
 device.Initialize(config);
 device.StartAcquisition();
 // AI自动优化参数和错误处理
-// 调试时间：2分钟</code></pre>
+// 调试时间：2分钟
                     </div>
-                    <div class="mt-4 p-4 bg-green-100 rounded-lg">
-                        <p class="text-green-800 font-semibold">
-                            <i class="fas fa-check-circle mr-2"></i>
-                            优势：代码简洁、AI优化、自动调试
-                        </p>
+                    <div class="code-footer misd">
+                        <i class="fas fa-check-circle"></i>
+                        优势：代码简洁、AI优化、自动调试
                     </div>
                 </div>
             </div>
@@ -388,96 +1058,87 @@ device.StartAcquisition();
     </section>
 
     <!-- AI Agent Demo -->
-    <section id="ai-agent" class="py-20 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-gray-800 mb-4">AI Agent智能助手</h2>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+    <section id="ai-agent" class="ai-agent">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">AI Agent智能助手</h2>
+                <p class="section-subtitle">
                     内置的AI Agent能够理解您的需求，自动生成代码、优化参数、检测错误，让开发变得更加智能
                 </p>
             </div>
             
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div class="ai-demo-container">
                 <!-- AI Demo Interface -->
-                <div class="bg-gray-900 rounded-xl p-6">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-red-600 w-3 h-3 rounded-full mr-2"></div>
-                        <div class="bg-yellow-500 w-3 h-3 rounded-full mr-2"></div>
-                        <div class="bg-green-500 w-3 h-3 rounded-full mr-2"></div>
-                        <span class="text-gray-400 ml-4">AI Agent - 锐视测控平台</span>
+                <div class="ai-terminal">
+                    <div class="ai-terminal-header">
+                        <div class="terminal-dot red"></div>
+                        <div class="terminal-dot yellow"></div>
+                        <div class="terminal-dot green"></div>
+                        <span class="terminal-title">AI Agent - 锐视测控平台</span>
                     </div>
                     
-                    <div id="ai-chat" class="h-96 overflow-y-auto mb-4 space-y-4">
-                        <div class="flex items-start space-x-3">
-                            <div class="bg-blue-600 w-8 h-8 rounded-full flex items-center justify-center">
-                                <i class="fas fa-robot text-white text-sm"></i>
+                    <div class="ai-chat" id="ai-chat">
+                        <div class="ai-message">
+                            <div class="ai-avatar bot">
+                                <i class="fas fa-robot"></i>
                             </div>
-                            <div class="bg-gray-800 text-gray-300 p-3 rounded-lg max-w-xs">
+                            <div class="ai-message-content">
                                 您好！我是锐视测控平台的AI助手。我可以帮您生成代码、优化参数、解决问题。请告诉我您需要什么帮助？
                             </div>
                         </div>
                     </div>
                     
-                    <div class="flex">
+                    <div class="ai-input-container">
                         <input 
                             type="text" 
                             id="ai-input" 
                             placeholder="输入您的需求，例如：生成USB-1601数据采集代码"
-                            class="flex-1 bg-gray-800 text-white px-4 py-2 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            class="ai-input"
                         >
-                        <button 
-                            onclick="sendAIMessage()" 
-                            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-r-lg transition-colors"
-                        >
+                        <button onclick="sendAIMessage()" class="ai-send-btn">
                             发送
                         </button>
                     </div>
                 </div>
                 
                 <!-- AI Capabilities -->
-                <div class="space-y-6">
-                    <div class="bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-xl">
-                        <h3 class="text-xl font-bold text-gray-800 mb-3">
-                            <i class="fas fa-code text-blue-600 mr-2"></i>
+                <div class="ai-capabilities">
+                    <div class="ai-capability">
+                        <h3>
+                            <i class="fas fa-code" style="color: var(--brand-primary);"></i>
                             智能代码生成
                         </h3>
-                        <p class="text-gray-700 mb-4">
+                        <p>
                             根据您的需求自动生成C#或Python代码，包含完整的错误处理和优化逻辑。
                         </p>
-                        <div class="bg-blue-200 p-3 rounded-lg">
-                            <p class="text-sm text-blue-800">
-                                <strong>示例：</strong>"生成USB-1601的8通道数据采集代码" → 自动生成完整可运行代码
-                            </p>
+                        <div class="ai-capability-example">
+                            <strong>示例：</strong>"生成USB-1601的8通道数据采集代码" → 自动生成完整可运行代码
                         </div>
                     </div>
                     
-                    <div class="bg-gradient-to-r from-green-50 to-green-100 p-6 rounded-xl">
-                        <h3 class="text-xl font-bold text-gray-800 mb-3">
-                            <i class="fas fa-sliders-h text-green-600 mr-2"></i>
+                    <div class="ai-capability">
+                        <h3>
+                            <i class="fas fa-sliders-h" style="color: var(--brand-accent);"></i>
                             参数智能优化
                         </h3>
-                        <p class="text-gray-700 mb-4">
+                        <p>
                             AI分析您的应用场景，自动推荐最优的采样率、缓冲区大小等参数配置。
                         </p>
-                        <div class="bg-green-200 p-3 rounded-lg">
-                            <p class="text-sm text-green-800">
-                                <strong>效果：</strong>参数优化准确率95%+，避免常见配置错误
-                            </p>
+                        <div class="ai-capability-example">
+                            <strong>效果：</strong>参数优化准确率95%+，避免常见配置错误
                         </div>
                     </div>
                     
-                    <div class="bg-gradient-to-r from-purple-50 to-purple-100 p-6 rounded-xl">
-                        <h3 class="text-xl font-bold text-gray-800 mb-3">
-                            <i class="fas fa-bug text-purple-600 mr-2"></i>
+                    <div class="ai-capability">
+                        <h3>
+                            <i class="fas fa-bug" style="color: var(--brand-secondary);"></i>
                             实时错误检测
                         </h3>
-                        <p class="text-gray-700 mb-4">
+                        <p>
                             实时监测代码运行状态，自动检测和修复常见错误，提供优化建议。
                         </p>
-                        <div class="bg-purple-200 p-3 rounded-lg">
-                            <p class="text-sm text-purple-800">
-                                <strong>能力：</strong>自动检测内存泄漏、线程冲突、参数错误等问题
-                            </p>
+                        <div class="ai-capability-example">
+                            <strong>能力：</strong>自动检测内存泄漏、线程冲突、参数错误等问题
                         </div>
                     </div>
                 </div>
@@ -486,50 +1147,42 @@ device.StartAcquisition();
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-12">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div>
-                    <div class="flex items-center space-x-3 mb-4">
-                        <div class="bg-red-600 text-white px-3 py-2 rounded font-bold">
-                            JYTEK
-                        </div>
-                        <div>
-                            <h3 class="font-bold">简仪科技</h3>
-                            <p class="text-sm text-gray-400">锐视测控平台</p>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <div class="nav-brand" style="margin-bottom: 20px;">
+                        <div class="nav-logo">JYTEK</div>
+                        <div class="nav-info">
+                            <h4 style="color: white; margin-bottom: 4px;">简仪科技</h4>
+                            <p style="color: rgba(255,255,255,0.7);">锐视测控平台</p>
                         </div>
                     </div>
-                    <p class="text-gray-400 mb-4">
-                        专业的PXI模块化测控解决方案提供商，致力于为客户提供高质量的测试测量产品和服务。
+                    <p>专业的PXI模块化测控解决方案提供商，致力于为客户提供高质量的测试测量产品和服务。</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>核心技术</h4>
+                    <p>AI增强开发</p>
+                    <p>MISD方法</p>
+                    <p>开源生态</p>
+                    <p>自主可控</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>联系我们</h4>
+                    <p>
+                        <i class="fas fa-globe"></i>
+                        <a href="https://www.jytek.com" target="_blank" rel="noopener">www.jytek.com</a>
                     </p>
-                </div>
-                
-                <div>
-                    <h4 class="font-bold mb-4">核心技术</h4>
-                    <ul class="space-y-2 text-gray-400">
-                        <li>AI增强开发</li>
-                        <li>MISD方法</li>
-                        <li>开源生态</li>
-                        <li>自主可控</li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h4 class="font-bold mb-4">联系我们</h4>
-                    <ul class="space-y-2 text-gray-400">
-                        <li>
-                            <i class="fas fa-globe mr-2"></i>
-                            <a href="https://www.jytek.com" target="_blank" class="hover:text-white">www.jytek.com</a>
-                        </li>
-                        <li>
-                            <i class="fas fa-home mr-2"></i>
-                            <a href="index.html" class="hover:text-white">返回首页</a>
-                        </li>
-                    </ul>
+                    <p>
+                        <i class="fas fa-home"></i>
+                        <a href="index.html">返回首页</a>
+                    </p>
                 </div>
             </div>
             
-            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+            <div class="footer-bottom">
                 <p>&copy; 2024 简仪科技 JYTEK. 保留所有权利. | 锐视测控平台 - AI增强的开源测控解决方案</p>
             </div>
         </div>
@@ -573,13 +1226,13 @@ device.StartAcquisition();
             
             // Add user message
             const userMessage = document.createElement('div');
-            userMessage.className = 'flex items-start space-x-3 justify-end';
+            userMessage.className = 'ai-message user';
             userMessage.innerHTML = `
-                <div class="bg-blue-600 text-white p-3 rounded-lg max-w-xs">
+                <div class="ai-message-content">
                     ${message}
                 </div>
-                <div class="bg-blue-600 w-8 h-8 rounded-full flex items-center justify-center">
-                    <i class="fas fa-user text-white text-sm"></i>
+                <div class="ai-avatar user">
+                    <i class="fas fa-user"></i>
                 </div>
             `;
             chatContainer.appendChild(userMessage);
@@ -590,13 +1243,12 @@ device.StartAcquisition();
             // Simulate AI response
             setTimeout(() => {
                 const aiResponse = document.createElement('div');
-                aiResponse.className = 'flex items-start space-x-3';
+                aiResponse.className = 'ai-message';
                 
                 let responseText = '';
                 if (message.includes('USB-1601') || message.includes('数据采集')) {
                     responseText = `好的！我为您生成USB-1601的数据采集代码：
 
-\`\`\`csharp
 using SeeSharpTools.JY.AI;
 using SeeSharpTools.JY.DAQ;
 
@@ -611,35 +1263,34 @@ var config = aiAgent.OptimizeDAQConfig(
 var daq = new JYDevice("USB-1601");
 daq.Initialize(config);
 daq.StartAcquisition();
-\`\`\`
 
 代码已优化，包含错误处理和最佳参数配置！`;
                 } else if (message.includes('MISD') || message.includes('方法')) {
                     responseText = `MISD（模块仪器软件词典）方法的核心优势：
 
-1. **统一API语法树** - 标准化硬件接口
-2. **AI理解硬件** - 智能分析设备能力  
-3. **自动代码生成** - 减少70%编程工作量
-4. **实时优化** - 调试时间缩短至2分钟
+1. 统一API语法树 - 标准化硬件接口
+2. AI理解硬件 - 智能分析设备能力  
+3. 自动代码生成 - 减少70%编程工作量
+4. 实时优化 - 调试时间缩短至2分钟
 
 这种方法让AI能够"理解"PXI硬件特性，自动生成最优代码！`;
                 } else {
                     responseText = `我理解您的需求。锐视测控平台可以帮您：
 
-• **智能代码生成** - 自动生成C#/Python代码
-• **参数优化** - AI推荐最佳配置
-• **错误检测** - 实时监控和修复
-• **MISD集成** - 简化硬件操作
+• 智能代码生成 - 自动生成C#/Python代码
+• 参数优化 - AI推荐最佳配置
+• 错误检测 - 实时监控和修复
+• MISD集成 - 简化硬件操作
 
 请告诉我您的具体需求，我会为您提供详细的解决方案！`;
                 }
                 
                 aiResponse.innerHTML = `
-                    <div class="bg-blue-600 w-8 h-8 rounded-full flex items-center justify-center">
-                        <i class="fas fa-robot text-white text-sm"></i>
+                    <div class="ai-avatar bot">
+                        <i class="fas fa-robot"></i>
                     </div>
-                    <div class="bg-gray-800 text-gray-300 p-3 rounded-lg max-w-md">
-                        <pre class="whitespace-pre-wrap text-sm">${responseText}</pre>
+                    <div class="ai-message-content">
+                        <pre style="white-space: pre-wrap; font-family: inherit;">${responseText}</pre>
                     </div>
                 `;
                 chatContainer.appendChild(aiResponse);
@@ -662,6 +1313,33 @@ daq.StartAcquisition();
                     }
                 });
             }
+        });
+
+        // 语言切换功能
+        function switchLanguage(lang) {
+            if (lang === 'zh') {
+                document.documentElement.lang = 'zh-CN';
+                document.title = '锐视测控平台 - 简仪科技AI增强的开源测控解决方案';
+            } else if (lang === 'en') {
+                document.documentElement.lang = 'en';
+                document.title = 'SeeSharp Platform - AI-Enhanced Open Source Control Solution';
+            }
+            
+            // 更新语言切换按钮状态
+            document.querySelectorAll('.language-switcher button').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            console.log('Language switched to:', lang);
+        }
+
+        // 初始化语言切换器
+        document.addEventListener('DOMContentLoaded', function() {
+            const defaultLang = 'zh';
+            switchLanguage(defaultLang);
         });
     </script>
 </body>

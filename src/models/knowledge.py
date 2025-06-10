@@ -264,5 +264,46 @@ class KnowledgeBase:
         
         return "\n\n".join(content_parts)
 
-# 全局知识库实例
-knowledge_base = KnowledgeBase()
+# 集成数据库的知识库类
+class DatabaseKnowledgeBase:
+    """基于数据库的知识库管理类"""
+    
+    def __init__(self):
+        from models.database import document_manager
+        self.document_manager = document_manager
+    
+    def search_documents(self, query: str, limit: int = 5) -> List[Dict]:
+        """搜索文档"""
+        return self.document_manager.search_documents(query, limit=limit)
+    
+    def get_relevant_content(self, question: str, max_docs: int = 3) -> str:
+        """获取与问题相关的文档内容"""
+        relevant_docs = self.search_documents(question, limit=max_docs)
+        
+        if not relevant_docs:
+            return ""
+        
+        content_parts = []
+        for doc in relevant_docs:
+            # 获取文档内容
+            content = self.document_manager.get_document_content(doc['id'])
+            if content:
+                # 提取相关段落
+                paragraphs = content.split('\n')
+                relevant_paragraphs = []
+                
+                query_words = question.lower().split()
+                for paragraph in paragraphs:
+                    if any(word in paragraph.lower() for word in query_words):
+                        relevant_paragraphs.append(paragraph.strip())
+                
+                if relevant_paragraphs:
+                    content_parts.append(f"【{doc['title']}】\n" + "\n".join(relevant_paragraphs[:3]))
+                else:
+                    # 如果没有找到相关段落，取前几段
+                    content_parts.append(f"【{doc['title']}】\n" + "\n".join(paragraphs[:2]))
+        
+        return "\n\n".join(content_parts)
+
+# 全局知识库实例 - 使用数据库版本
+knowledge_base = DatabaseKnowledgeBase()

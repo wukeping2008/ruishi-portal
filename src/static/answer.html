@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI回答 - 锐视测控平台</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>知识库 - 锐视测控平台</title>
     <!-- MathJax for LaTeX rendering -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -16,192 +14,319 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Chart.js for interactive charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Custom styles -->
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
-        
         :root {
-            --primary-color: #0a2342;
-            --secondary-color: #126872;
-            --accent-color: #2ca58d;
-            --light-color: #f8f9fa;
-            --dark-color: #212529;
+            /* 主色调 - 受Apple启发的柔和色彩 */
+            --primary-bg: #fafafa;
+            --secondary-bg: #ffffff;
+            --accent-bg: #f5f5f7;
+            --card-bg: #ffffff;
+            
+            /* 文字颜色 - 高对比度但不刺眼 */
+            --text-primary: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --text-accent: #007aff;
+            --text-muted: #86868b;
+            
+            /* 品牌色 - 温和的蓝色系 */
+            --brand-primary: #007aff;
+            --brand-secondary: #5856d6;
+            --brand-accent: #34c759;
+            
+            /* 渐变色 - 柔和不刺眼 */
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-subtle: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            
+            /* 阴影 - 微妙的深度 */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+            
+            /* 边框 */
+            --border-light: rgba(0, 0, 0, 0.05);
+            --border-medium: rgba(0, 0, 0, 0.1);
+            
+            /* 圆角 */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
         
         body {
-            font-family: 'Noto Sans SC', sans-serif;
-            background-color: #f5f7fa;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
-        .answer-container {
+        .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 20px;
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+        }
+        
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .nav-logo {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 16px;
+        }
+        
+        .nav-info h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .nav-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .back-button {
+            background: var(--brand-primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .back-button:hover {
+            background: #0056cc;
+            transform: translateY(-1px);
+        }
+        
+        /* 语言切换器样式 */
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .language-switcher {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: var(--radius-md);
+            padding: 4px;
+            display: flex;
+            gap: 4px;
+        }
+        
+        .language-switcher button {
+            background: none;
+            border: none;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+        }
+        
+        .language-switcher button.active {
+            background: var(--brand-primary);
+            color: white;
+        }
+        
+        .language-switcher button:hover:not(.active) {
+            background: rgba(0, 122, 255, 0.1);
+            color: var(--brand-primary);
+        }
+        
+        /* 主要内容区域 */
+        .main-content {
+            padding: 40px 0;
         }
         
         .answer-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(30px) saturate(150%);
+            -webkit-backdrop-filter: blur(30px) saturate(150%);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 32px;
             overflow: hidden;
         }
         
         .answer-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: var(--gradient-hero);
             color: white;
-            padding: 20px;
+            padding: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .answer-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255,255,255,0.08) 0%, transparent 50%);
+        }
+        
+        .answer-header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .answer-header h1 {
+            font-size: clamp(24px, 4vw, 32px);
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+        
+        .question-text {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 400;
         }
         
         .answer-content {
-            padding: 30px;
+            padding: 40px;
+        }
+        
+        .answer-text {
+            font-size: 16px;
             line-height: 1.8;
+            color: var(--text-primary);
         }
         
-        .module-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-top: 30px;
-        }
-        
-        .module-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        
-        .module-header {
-            background: var(--accent-color);
-            color: white;
-            padding: 15px 20px;
+        .answer-text h2, .answer-text h3, .answer-text h4 {
+            color: var(--text-primary);
+            margin: 24px 0 16px 0;
             font-weight: 600;
         }
         
-        .module-content {
-            padding: 20px;
+        .answer-text h2 {
+            font-size: 24px;
+            border-bottom: 2px solid var(--accent-bg);
+            padding-bottom: 8px;
         }
         
-        .knowledge-item, .experiment-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 15px;
-            margin-bottom: 10px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            cursor: pointer;
+        .answer-text h3 {
+            font-size: 20px;
         }
         
-        .knowledge-item:hover, .experiment-item:hover {
-            background: #e9ecef;
-            transform: translateX(5px);
+        .answer-text h4 {
+            font-size: 18px;
         }
         
-        .simulation-container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-top: 30px;
-            overflow: hidden;
+        .answer-text p {
+            margin-bottom: 16px;
         }
         
-        .simulation-header {
-            background: var(--secondary-color);
-            color: white;
-            padding: 15px 20px;
+        .answer-text ul, .answer-text ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+        
+        .answer-text li {
+            margin-bottom: 8px;
+        }
+        
+        .answer-text strong {
+            color: var(--text-primary);
             font-weight: 600;
         }
         
-        .simulation-content {
+        .answer-text em {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+        
+        .answer-text code {
+            background: var(--accent-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-size: 14px;
+        }
+        
+        .answer-text pre {
+            background: #1e293b;
+            color: #e2e8f0;
             padding: 20px;
-            min-height: 400px;
-            background: #f8f9fa;
-        }
-        
-        .back-button {
-            background: var(--primary-color);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-        
-        .back-button:hover {
-            background: var(--secondary-color);
-            transform: translateY(-2px);
-        }
-        
-        .rating-section {
-            background: #f8f9fa;
-            padding: 20px;
-            border-top: 1px solid #e9ecef;
-        }
-        
-        .rating-button {
-            padding: 10px 20px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-right: 10px;
-        }
-        
-        .rating-helpful {
-            background: #28a745;
-            color: white;
-        }
-        
-        .rating-helpful:hover {
-            background: #218838;
-        }
-        
-        .rating-unhelpful {
-            background: #dc3545;
-            color: white;
-        }
-        
-        .rating-unhelpful:hover {
-            background: #c82333;
-        }
-        
-        /* Parameter control styles */
-        .parameter-control {
-            margin-bottom: 15px;
-        }
-        
-        .parameter-slider {
-            width: 100%;
-            margin: 10px 0;
-        }
-        
-        .parameter-value {
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-        
-        /* Chart container */
-        .chart-container {
-            position: relative;
-            height: 300px;
+            border-radius: var(--radius-lg);
+            overflow-x: auto;
             margin: 20px 0;
         }
         
-        /* Loading spinner */
+        .answer-text pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+        
+        .loading-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+        
         .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid var(--accent-color);
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--accent-bg);
+            border-top: 3px solid var(--brand-primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
+            margin-right: 12px;
         }
         
         @keyframes spin {
@@ -209,120 +334,428 @@
             100% { transform: rotate(360deg); }
         }
         
+        .rating-section {
+            background: var(--accent-bg);
+            padding: 24px 40px;
+            border-top: 1px solid var(--border-light);
+        }
+        
+        .rating-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+        
+        .rating-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .rating-button {
+            padding: 12px 20px;
+            border-radius: var(--radius-lg);
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .rating-helpful {
+            background: var(--brand-accent);
+            color: white;
+        }
+        
+        .rating-helpful:hover {
+            background: #2ea043;
+            transform: translateY(-1px);
+        }
+        
+        .rating-unhelpful {
+            background: #ff3b30;
+            color: white;
+        }
+        
+        .rating-unhelpful:hover {
+            background: #d70015;
+            transform: translateY(-1px);
+        }
+        
+        /* 相关内容网格 */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+        
+        .content-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .content-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--border-medium);
+        }
+        
+        .content-card-header {
+            padding: 20px 24px;
+            font-weight: 600;
+            font-size: 18px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .content-card-header.knowledge {
+            background: var(--gradient-accent);
+        }
+        
+        .content-card-header.experiments {
+            background: var(--gradient-secondary);
+        }
+        
+        .content-card-body {
+            padding: 24px;
+        }
+        
+        .content-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            margin-bottom: 12px;
+            background: var(--accent-bg);
+            border-radius: var(--radius-lg);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .content-item:hover {
+            background: var(--secondary-bg);
+            transform: translateX(8px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .content-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .content-item-text {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .content-item-icon {
+            color: var(--brand-primary);
+            font-size: 16px;
+        }
+        
+        /* 仿真容器 */
+        .simulation-container {
+            background: var(--card-bg);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .simulation-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 20px 24px;
+            font-weight: 600;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .simulation-content {
+            padding: 32px;
+            min-height: 400px;
+            background: var(--accent-bg);
+        }
+        
+        .simulation-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 300px;
+            color: var(--text-secondary);
+        }
+        
+        .simulation-placeholder i {
+            font-size: 64px;
+            margin-bottom: 16px;
+            color: var(--text-muted);
+        }
+        
+        .simulation-placeholder h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .simulation-placeholder p {
+            text-align: center;
+            max-width: 400px;
+        }
+        
+        /* 参数控制 */
+        .parameter-control {
+            margin-bottom: 20px;
+        }
+        
+        .parameter-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        
+        .parameter-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--accent-bg);
+            outline: none;
+            margin: 12px 0;
+            -webkit-appearance: none;
+        }
+        
+        .parameter-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--brand-primary);
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .parameter-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--brand-primary);
+            cursor: pointer;
+            border: none;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .parameter-value {
+            font-weight: 600;
+            color: var(--brand-primary);
+        }
+        
+        /* 图表容器 */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 16px;
+        }
+        
+        /* 错误状态 */
+        .error-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            color: #ff3b30;
+        }
+        
+        .error-icon {
+            font-size: 24px;
+            margin-right: 12px;
+        }
+        
+        /* 通知 */
+        .notification {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .notification.success {
+            background: var(--brand-accent);
+            color: white;
+        }
+        
+        .notification.error {
+            background: #ff3b30;
+            color: white;
+        }
+        
+        .notification.info {
+            background: var(--brand-primary);
+            color: white;
+        }
+        
+        /* 响应式设计 */
         @media (max-width: 768px) {
-            .module-grid {
-                grid-template-columns: 1fr;
+            .container {
+                padding: 0 16px;
             }
             
-            .answer-container {
-                padding: 10px;
+            .main-content {
+                padding: 24px 0;
+            }
+            
+            .answer-header,
+            .answer-content,
+            .rating-section {
+                padding: 24px 20px;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .simulation-content {
+                padding: 20px;
             }
         }
     </style>
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="bg-white shadow-sm py-4">
-        <div class="container mx-auto px-4 flex justify-between items-center">
-            <div class="flex items-center">
-                <div class="bg-red-600 text-white px-3 py-2 rounded font-bold text-lg mr-3">
-                    JYTEK
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <div class="nav-logo">SeeSharp</div>
+                    <div class="nav-info">
+                        <h1>简仪科技</h1>
+                        <p>AI智能问答</p>
+                    </div>
                 </div>
-                <div>
-                    <span class="text-xl font-bold text-gray-800">锐视测控平台</span>
-                    <p class="text-sm text-gray-600">简仪科技专业测控解决方案</p>
+                <div class="nav-actions">
+                    <div class="language-switcher">
+                        <button data-lang="zh" onclick="switchLanguage('zh')">中文</button>
+                        <button data-lang="en" onclick="switchLanguage('en')">EN</button>
+                    </div>
+                    <a href="index.html" class="back-button">
+                        <i class="fas fa-arrow-left"></i>
+                        返回首页
+                    </a>
                 </div>
             </div>
-            <a href="/" class="back-button">
-                <i class="fas fa-arrow-left mr-2"></i>
-                返回首页
-            </a>
         </div>
     </nav>
 
-    <div class="answer-container">
-        <!-- Question Display -->
-        <div class="answer-card">
-            <div class="answer-header">
-                <h1 class="text-2xl font-bold mb-2">问题</h1>
-                <p id="question-text" class="text-lg opacity-90">正在加载问题...</p>
-            </div>
-        </div>
-
-        <!-- Answer Display -->
-        <div class="answer-card">
-            <div class="answer-header">
-                <h2 class="text-xl font-bold">
-                    <i class="fas fa-lightbulb mr-2"></i>
-                    智能回答
-                </h2>
-            </div>
-            <div class="answer-content">
-                <div id="answer-content" class="prose max-w-none">
-                    <div class="flex items-center justify-center py-8">
-                        <i class="fas fa-spinner fa-spin text-2xl text-blue-500 mr-3"></i>
-                        <span>正在生成回答...</span>
+    <div class="container">
+        <div class="main-content">
+            <!-- Question Display -->
+            <div class="answer-card">
+                <div class="answer-header">
+                    <div class="answer-header-content">
+                        <h1>问题</h1>
+                        <p id="question-text" class="question-text">正在加载问题...</p>
                     </div>
                 </div>
             </div>
-            <div class="rating-section">
-                <h4 class="text-lg font-semibold mb-3">这个回答有帮助吗？</h4>
-                <button class="rating-button rating-helpful" onclick="rateAnswer(true)">
-                    <i class="fas fa-thumbs-up mr-2"></i>有帮助
-                </button>
-                <button class="rating-button rating-unhelpful" onclick="rateAnswer(false)">
-                    <i class="fas fa-thumbs-down mr-2"></i>需改进
-                </button>
-            </div>
-        </div>
 
-        <!-- Knowledge and Experiments Grid -->
-        <div class="module-grid">
-            <!-- Related Knowledge -->
-            <div class="module-card">
-                <div class="module-header">
-                    <i class="fas fa-book mr-2"></i>
-                    相关知识点
+            <!-- Answer Display -->
+            <div class="answer-card">
+                <div class="answer-header">
+                    <div class="answer-header-content">
+                        <h1>
+                            <i class="fas fa-lightbulb" style="margin-right: 12px;"></i>
+                            智能回答
+                        </h1>
+                    </div>
                 </div>
-                <div class="module-content">
-                    <div id="knowledge-list">
-                        <div class="flex items-center justify-center py-8">
-                            <div class="loading-spinner mr-3"></div>
-                            <span>AI正在分析相关知识点...</span>
+                <div class="answer-content">
+                    <div id="answer-content" class="answer-text">
+                        <div class="loading-container">
+                            <div class="loading-spinner"></div>
+                            <span>正在生成回答...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="rating-section">
+                    <h4 class="rating-title">这个回答有帮助吗？</h4>
+                    <div class="rating-buttons">
+                        <button class="rating-button rating-helpful" onclick="rateAnswer(true)">
+                            <i class="fas fa-thumbs-up"></i>有帮助
+                        </button>
+                        <button class="rating-button rating-unhelpful" onclick="rateAnswer(false)">
+                            <i class="fas fa-thumbs-down"></i>需改进
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technology and Configuration Grid -->
+            <div class="content-grid">
+                <!-- Related Technology -->
+                <div class="content-card">
+                    <div class="content-card-header knowledge">
+                        <i class="fas fa-microchip"></i>
+                        相关技术
+                    </div>
+                    <div class="content-card-body">
+                        <div id="technology-list">
+                            <div class="loading-container">
+                                <div class="loading-spinner"></div>
+                                <span>AI正在分析相关技术...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommended Configuration -->
+                <div class="content-card">
+                    <div class="content-card-header experiments">
+                        <i class="fas fa-cogs"></i>
+                        推荐配置
+                    </div>
+                    <div class="content-card-body">
+                        <div id="configuration-list">
+                            <div class="loading-container">
+                                <div class="loading-spinner"></div>
+                                <span>AI正在生成推荐配置...</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Recommended Experiments -->
-            <div class="module-card">
-                <div class="module-header">
-                    <i class="fas fa-flask mr-2"></i>
-                    推荐实验
+            <!-- Product Showcase -->
+            <div class="simulation-container">
+                <div class="simulation-header">
+                    <i class="fas fa-cube"></i>
+                    <span id="product-showcase-title">产品展示</span>
                 </div>
-                <div class="module-content">
-                    <div id="experiment-list">
-                        <div class="flex items-center justify-center py-8">
-                            <div class="loading-spinner mr-3"></div>
-                            <span>AI正在生成推荐实验...</span>
+                <div class="simulation-content">
+                    <div id="product-showcase-area">
+                        <div class="simulation-placeholder">
+                            <div class="loading-spinner"></div>
+                            <h3>AI正在生成产品展示...</h3>
+                            <p>请稍候，系统正在根据问题内容生成相关产品展示</p>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Interactive Simulation -->
-        <div class="simulation-container">
-            <div class="simulation-header">
-                <i class="fas fa-cogs mr-2"></i>
-                <span id="simulation-title">交互式仿真实验</span>
-            </div>
-            <div class="simulation-content">
-                <div id="simulation-area" class="text-center">
-                    <div class="py-20">
-                        <div class="loading-spinner mx-auto mb-4"></div>
-                        <h3 class="text-xl font-semibold text-gray-600 mb-2">AI正在设计交互式仿真...</h3>
-                        <p class="text-gray-500">请稍候，系统正在根据问题内容生成专属的仿真实验</p>
                     </div>
                 </div>
             </div>
@@ -374,7 +807,7 @@
                 // 如果没有存储的回答，则重新获取
                 fetchAnswer(question);
             } else {
-                window.location.href = '/';
+                window.location.href = 'index.html';
             }
         }
 
@@ -408,17 +841,17 @@
                 } else if (data.error) {
                     // 显示错误信息
                     document.getElementById('answer-content').innerHTML = 
-                        `<div class="text-red-600"><i class="fas fa-exclamation-triangle mr-2"></i>错误：${data.error}</div>`;
+                        `<div class="error-container"><i class="fas fa-exclamation-triangle error-icon"></i>错误：${data.error}</div>`;
                 } else {
                     // 显示通用错误
                     document.getElementById('answer-content').innerHTML = 
-                        '<div class="text-red-600"><i class="fas fa-exclamation-triangle mr-2"></i>未收到有效回答，请稍后重试</div>';
+                        '<div class="error-container"><i class="fas fa-exclamation-triangle error-icon"></i>未收到有效回答，请稍后重试</div>';
                 }
             })
             .catch(error => {
                 console.error('Error fetching answer:', error);
                 document.getElementById('answer-content').innerHTML = 
-                    '<div class="text-red-600"><i class="fas fa-exclamation-triangle mr-2"></i>网络错误，请检查连接后重试</div>';
+                    '<div class="error-container"><i class="fas fa-exclamation-triangle error-icon"></i>网络错误，请检查连接后重试</div>';
             });
         }
 
@@ -433,7 +866,7 @@
             formattedContent = formattedContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
             formattedContent = formattedContent.replace(/\*(.*?)\*/g, '<em>$1</em>');
             
-            answerContent.innerHTML = `<div class="prose max-w-none">${formattedContent}</div>`;
+            answerContent.innerHTML = formattedContent;
             
             // Re-render MathJax if available
             if (window.MathJax) {
@@ -477,715 +910,527 @@
             });
         }
 
-        // Display knowledge points
-        function displayKnowledgePoints(knowledgePoints) {
+        // Display technology points
+        function displayKnowledgePoints(technologyPoints) {
+            const technologyList = document.getElementById('technology-list');
+            technologyList.innerHTML = '';
+            
+            if (technologyPoints && technologyPoints.length > 0) {
+                technologyPoints.forEach(technology => {
+                    const item = document.createElement('div');
+                    item.className = 'content-item';
+                    item.innerHTML = `
+                        <span class="content-item-text">${technology.title}</span>
+                        <i class="fas fa-chevron-right content-item-icon"></i>
+                    `;
+                    item.onclick = () => showTechnologyModal(technology.title, technology.description);
+                    technologyList.appendChild(item);
+                });
+            } else {
+                technologyList.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">暂无相关技术</p>';
+            }
+        }
+
+        // Display configurations
+        function displayExperiments(configurations) {
+            const configurationList = document.getElementById('configuration-list');
+            configurationList.innerHTML = '';
+            
+            if (configurations && configurations.length > 0) {
+                configurations.forEach(config => {
+                    const item = document.createElement('div');
+                    item.className = 'content-item';
+                    item.innerHTML = `
+                        <span class="content-item-text">${config.title}</span>
+                        <i class="fas fa-chevron-right content-item-icon"></i>
+                    `;
+                    item.onclick = () => showConfiguration(config);
+                    configurationList.appendChild(item);
+                });
+            } else {
+                configurationList.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">暂无推荐配置</p>';
+            }
+        }
+
+        // Display product showcase
+        function displaySimulation(productShowcase) {
+            if (productShowcase && productShowcase.type) {
+                document.getElementById('product-showcase-title').textContent = productShowcase.title || '产品展示';
+                
+                const showcaseArea = document.getElementById('product-showcase-area');
+                showcaseArea.innerHTML = '';
+                
+                if (productShowcase.type === 'product-gallery') {
+                    createProductGallery(showcaseArea, productShowcase);
+                } else if (productShowcase.type === 'product-comparison') {
+                    createProductComparison(showcaseArea, productShowcase);
+                } else {
+                    showDefaultProductShowcase(showcaseArea);
+                }
+            } else {
+                showDefaultProductShowcase(document.getElementById('product-showcase-area'));
+            }
+        }
+
+        // Show fallback content when AI generation fails
+        function showFallbackContent() {
+            // Show default knowledge points
             const knowledgeList = document.getElementById('knowledge-list');
-            knowledgeList.innerHTML = '';
+            knowledgeList.innerHTML = `
+                <div class="content-item" onclick="showKnowledgeModal('PXI基础', 'PXI是一种基于PC的模块化仪器平台')">
+                    <span class="content-item-text">PXI基础知识</span>
+                    <i class="fas fa-chevron-right content-item-icon"></i>
+                </div>
+                <div class="content-item" onclick="showKnowledgeModal('数据采集', '数据采集是将模拟信号转换为数字信号的过程')">
+                    <span class="content-item-text">数据采集原理</span>
+                    <i class="fas fa-chevron-right content-item-icon"></i>
+                </div>
+                <div class="content-item" onclick="showKnowledgeModal('信号处理', '信号处理包括滤波、变换、分析等技术')">
+                    <span class="content-item-text">信号处理技术</span>
+                    <i class="fas fa-chevron-right content-item-icon"></i>
+                </div>
+            `;
             
-            if (knowledgePoints && knowledgePoints.length > 0) {
-                knowledgePoints.forEach(knowledge => {
-                    const item = document.createElement('div');
-                    item.className = 'knowledge-item';
-                    item.innerHTML = `
-                        <span>${knowledge.title}</span>
-                        <i class="fas fa-chevron-right text-blue-500"></i>
-                    `;
-                    item.onclick = () => showKnowledgeModal(knowledge.title, knowledge.description);
-                    knowledgeList.appendChild(item);
-                });
-            } else {
-                knowledgeList.innerHTML = '<p class="text-gray-500">暂无相关知识点</p>';
-            }
-        }
-
-        // Display experiments
-        function displayExperiments(experiments) {
+            // Show default experiments
             const experimentList = document.getElementById('experiment-list');
-            experimentList.innerHTML = '';
+            experimentList.innerHTML = `
+                <div class="content-item" onclick="runDefaultExperiment('basic_daq')">
+                    <span class="content-item-text">基础数据采集实验</span>
+                    <i class="fas fa-chevron-right content-item-icon"></i>
+                </div>
+                <div class="content-item" onclick="runDefaultExperiment('signal_gen')">
+                    <span class="content-item-text">信号发生器实验</span>
+                    <i class="fas fa-chevron-right content-item-icon"></i>
+                </div>
+                <div class="content-item" onclick="runDefaultExperiment('frequency_analysis')">
+                    <span class="content-item-text">频谱分析实验</span>
+                    <i class="fas fa-chevron-right content-item-icon"></i>
+                </div>
+            `;
             
-            if (experiments && experiments.length > 0) {
-                experiments.forEach(experiment => {
-                    const item = document.createElement('div');
-                    item.className = 'experiment-item';
-                    item.innerHTML = `
-                        <span>${experiment.title}</span>
-                        <i class="fas fa-play-circle text-green-500"></i>
-                    `;
-                    item.onclick = () => openDynamicSimulation(experiment);
-                    experimentList.appendChild(item);
-                });
-            } else {
-                experimentList.innerHTML = '<p class="text-gray-500">暂无推荐实验</p>';
-            }
+            // Show default simulation
+            showDefaultSimulation(document.getElementById('simulation-area'));
         }
 
-        // Display simulation
-        function displaySimulation(simulation) {
-            if (simulation && simulation.title) {
-                currentSimulation = simulation;
-                document.getElementById('simulation-title').textContent = simulation.title;
-                createDynamicSimulation(simulation);
-            } else {
-                // Show default message
-                document.getElementById('simulation-area').innerHTML = `
-                    <div class="py-20 text-center">
-                        <i class="fas fa-circuit-board text-6xl text-gray-400 mb-4"></i>
-                        <h3 class="text-xl font-semibold text-gray-600 mb-2">选择上方实验开始仿真</h3>
-                        <p class="text-gray-500">点击推荐实验中的任意一个来启动交互式仿真</p>
-                    </div>
-                `;
-            }
+        // Create chart simulation
+        function createChartSimulation(container, simulation) {
+            container.innerHTML = `
+                <div class="chart-container">
+                    <canvas id="simulation-chart"></canvas>
+                </div>
+                <div class="parameter-control">
+                    <label class="parameter-label">频率: <span class="parameter-value" id="freq-value">1000</span> Hz</label>
+                    <input type="range" class="parameter-slider" id="freq-slider" min="100" max="5000" value="1000" oninput="updateChart()">
+                </div>
+                <div class="parameter-control">
+                    <label class="parameter-label">幅度: <span class="parameter-value" id="amp-value">1.0</span> V</label>
+                    <input type="range" class="parameter-slider" id="amp-slider" min="0.1" max="5.0" step="0.1" value="1.0" oninput="updateChart()">
+                </div>
+            `;
+            
+            initChart();
         }
 
-        // Create dynamic simulation based on AI-generated design
-        function createDynamicSimulation(simulation) {
-            const simulationArea = document.getElementById('simulation-area');
-            
-            let parametersHTML = '';
-            if (simulation.parameters && simulation.parameters.length > 0) {
-                parametersHTML = simulation.parameters.map((param, index) => {
-                    if (param.type === 'slider') {
-                        return `
-                            <div class="parameter-control">
-                                <label class="block text-sm font-medium mb-1">
-                                    ${param.name} (<span id="param-${index}-value">${param.default}</span> ${param.unit || ''})
-                                </label>
-                                <input type="range" 
-                                       id="param-${index}" 
-                                       class="parameter-slider" 
-                                       min="${param.min}" 
-                                       max="${param.max}" 
-                                       value="${param.default}"
-                                       oninput="updateParameter(${index}, this.value)">
-                            </div>
-                        `;
-                    }
-                    return '';
-                }).join('');
-            }
-
-            let outputsHTML = '';
-            if (simulation.outputs && simulation.outputs.length > 0) {
-                outputsHTML = simulation.outputs.map((output, index) => {
-                    if (output.type === 'chart') {
-                        return `
-                            <div class="chart-container">
-                                <canvas id="chart-${index}"></canvas>
-                            </div>
-                        `;
-                    } else if (output.type === 'value') {
-                        return `
-                            <div class="bg-gray-50 p-4 rounded mb-4">
-                                <h4 class="font-semibold">${output.name}</h4>
-                                <div id="value-${index}" class="text-2xl font-bold text-blue-600">--</div>
-                                <p class="text-sm text-gray-600">${output.description}</p>
-                            </div>
-                        `;
-                    }
-                    return '';
-                }).join('');
-            }
-
-            simulationArea.innerHTML = `
-                <div class="bg-white rounded-lg p-6">
-                    <h3 class="text-xl font-bold mb-4">${simulation.title}</h3>
-                    <p class="text-gray-600 mb-6">${simulation.description || ''}</p>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <h4 class="font-semibold mb-4">参数控制</h4>
-                            ${parametersHTML}
+        // Create parameter simulation
+        function createParameterSimulation(container, simulation) {
+            container.innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <h4 style="margin-bottom: 16px;">参数设置</h4>
+                        <div class="parameter-control">
+                            <label class="parameter-label">采样率: <span class="parameter-value" id="sample-rate-value">10000</span> Hz</label>
+                            <input type="range" class="parameter-slider" id="sample-rate-slider" min="1000" max="100000" value="10000" oninput="updateParameters()">
                         </div>
-                        <div>
-                            <h4 class="font-semibold mb-4">仿真结果</h4>
-                            ${outputsHTML}
+                        <div class="parameter-control">
+                            <label class="parameter-label">通道数: <span class="parameter-value" id="channels-value">4</span></label>
+                            <input type="range" class="parameter-slider" id="channels-slider" min="1" max="16" value="4" oninput="updateParameters()">
+                        </div>
+                        <div class="parameter-control">
+                            <label class="parameter-label">量程: <span class="parameter-value" id="range-value">±10</span> V</label>
+                            <input type="range" class="parameter-slider" id="range-slider" min="1" max="20" value="10" oninput="updateParameters()">
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 16px;">系统状态</h4>
+                        <div id="system-status" style="background: var(--accent-bg); padding: 16px; border-radius: var(--radius-lg);">
+                            <p><strong>内存使用:</strong> <span id="memory-usage">25%</span></p>
+                            <p><strong>数据速率:</strong> <span id="data-rate">40 MB/s</span></p>
+                            <p><strong>缓冲区:</strong> <span id="buffer-status">正常</span></p>
+                            <p><strong>状态:</strong> <span id="system-state" style="color: var(--brand-accent);">就绪</span></p>
                         </div>
                     </div>
                 </div>
             `;
-
-            // Initialize charts and calculations
-            initializeSimulation(simulation);
         }
 
-        // Initialize simulation with charts and real-time updates
-        function initializeSimulation(simulation) {
-            if (simulation.outputs) {
-                simulation.outputs.forEach((output, index) => {
-                    if (output.type === 'chart') {
-                        initializeChart(index, output);
-                    }
-                });
-            }
+        // Show default product showcase
+        function showDefaultProductShowcase(container) {
+            container.innerHTML = `
+                <div class="product-showcase-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                    <div class="product-card" style="background: white; border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-md);">
+                        <div class="product-image" style="height: 150px; background: var(--gradient-primary); border-radius: var(--radius-md); margin-bottom: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 48px;">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                        <h4 style="margin-bottom: 8px; color: var(--text-primary);">PXI数据采集模块</h4>
+                        <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 12px;">高精度多通道数据采集，支持同步采样</p>
+                        <div class="product-specs" style="font-size: 12px; color: var(--text-muted);">
+                            <div>• 16位分辨率</div>
+                            <div>• 1MS/s采样率</div>
+                            <div>• 32通道同步</div>
+                        </div>
+                    </div>
+                    <div class="product-card" style="background: white; border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-md);">
+                        <div class="product-image" style="height: 150px; background: var(--gradient-secondary); border-radius: var(--radius-md); margin-bottom: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 48px;">
+                            <i class="fas fa-wave-square"></i>
+                        </div>
+                        <h4 style="margin-bottom: 8px; color: var(--text-primary);">PXI信号发生器</h4>
+                        <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 12px;">任意波形发生器，支持多种信号类型</p>
+                        <div class="product-specs" style="font-size: 12px; color: var(--text-muted);">
+                            <div>• 100MHz带宽</div>
+                            <div>• 任意波形</div>
+                            <div>• 双通道输出</div>
+                        </div>
+                    </div>
+                    <div class="product-card" style="background: white; border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-md);">
+                        <div class="product-image" style="height: 150px; background: var(--gradient-accent); border-radius: var(--radius-md); margin-bottom: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 48px;">
+                            <i class="fas fa-desktop"></i>
+                        </div>
+                        <h4 style="margin-bottom: 8px; color: var(--text-primary);">PXI控制器</h4>
+                        <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 12px;">嵌入式控制器，支持实时操作系统</p>
+                        <div class="product-specs" style="font-size: 12px; color: var(--text-muted);">
+                            <div>• Intel处理器</div>
+                            <div>• 实时系统</div>
+                            <div>• 多槽位支持</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 24px;">
+                    <p style="color: var(--text-secondary); margin-bottom: 16px;">更多产品信息请访问简仪科技官网</p>
+                    <a href="https://www.jytek.com" target="_blank" style="background: var(--brand-primary); color: white; padding: 12px 24px; border-radius: var(--radius-lg); text-decoration: none; font-weight: 500;">
+                        <i class="fas fa-external-link-alt" style="margin-right: 8px;"></i>
+                        访问官网
+                    </a>
+                </div>
+            `;
+        }
+
+        // Create product gallery
+        function createProductGallery(container, productShowcase) {
+            const products = productShowcase.products || [];
+            let galleryHTML = '<div class="product-showcase-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">';
             
-            // Initial calculation
-            updateSimulation();
+            products.forEach(product => {
+                galleryHTML += `
+                    <div class="product-card" style="background: white; border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-md); cursor: pointer;" onclick="showProductDetails('${product.id}')">
+                        <div class="product-image" style="height: 150px; background: var(--gradient-primary); border-radius: var(--radius-md); margin-bottom: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 48px;">
+                            <i class="fas ${product.icon || 'fa-microchip'}"></i>
+                        </div>
+                        <h4 style="margin-bottom: 8px; color: var(--text-primary);">${product.name}</h4>
+                        <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 12px;">${product.description}</p>
+                        <div class="product-specs" style="font-size: 12px; color: var(--text-muted);">
+                            ${product.specs ? product.specs.map(spec => `<div>• ${spec}</div>`).join('') : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            galleryHTML += '</div>';
+            container.innerHTML = galleryHTML;
         }
 
-        // Initialize a chart
-        function initializeChart(index, output) {
-            const ctx = document.getElementById(`chart-${index}`);
-            if (ctx) {
-                simulationChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            label: output.name,
-                            data: [],
-                            borderColor: 'rgb(75, 192, 192)',
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            tension: 0.1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        },
-                        plugins: {
+        // Create product comparison
+        function createProductComparison(container, productShowcase) {
+            const products = productShowcase.products || [];
+            let comparisonHTML = `
+                <div class="product-comparison-table" style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; background: white; border-radius: var(--radius-lg); overflow: hidden;">
+                        <thead>
+                            <tr style="background: var(--gradient-primary); color: white;">
+                                <th style="padding: 16px; text-align: left;">产品特性</th>
+            `;
+            
+            products.forEach(product => {
+                comparisonHTML += `<th style="padding: 16px; text-align: center;">${product.name}</th>`;
+            });
+            
+            comparisonHTML += `
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            // Add comparison rows
+            const features = ['分辨率', '采样率', '通道数', '带宽', '价格'];
+            features.forEach((feature, index) => {
+                comparisonHTML += `
+                    <tr style="border-bottom: 1px solid var(--border-light); ${index % 2 === 0 ? 'background: var(--accent-bg);' : ''}">
+                        <td style="padding: 12px; font-weight: 500;">${feature}</td>
+                `;
+                
+                products.forEach(product => {
+                    const value = product.features && product.features[feature] ? product.features[feature] : '-';
+                    comparisonHTML += `<td style="padding: 12px; text-align: center;">${value}</td>`;
+                });
+                
+                comparisonHTML += '</tr>';
+            });
+            
+            comparisonHTML += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            container.innerHTML = comparisonHTML;
+        }
+
+        // Show product details
+        function showProductDetails(productId) {
+            showNotification(`查看产品详情: ${productId}`, 'info');
+        }
+
+        // Show default simulation (kept for backward compatibility)
+        function showDefaultSimulation(container) {
+            showDefaultProductShowcase(container);
+        }
+
+        // Initialize chart
+        function initChart() {
+            const ctx = document.getElementById('simulation-chart').getContext('2d');
+            const data = generateSineWave(1000, 1.0);
+            
+            simulationChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.x,
+                    datasets: [{
+                        label: '信号波形',
+                        data: data.y,
+                        borderColor: '#007aff',
+                        backgroundColor: 'rgba(0, 122, 255, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
                             title: {
                                 display: true,
-                                text: output.description || output.name
+                                text: '时间 (ms)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: '幅度 (V)'
                             }
                         }
                     }
-                });
-            }
-        }
-
-        // Update parameter value and recalculate
-        function updateParameter(index, value) {
-            document.getElementById(`param-${index}-value`).textContent = value;
-            updateSimulation();
-        }
-
-        // Update simulation calculations and charts
-        function updateSimulation() {
-            if (!currentSimulation || !currentSimulation.parameters) return;
-
-            // Get current parameter values
-            const params = {};
-            currentSimulation.parameters.forEach((param, index) => {
-                const element = document.getElementById(`param-${index}`);
-                if (element) {
-                    params[param.name] = parseFloat(element.value);
                 }
             });
-
-            // Perform calculations based on simulation type
-            if (currentSimulation.type === 'pid-control') {
-                updatePIDSimulation(params);
-            } else if (currentSimulation.type === 'circuit-analysis') {
-                updateCircuitSimulation(params);
-            } else {
-                // Generic simulation update
-                updateGenericSimulation(params);
-            }
         }
 
-        // Update PID control simulation
-        function updatePIDSimulation(params) {
-            const kp = params['比例增益'] || params['Kp'] || 1;
-            const ki = params['积分增益'] || params['Ki'] || 0.1;
-            const kd = params['微分增益'] || params['Kd'] || 0.01;
-
-            // Generate PID response data
-            const timeData = [];
-            const responseData = [];
-            const setpointData = [];
-            const errorData = [];
-
-            let error = 1; // Initial error
-            let integral = 0;
-            let previousError = 0;
-
-            for (let t = 0; t <= 10; t += 0.1) {
-                timeData.push(t.toFixed(1));
-                
-                // PID calculation
-                integral += error * 0.1;
-                const derivative = (error - previousError) / 0.1;
-                const output = kp * error + ki * integral + kd * derivative;
-                
-                // Simple plant model (first-order system)
-                const response = 1 - Math.exp(-output * t / 5);
-                responseData.push(response);
-                setpointData.push(1); // Setpoint = 1
-                
-                error = 1 - response;
-                errorData.push(error);
-                previousError = error;
-            }
-
-            // Update chart
-            if (simulationChart) {
-                simulationChart.data.labels = timeData;
-                simulationChart.data.datasets = [
-                    {
-                        label: '系统响应',
-                        data: responseData,
-                        borderColor: 'rgb(75, 192, 192)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    },
-                    {
-                        label: '设定值',
-                        data: setpointData,
-                        borderColor: 'rgb(255, 99, 132)',
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    },
-                    {
-                        label: '误差',
-                        data: errorData,
-                        borderColor: 'rgb(255, 205, 86)',
-                        backgroundColor: 'rgba(255, 205, 86, 0.2)',
+        // Initialize default chart
+        function initDefaultChart() {
+            const ctx = document.getElementById('default-chart').getContext('2d');
+            const data = generateSineWave(1000, 1.0);
+            
+            simulationChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.x,
+                    datasets: [{
+                        label: '信号波形',
+                        data: data.y,
+                        borderColor: '#007aff',
+                        backgroundColor: 'rgba(0, 122, 255, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: '时间 (ms)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: '幅度 (V)'
+                            }
+                        }
                     }
-                ];
-                simulationChart.update();
-            }
-
-            // Update value displays
-            const steadyStateError = Math.abs(error);
-            const valueElement = document.getElementById('value-0');
-            if (valueElement) {
-                valueElement.textContent = `${(steadyStateError * 100).toFixed(2)}%`;
-            }
+                }
+            });
         }
 
-        // Update generic simulation
-        function updateGenericSimulation(params) {
-            // Generate some sample data based on parameters
-            const timeData = [];
-            const outputData = [];
-
-            for (let t = 0; t <= 10; t += 0.1) {
-                timeData.push(t.toFixed(1));
-                
-                // Simple mathematical function using first parameter
-                const firstParam = Object.values(params)[0] || 1;
-                const output = Math.sin(t * firstParam / 10) * Math.exp(-t / 10);
-                outputData.push(output);
+        // Generate sine wave data
+        function generateSineWave(frequency, amplitude) {
+            const points = 100;
+            const period = 1000 / frequency; // ms
+            const x = [];
+            const y = [];
+            
+            for (let i = 0; i < points; i++) {
+                const t = (i / points) * period * 2;
+                x.push(t.toFixed(2));
+                y.push((amplitude * Math.sin(2 * Math.PI * frequency * t / 1000)).toFixed(3));
             }
+            
+            return { x, y };
+        }
 
-            // Update chart if available
+        // Update chart
+        function updateChart() {
+            const freq = document.getElementById('freq-slider').value;
+            const amp = document.getElementById('amp-slider').value;
+            
+            document.getElementById('freq-value').textContent = freq;
+            document.getElementById('amp-value').textContent = amp;
+            
             if (simulationChart) {
-                simulationChart.data.labels = timeData;
-                simulationChart.data.datasets[0].data = outputData;
+                const data = generateSineWave(parseInt(freq), parseFloat(amp));
+                simulationChart.data.labels = data.x;
+                simulationChart.data.datasets[0].data = data.y;
                 simulationChart.update();
             }
         }
 
-        // Open dynamic simulation from experiment click
-        function openDynamicSimulation(experiment) {
-            // Create a simple simulation based on experiment type
-            const simulation = {
-                title: experiment.title,
-                type: experiment.type,
-                description: experiment.description,
-                parameters: [
-                    { name: '参数1', type: 'slider', min: 0, max: 100, default: 50, unit: '' },
-                    { name: '参数2', type: 'slider', min: 0, max: 10, default: 5, unit: '' }
-                ],
-                outputs: [
-                    { name: '输出曲线', type: 'chart', description: '实时输出曲线' }
-                ]
-            };
-
-            currentSimulation = simulation;
-            document.getElementById('simulation-title').textContent = simulation.title;
-            createDynamicSimulation(simulation);
+        // Update default simulation
+        function updateDefaultSimulation() {
+            const freq = document.getElementById('default-freq-slider').value;
+            const amp = document.getElementById('default-amp-slider').value;
+            
+            document.getElementById('default-freq-value').textContent = freq;
+            document.getElementById('default-amp-value').textContent = amp;
+            
+            if (simulationChart) {
+                const data = generateSineWave(parseInt(freq), parseFloat(amp));
+                simulationChart.data.labels = data.x;
+                simulationChart.data.datasets[0].data = data.y;
+                simulationChart.update();
+            }
         }
 
-        // Show fallback content if AI generation fails
-        function showFallbackContent() {
-            document.getElementById('knowledge-list').innerHTML = 
-                '<p class="text-gray-500">相关知识点生成失败，请稍后重试</p>';
-            document.getElementById('experiment-list').innerHTML = 
-                '<p class="text-gray-500">推荐实验生成失败，请稍后重试</p>';
-            document.getElementById('simulation-area').innerHTML = `
-                <div class="py-20 text-center">
-                    <i class="fas fa-exclamation-triangle text-6xl text-gray-400 mb-4"></i>
-                    <h3 class="text-xl font-semibold text-gray-600 mb-2">仿真生成失败</h3>
-                    <p class="text-gray-500">请稍后重试或联系技术支持</p>
-                </div>
-            `;
+        // Update parameters
+        function updateParameters() {
+            const sampleRate = document.getElementById('sample-rate-slider').value;
+            const channels = document.getElementById('channels-slider').value;
+            const range = document.getElementById('range-slider').value;
+            
+            document.getElementById('sample-rate-value').textContent = sampleRate;
+            document.getElementById('channels-value').textContent = channels;
+            document.getElementById('range-value').textContent = `±${range}`;
+            
+            // Update system status
+            const memoryUsage = Math.min(95, Math.max(10, (sampleRate * channels / 1000).toFixed(0)));
+            const dataRate = (sampleRate * channels * 2 / 1000000).toFixed(1);
+            
+            document.getElementById('memory-usage').textContent = `${memoryUsage}%`;
+            document.getElementById('data-rate').textContent = `${dataRate} MB/s`;
+            
+            if (memoryUsage > 80) {
+                document.getElementById('buffer-status').textContent = '警告';
+                document.getElementById('system-state').textContent = '高负载';
+                document.getElementById('system-state').style.color = '#ff3b30';
+            } else {
+                document.getElementById('buffer-status').textContent = '正常';
+                document.getElementById('system-state').textContent = '就绪';
+                document.getElementById('system-state').style.color = 'var(--brand-accent)';
+            }
+        }
+
+        // Show technology modal
+        function showTechnologyModal(title, description) {
+            showNotification(`相关技术: ${title}`, 'info');
+        }
+
+        // Show configuration
+        function showConfiguration(config) {
+            showNotification(`推荐配置: ${config.title}`, 'info');
+        }
+
+        // Run default experiment
+        function runDefaultExperiment(type) {
+            const experiments = {
+                'basic_daq': '基础数据采集实验',
+                'signal_gen': '信号发生器实验',
+                'frequency_analysis': '频谱分析实验'
+            };
+            showNotification(`启动实验: ${experiments[type]}`, 'info');
         }
 
         // Rate answer
-        function rateAnswer(isHelpful) {
-            if (!currentAnswer) return;
-            
-            fetch('/api/llm/rate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    answer_id: currentAnswer.id || 'unknown',
-                    rating: isHelpful ? 'helpful' : 'unhelpful'
-                })
-            })
-            .then(response => {
-                if (response.ok) {
-                    showNotification('感谢您的反馈！', 'success');
-                } else {
-                    showNotification('反馈提交失败，请稍后再试', 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error rating answer:', error);
-                showNotification('反馈提交失败，请稍后再试', 'error');
-            });
+        function rateAnswer(helpful) {
+            const message = helpful ? '感谢您的反馈！' : '我们会继续改进回答质量';
+            showNotification(message, helpful ? 'success' : 'info');
         }
 
         // Show notification
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
-            notification.className = 'fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 transition-all duration-300';
-            
-            switch (type) {
-                case 'success':
-                    notification.classList.add('bg-green-500', 'text-white');
-                    break;
-                case 'error':
-                    notification.classList.add('bg-red-500', 'text-white');
-                    break;
-                default:
-                    notification.classList.add('bg-blue-500', 'text-white');
-            }
-            
+            notification.className = `notification ${type}`;
             notification.textContent = message;
             document.body.appendChild(notification);
             
             setTimeout(() => {
-                notification.remove();
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
             }, 3000);
         }
 
         // Initialize MathJax
         function initMathJax() {
             if (window.MathJax) {
-                window.MathJax = {
-                    tex: {
-                        inlineMath: [['$', '$'], ['\\(', '\\)']],
-                        displayMath: [['$$', '$$'], ['\\[', '\\]']],
-                        processEscapes: true,
-                        processEnvironments: true
-                    },
-                    options: {
-                        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-                    }
-                };
+                MathJax.typesetPromise().catch((err) => console.log(err.message));
             }
         }
 
         // Initialize code highlighting
         function initCodeHighlighting() {
             if (window.hljs) {
-                document.querySelectorAll('pre code').forEach((block) => {
-                    hljs.highlightElement(block);
-                });
+                hljs.highlightAll();
             }
         }
 
-        // Show knowledge modal with AI-generated content
-        function showKnowledgeModal(knowledgeTitle, knowledgeDescription) {
-            // Create modal
-            const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 flex items-center justify-center z-50';
-            modal.innerHTML = `
-                <div class="fixed inset-0 bg-black opacity-50"></div>
-                <div class="bg-white rounded-lg shadow-xl z-10 w-full max-w-5xl max-h-[95vh] overflow-y-auto relative">
-                    <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-10" id="close-knowledge-modal">
-                        <i class="fas fa-times text-xl"></i>
-                    </button>
-                    
-                    <!-- Header -->
-                    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6">
-                        <h2 class="text-3xl font-bold mb-2">${knowledgeTitle}</h2>
-                        <p class="text-blue-100">${knowledgeDescription || '深入了解相关概念和应用'}</p>
-                    </div>
-                    
-                    <!-- Content -->
-                    <div class="p-6">
-                        <!-- AI Generated Detailed Content -->
-                        <div class="mb-8">
-                            <div class="bg-white rounded-lg border border-gray-200">
-                                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
-                                    <h3 class="text-xl font-bold text-gray-800">
-                                        <i class="fas fa-lightbulb mr-2 text-yellow-500"></i>
-                                        详细解释
-                                    </h3>
-                                </div>
-                                <div class="p-6">
-                                    <div id="knowledge-detailed-content" class="prose max-w-none">
-                                        <div class="flex items-center justify-center py-8">
-                                            <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600 mr-3"></div>
-                                            <span class="text-gray-600">AI正在生成${knowledgeTitle}的详细解释...</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Related Content Grid -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                            <!-- Sub Knowledge Points -->
-                            <div class="bg-blue-50 rounded-lg border border-blue-200">
-                                <div class="bg-blue-100 px-4 py-3 border-b border-blue-200">
-                                    <h3 class="text-lg font-bold text-blue-800">
-                                        <i class="fas fa-sitemap mr-2"></i>相关概念
-                                    </h3>
-                                </div>
-                                <div class="p-4">
-                                    <div id="knowledge-sub-concepts" class="space-y-3">
-                                        <div class="flex items-center justify-center py-4">
-                                            <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-600 mr-2"></div>
-                                            <span class="text-gray-600">加载中...</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Practical Applications -->
-                            <div class="bg-green-50 rounded-lg border border-green-200">
-                                <div class="bg-green-100 px-4 py-3 border-b border-green-200">
-                                    <h3 class="text-lg font-bold text-green-800">
-                                        <i class="fas fa-cogs mr-2"></i>实际应用
-                                    </h3>
-                                </div>
-                                <div class="p-4">
-                                    <div id="knowledge-applications" class="space-y-3">
-                                        <div class="flex items-center justify-center py-4">
-                                            <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-green-600 mr-2"></div>
-                                            <span class="text-gray-600">加载中...</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Examples and Exercises -->
-                        <div class="bg-purple-50 rounded-lg border border-purple-200 mb-8">
-                            <div class="bg-purple-100 px-4 py-3 border-b border-purple-200">
-                                <h3 class="text-lg font-bold text-purple-800">
-                                    <i class="fas fa-calculator mr-2"></i>示例与练习
-                                </h3>
-                            </div>
-                            <div class="p-4">
-                                <div id="knowledge-examples" class="space-y-4">
-                                    <div class="flex items-center justify-center py-6">
-                                        <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-purple-600 mr-2"></div>
-                                        <span class="text-gray-600">AI正在生成相关示例...</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Action Buttons -->
-                        <div class="flex justify-center space-x-4">
-                            <button onclick="askDetailedQuestion('${knowledgeTitle}')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                                <i class="fas fa-question-circle mr-2"></i>深入提问
-                            </button>
-                            <button onclick="findRelatedExperiments('${knowledgeTitle}')" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                                <i class="fas fa-flask mr-2"></i>相关实验
-                            </button>
-                            <button onclick="generatePracticeProblems('${knowledgeTitle}')" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                                <i class="fas fa-pencil-alt mr-2"></i>练习题目
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
+        // 语言切换功能
+        function switchLanguage(lang) {
+            if (lang === 'zh') {
+                document.documentElement.lang = 'zh-CN';
+                document.title = '知识库 - 锐视测控平台';
+            } else if (lang === 'en') {
+                document.documentElement.lang = 'en';
+                document.title = 'Knowledge Base - SeeSharp Platform';
+            }
             
-            // Add to document
-            document.body.appendChild(modal);
-            
-            // Close modal events
-            document.getElementById('close-knowledge-modal').addEventListener('click', function() {
-                document.body.removeChild(modal);
-            });
-            
-            // Click background to close modal
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    document.body.removeChild(modal);
+            // 更新语言切换按钮状态
+            document.querySelectorAll('.language-switcher button').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
                 }
             });
             
-            // Generate detailed knowledge content
-            generateDetailedKnowledgeContent(knowledgeTitle, knowledgeDescription);
+            console.log('Language switched to:', lang);
         }
 
-        // Generate detailed knowledge content using AI
-        function generateDetailedKnowledgeContent(knowledgeTitle, knowledgeDescription) {
-            // Generate detailed explanation
-            const detailedQuestion = `请详细解释"${knowledgeTitle}"这个概念，包括其定义、原理、重要性和在实际中的应用。请用通俗易懂的语言解释，并提供具体的例子。`;
-            
-            fetch('/api/llm/ask', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    question: detailedQuestion,
-                    provider: null,
-                    model: null,
-                    options: {}
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                displayDetailedKnowledgeContent(data.content);
-            })
-            .catch(error => {
-                console.error('Error generating detailed knowledge content:', error);
-                document.getElementById('knowledge-detailed-content').innerHTML = 
-                    '<p class="text-red-600">详细内容生成失败，请稍后重试</p>';
-            });
-            
-            // Generate related content
-            const relatedContentQuestion = `关于"${knowledgeTitle}"，请生成相关的概念、实际应用和示例练习。`;
-            
-            fetch('/api/llm/generate-related-content', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    question: relatedContentQuestion,
-                    answer: `${knowledgeTitle}是一个重要的概念，需要深入理解其原理和应用。`
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    displayKnowledgeRelatedContent(data);
-                } else {
-                    showKnowledgeContentError();
-                }
-            })
-            .catch(error => {
-                console.error('Error generating knowledge related content:', error);
-                showKnowledgeContentError();
-            });
-        }
-
-        // Display detailed knowledge content
-        function displayDetailedKnowledgeContent(content) {
-            const contentContainer = document.getElementById('knowledge-detailed-content');
-            
-            // Format the content
-            let formattedContent = content.replace(/\n/g, '<br>');
-            formattedContent = formattedContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            formattedContent = formattedContent.replace(/\*(.*?)\*/g, '<em>$1</em>');
-            
-            contentContainer.innerHTML = `<div class="prose max-w-none text-gray-700 leading-relaxed">${formattedContent}</div>`;
-            
-            // Re-render MathJax if available
-            if (window.MathJax) {
-                MathJax.typesetPromise([contentContainer]).catch((err) => console.log(err.message));
-            }
-        }
-
-        // Display knowledge related content
-        function displayKnowledgeRelatedContent(data) {
-            // Display sub concepts
-            const subConceptsContainer = document.getElementById('knowledge-sub-concepts');
-            if (data.knowledge_points && data.knowledge_points.length > 0) {
-                subConceptsContainer.innerHTML = '';
-                data.knowledge_points.forEach(concept => {
-                    const item = document.createElement('div');
-                    item.className = 'bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-blue-100';
-                    item.innerHTML = `
-                        <div class="flex items-center justify-between">
-                            <span class="font-medium text-blue-800">${concept.title}</span>
-                            <i class="fas fa-chevron-right text-blue-500"></i>
-                        </div>
-                        <p class="text-sm text-gray-600 mt-1">${concept.description || ''}</p>
-                    `;
-                    item.onclick = () => askDetailedQuestion(concept.title);
-                    subConceptsContainer.appendChild(item);
-                });
-            } else {
-                subConceptsContainer.innerHTML = '<p class="text-gray-500">暂无相关概念</p>';
-            }
-            
-            // Display applications
-            const applicationsContainer = document.getElementById('knowledge-applications');
-            if (data.experiments && data.experiments.length > 0) {
-                applicationsContainer.innerHTML = '';
-                data.experiments.forEach(application => {
-                    const item = document.createElement('div');
-                    item.className = 'bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-green-100';
-                    item.innerHTML = `
-                        <div class="flex items-center justify-between">
-                            <span class="font-medium text-green-800">${application.title}</span>
-                            <i class="fas fa-external-link-alt text-green-500"></i>
-                        </div>
-                        <p class="text-sm text-gray-600 mt-1">${application.description || ''}</p>
-                    `;
-                    item.onclick = () => findRelatedExperiments(application.title);
-                    applicationsContainer.appendChild(item);
-                });
-            } else {
-                applicationsContainer.innerHTML = '<p class="text-gray-500">暂无实际应用</p>';
-            }
-            
-            // Display examples
-            const examplesContainer = document.getElementById('knowledge-examples');
-            if (data.simulation && data.simulation.title) {
-                examplesContainer.innerHTML = `
-                    <div class="bg-white p-4 rounded-lg shadow-sm border border-purple-100">
-                        <h4 class="text-lg font-bold text-purple-800 mb-2">${data.simulation.title}</h4>
-                        <p class="text-gray-600 mb-4">${data.simulation.description || ''}</p>
-                        <div class="flex justify-center">
-                            <button onclick="generatePracticeProblems('${data.simulation.title}')" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
-                                <i class="fas fa-play mr-2"></i>开始练习
-                            </button>
-                        </div>
-                    </div>
-                `;
-            } else {
-                examplesContainer.innerHTML = `
-                    <div class="text-gray-500 text-center py-4">
-                        <i class="fas fa-info-circle mr-2"></i>
-                        暂无相关示例
-                    </div>
-                `;
-            }
-        }
-
-        // Show knowledge content error
-        function showKnowledgeContentError() {
-            document.getElementById('knowledge-sub-concepts').innerHTML = 
-                '<p class="text-red-600">相关概念生成失败</p>';
-            document.getElementById('knowledge-applications').innerHTML = 
-                '<p class="text-red-600">实际应用生成失败</p>';
-            document.getElementById('knowledge-examples').innerHTML = 
-                '<p class="text-red-600">示例生成失败</p>';
-        }
-
-        // Ask detailed question about knowledge point
-        function askDetailedQuestion(topic) {
-            const question = `请详细解释${topic}的相关概念、原理和应用，并提供具体的例子和计算方法`;
-            window.open(`/static/answer.html?q=${encodeURIComponent(question)}`, '_blank');
-        }
-
-        // Find related experiments
-        function findRelatedExperiments(topic) {
-            const question = `请推荐与${topic}相关的实验项目，包括实验目的、步骤、所需设备和预期结果`;
-            window.open(`/static/answer.html?q=${encodeURIComponent(question)}`, '_blank');
-        }
-
-        // Generate practice problems
-        function generatePracticeProblems(topic) {
-            const question = `请为${topic}生成一些练习题目，包括基础题、应用题和综合题，并提供详细的解答步骤`;
-            window.open(`/static/answer.html?q=${encodeURIComponent(question)}`, '_blank');
-        }
+        // 初始化语言切换器
+        document.addEventListener('DOMContentLoaded', function() {
+            const defaultLang = 'zh';
+            switchLanguage(defaultLang);
+        });
     </script>
 </body>
 </html>

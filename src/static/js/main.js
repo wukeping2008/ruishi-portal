@@ -140,8 +140,12 @@ async function handleAISearch() {
         console.log('Main page received data:', data);
         
         if (data.content) {
-            // 显示答案模态框
-            showAnswerModal(question, data);
+            // 存储问题和答案到localStorage
+            localStorage.setItem('currentQuestion', question);
+            localStorage.setItem('currentAnswer', JSON.stringify(data));
+            
+            // 跳转到答案页面
+            window.open('answer.html', '_blank');
             
             // 清空搜索框
             searchInput.value = '';
@@ -1531,4 +1535,28 @@ function showNotification(messageKey, type = 'info', params = {}) {
     setTimeout(() => {
         notification.remove();
     }, 3000);
+}
+
+// 追问功能的辅助函数
+function askFollowUpQuestion() {
+    const input = prompt('请输入您的追问：');
+    if (input && input.trim()) {
+        // 关闭当前模态框
+        const modal = document.querySelector('.fixed.inset-0');
+        if (modal) {
+            document.body.removeChild(modal);
+        }
+        
+        // 设置搜索框内容并触发搜索
+        const searchInput = document.getElementById('ai-search-input');
+        if (searchInput) {
+            searchInput.value = input.trim();
+            handleAISearch();
+        }
+    }
+}
+
+// 获取当前语言的辅助函数
+function getCurrentLanguage() {
+    return currentLanguage || 'zh';
 }

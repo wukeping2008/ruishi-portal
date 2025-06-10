@@ -147,9 +147,9 @@ def generate_related_content():
         question = data['question']
         answer = data['answer']
         
-        # 生成相关知识点的提示词
-        knowledge_prompt = f"""
-基于以下问题和回答，请生成4个最相关的PXI技术知识点。每个知识点应该是具体的、可学习的概念。
+        # 生成相关技术的提示词
+        technology_prompt = f"""
+基于以下问题和回答，请生成4个最相关的PXI技术领域。每个技术应该是具体的、实用的技术概念。
 
 问题：{question}
 回答：{answer}
@@ -157,17 +157,17 @@ def generate_related_content():
 请以JSON格式返回，格式如下：
 {{
     "knowledge_points": [
-        {{"title": "PXI系统架构", "description": "PXI系统的基本架构和组件"}},
-        {{"title": "数据采集原理", "description": "PXI数据采集的工作原理"}},
-        {{"title": "同步触发机制", "description": "PXI系统的同步和触发技术"}},
-        {{"title": "软件驱动开发", "description": "PXI模块的软件驱动开发"}}
+        {{"title": "PXI总线技术", "description": "PXI总线的技术原理和应用"}},
+        {{"title": "高速数据采集", "description": "高速数据采集技术和实现方法"}},
+        {{"title": "实时信号处理", "description": "实时信号处理算法和硬件实现"}},
+        {{"title": "同步测量技术", "description": "多通道同步测量的技术要点"}}
     ]
 }}
 """
 
-        # 生成推荐实验的提示词
-        experiment_prompt = f"""
-基于以下问题和回答，请生成4个最相关的PXI实验项目。每个实验应该是可操作的、有教育意义的。
+        # 生成推荐配置的提示词
+        configuration_prompt = f"""
+基于以下问题和回答，请生成4个最相关的PXI系统配置方案。每个配置应该是实际可行的硬件配置。
 
 问题：{question}
 回答：{answer}
@@ -175,34 +175,44 @@ def generate_related_content():
 请以JSON格式返回，格式如下：
 {{
     "experiments": [
-        {{"title": "PXI数据采集实验", "type": "data_acquisition", "description": "使用PXI模块进行数据采集的实验"}},
-        {{"title": "信号发生实验", "type": "signal_generation", "description": "PXI信号发生器的使用实验"}},
-        {{"title": "自动化测试实验", "type": "automation", "description": "基于PXI的自动化测试系统实验"}},
-        {{"title": "系统集成实验", "type": "integration", "description": "PXI系统集成和配置实验"}}
+        {{"title": "基础数据采集配置", "type": "basic_daq", "description": "适合入门级数据采集应用的PXI配置"}},
+        {{"title": "高精度测量配置", "type": "precision", "description": "高精度测量应用的专业PXI配置"}},
+        {{"title": "多通道同步配置", "type": "multichannel", "description": "多通道同步采集的PXI系统配置"}},
+        {{"title": "自动化测试配置", "type": "automation", "description": "自动化测试系统的完整PXI配置"}}
     ]
 }}
 """
 
-        # 生成交互仿真的提示词
-        simulation_prompt = f"""
-基于以下问题和回答，请设计一个PXI相关的交互式仿真实验。仿真应该包含可调节的参数和实时的可视化效果。
+        # 生成产品展示的提示词
+        product_prompt = f"""
+基于以下问题和回答，请生成简仪科技相关产品的展示内容。产品展示应该包含图片、规格和特点。
 
 问题：{question}
 回答：{answer}
 
-请以JSON格式返回仿真设计，格式如下：
+请以JSON格式返回产品展示设计，格式如下：
 {{
     "simulation": {{
-        "title": "PXI数据采集仿真",
-        "type": "pxi-simulation",
-        "description": "模拟PXI数据采集过程的交互式仿真",
-        "parameters": [
-            {{"name": "采样率", "type": "slider", "min": 1000, "max": 100000, "default": 10000, "unit": "Hz"}},
-            {{"name": "通道数", "type": "slider", "min": 1, "max": 32, "default": 8, "unit": "个"}}
-        ],
-        "outputs": [
-            {{"name": "采集波形", "type": "chart", "description": "实时显示采集的信号波形"}},
-            {{"name": "采样精度", "type": "value", "description": "当前采样精度值"}}
+        "title": "简仪科技产品展示",
+        "type": "product-gallery",
+        "description": "根据您的问题推荐的简仪科技产品",
+        "products": [
+            {{
+                "id": "pxi-daq-001",
+                "name": "PXI数据采集模块",
+                "icon": "fa-microchip",
+                "description": "高精度多通道数据采集模块",
+                "specs": ["16位分辨率", "1MS/s采样率", "32通道同步"],
+                "features": {{"分辨率": "16位", "采样率": "1MS/s", "通道数": "32", "带宽": "100kHz", "价格": "联系销售"}}
+            }},
+            {{
+                "id": "pxi-awg-001", 
+                "name": "PXI任意波形发生器",
+                "icon": "fa-wave-square",
+                "description": "高性能任意波形发生器",
+                "specs": ["100MHz带宽", "任意波形", "双通道输出"],
+                "features": {{"分辨率": "14位", "采样率": "500MS/s", "通道数": "2", "带宽": "100MHz", "价格": "联系销售"}}
+            }}
         ]
     }}
 }}
@@ -211,21 +221,21 @@ def generate_related_content():
         # 生成三种内容
         try:
             knowledge_result = model_selector.ask_question(
-                question=knowledge_prompt,
+                question=technology_prompt,
                 provider=None,
                 model=None,
                 options={'temperature': 0.7}
             )
             
             experiment_result = model_selector.ask_question(
-                question=experiment_prompt,
+                question=configuration_prompt,
                 provider=None,
                 model=None,
                 options={'temperature': 0.7}
             )
             
             simulation_result = model_selector.ask_question(
-                question=simulation_prompt,
+                question=product_prompt,
                 provider=None,
                 model=None,
                 options={'temperature': 0.7}

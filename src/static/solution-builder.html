@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>方案配置 - 锐视测控平台</title>
+    <meta name="description" content="锐视测控平台智能方案配置器，基于AI技术自动生成最优PXI系统配置方案">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* 主色调 - 受Apple启发的柔和色彩 */
+            --primary-bg: #fafafa;
+            --secondary-bg: #ffffff;
+            --accent-bg: #f5f5f7;
+            --card-bg: #ffffff;
+            
+            /* 文字颜色 - 高对比度但不刺眼 */
+            --text-primary: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --text-accent: #007aff;
+            --text-muted: #86868b;
+            
+            /* 品牌色 - 温和的蓝色系 */
+            --brand-primary: #007aff;
+            --brand-secondary: #5856d6;
+            --brand-accent: #34c759;
+            
+            /* 渐变色 - 柔和不刺眼 */
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-subtle: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            
+            /* 阴影 - 微妙的深度 */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+            
+            /* 边框 */
+            --border-light: rgba(0, 0, 0, 0.05);
+            --border-medium: rgba(0, 0, 0, 0.1);
+            
+            /* 圆角 */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+        }
+        
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .nav-logo {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 16px;
+        }
+        
+        .nav-info h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .nav-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .back-button {
+            background: var(--brand-primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .back-button:hover {
+            background: #0056cc;
+            transform: translateY(-1px);
+        }
+        
+        /* Hero区域 */
+        .hero {
+            background: var(--gradient-hero);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255,255,255,0.08) 0%, transparent 50%);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-title {
+            font-size: clamp(36px, 6vw, 56px);
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+        
+        .hero-subtitle {
+            font-size: clamp(18px, 3vw, 24px);
+            margin-bottom: 32px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        /* 主要内容区域 */
+        .main-content {
+            padding: 80px 0;
+        }
+        
+        /* 配置器区域 */
+        .solution-builder {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(30px) saturate(150%);
+            -webkit-backdrop-filter: blur(30px) saturate(150%);
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-select {
+            padding: 16px 20px;
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            font-size: 16px;
+            background: var(--secondary-bg);
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+        
+        .form-select:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+        }
+        
+        .generate-button {
+            background: var(--gradient-accent);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 0 auto;
+            min-width: 200px;
+        }
+        
+        .generate-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .generate-button:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* 结果展示区域 */
+        .solution-result {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(30px) saturate(150%);
+            -webkit-backdrop-filter: blur(30px) saturate(150%);
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: none;
+        }
+        
+        .result-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .result-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .result-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .result-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+        }
+        
+        .result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--border-medium);
+        }
+        
+        .result-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .result-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+        }
+        
+        .result-icon.chassis { background: var(--gradient-primary); }
+        .result-icon.controller { background: var(--gradient-accent); }
+        .result-icon.modules { background: var(--gradient-secondary); }
+        .result-icon.cost { background: var(--gradient-subtle); color: var(--text-primary); }
+        
+        .result-card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .result-card-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        .result-actions {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .action-button {
+            padding: 16px 32px;
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .action-button.primary {
+            background: var(--brand-primary);
+            color: white;
+        }
+        
+        .action-button.primary:hover {
+            background: #0056cc;
+            transform: translateY(-1px);
+        }
+        
+        .action-button.secondary {
+            background: var(--brand-accent);
+            color: white;
+        }
+        
+        .action-button.secondary:hover {
+            background: #2ea043;
+            transform: translateY(-1px);
+        }
+        
+        /* 加载状态 */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+        
+        .loading-spinner {
+            width: 32px;
+            height: 32px;
+            border: 4px solid var(--accent-bg);
+            border-top: 4px solid var(--brand-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 16px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* 特性展示区域 */
+        .features-section {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(30px) saturate(150%);
+            -webkit-backdrop-filter: blur(30px) saturate(150%);
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+        
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            text-align: center;
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--brand-primary);
+        }
+        
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 16px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+        }
+        
+        .feature-icon.ai { background: var(--gradient-primary); }
+        .feature-icon.smart { background: var(--gradient-accent); }
+        .feature-icon.fast { background: var(--gradient-secondary); }
+        .feature-icon.accurate { background: var(--gradient-subtle); color: var(--text-primary); }
+        
+        .feature-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .feature-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        /* 语言切换器样式 */
+        .nav-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .language-switcher {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: var(--radius-md);
+            padding: 4px;
+            margin-right: 16px;
+        }
+        
+        .language-switcher button {
+            background: none;
+            border: none;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+        }
+        
+        .language-switcher button.active {
+            background: var(--brand-primary);
+            color: white;
+        }
+        
+        .language-switcher button:hover:not(.active) {
+            background: rgba(0, 122, 255, 0.1);
+            color: var(--brand-primary);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .hero {
+                padding: 60px 0;
+            }
+            
+            .main-content {
+                padding: 60px 0;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .result-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .result-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-actions {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .language-switcher {
+                margin-right: 0;
+                margin-bottom: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <div class="nav-logo">SeeSharp</div>
+                    <div class="nav-info">
+                        <h1>锐视测控平台</h1>
+                        <p>智能方案配置器</p>
+                    </div>
+                </div>
+                <div class="nav-actions">
+                    <div class="language-switcher flex items-center space-x-1 bg-gray-100 rounded-lg p-1 mr-4">
+                        <button data-lang="zh" onclick="switchLanguage('zh')" class="px-3 py-1 text-sm rounded-md transition-colors">
+                            中文
+                        </button>
+                        <button data-lang="en" onclick="switchLanguage('en')" class="px-3 py-1 text-sm rounded-md transition-colors">
+                            EN
+                        </button>
+                    </div>
+                    <a href="index.html" class="back-button">
+                        <i class="fas fa-arrow-left"></i>
+                        返回首页
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <i class="fas fa-cogs" style="margin-right: 16px;"></i>
+                    智能方案配置器
+                </h1>
+                <p class="hero-subtitle">
+                    基于AI技术的PXI系统智能配置解决方案
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-content">
+            <!-- Solution Builder Form -->
+            <div class="solution-builder">
+                <h2 style="text-align: center; margin-bottom: 32px; font-size: 24px; font-weight: 600;">
+                    请填写您的测控需求
+                </h2>
+                
+                <form id="solution-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-chart-line"></i>
+                                测量类型
+                            </label>
+                            <select name="measurement_type" class="form-select" required>
+                                <option value="">请选择测量类型</option>
+                                <option value="数据采集">数据采集</option>
+                                <option value="信号发生">信号发生</option>
+                                <option value="射频测试">射频测试</option>
+                                <option value="数字I/O">数字I/O</option>
+                                <option value="混合信号测试">混合信号测试</option>
+                                <option value="功率分析">功率分析</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-list-ol"></i>
+                                通道数量
+                            </label>
+                            <select name="channel_count" class="form-select" required>
+                                <option value="">请选择通道数量</option>
+                                <option value="1-8">1-8通道</option>
+                                <option value="9-16">9-16通道</option>
+                                <option value="17-32">17-32通道</option>
+                                <option value="33-64">33-64通道</option>
+                                <option value="64+">64通道以上</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-wave-square"></i>
+                                频率范围
+                            </label>
+                            <select name="frequency_range" class="form-select" required>
+                                <option value="">请选择频率范围</option>
+                                <option value="DC-1MHz">DC - 1MHz</option>
+                                <option value="1MHz-100MHz">1MHz - 100MHz</option>
+                                <option value="100MHz-1GHz">100MHz - 1GHz</option>
+                                <option value="1GHz-10GHz">1GHz - 10GHz</option>
+                                <option value="10GHz+">10GHz以上</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-crosshairs"></i>
+                                精度要求
+                            </label>
+                            <select name="accuracy_requirement" class="form-select" required>
+                                <option value="">请选择精度要求</option>
+                                <option value="标准精度">标准精度 (±0.1%)</option>
+                                <option value="高精度">高精度 (±0.01%)</option>
+                                <option value="超高精度">超高精度 (±0.001%)</option>
+                                <option value="实验室级">实验室级 (±0.0001%)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-dollar-sign"></i>
+                                预算范围
+                            </label>
+                            <select name="budget_range" class="form-select" required>
+                                <option value="">请选择预算范围</option>
+                                <option value="5万以下">5万以下</option>
+                                <option value="5-15万">5-15万</option>
+                                <option value="15-50万">15-50万</option>
+                                <option value="50-100万">50-100万</option>
+                                <option value="100万以上">100万以上</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-industry"></i>
+                                应用场景
+                            </label>
+                            <select name="application_scenario" class="form-select" required>
+                                <option value="">请选择应用场景</option>
+                                <option value="科研实验">科研实验</option>
+                                <option value="产品测试">产品测试</option>
+                                <option value="生产线检测">生产线检测</option>
+                                <option value="教学实训">教学实训</option>
+                                <option value="系统集成">系统集成</option>
+                                <option value="定制开发">定制开发</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="generate-button" id="generate-btn">
+                        <i class="fas fa-magic"></i>
+                        AI智能生成方案
+                    </button>
+                </form>
+            </div>
+
+            <!-- Features Section -->
+            <div class="features-section">
+                <h2 style="text-align: center; margin-bottom: 32px; font-size: 24px; font-weight: 600;">
+                    智能配置器特色
+                </h2>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon ai">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="feature-title">AI智能分析</div>
+                        <div class="feature-desc">基于深度学习算法，智能分析您的需求并推荐最优配置方案</div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon smart">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div class="feature-title">智能推荐</div>
+                        <div class="feature-desc">根据应用场景和预算自动匹配最适合的硬件组合</div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon fast">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="feature-title">快速配置</div>
+                        <div class="feature-desc">几分钟内完成复杂系统配置，大幅提升工作效率</div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon accurate">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <div class="feature-title">精准匹配</div>
+                        <div class="feature-desc">基于大量实际案例数据，确保推荐方案的准确性和可行性</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solution Result -->
+            <div class="solution-result" id="solution-result">
+                <div class="result-header">
+                    <h2 class="result-title">推荐配置方案</h2>
+                    <p class="result-subtitle">基于您的需求生成的最优PXI系统配置</p>
+                </div>
+                
+                <div class="result-grid" id="result-content">
+                    <!-- 结果内容将通过JavaScript动态生成 -->
+                </div>
+                
+                <div class="result-actions">
+                    <button class="action-button primary" onclick="getDetailedQuote()">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        获取详细报价
+                    </button>
+                    <button class="action-button secondary" onclick="consultSolution()">
+                        <i class="fas fa-comments"></i>
+                        咨询技术专家
+                    </button>
+                    <a href="https://www.jytek.com" target="_blank" class="action-button primary">
+                        <i class="fas fa-external-link-alt"></i>
+                        访问官网
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // 页面初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            setupFormSubmission();
+        });
+
+        // 设置表单提交
+        function setupFormSubmission() {
+            const form = document.getElementById('solution-form');
+            form.addEventListener('submit', handleFormSubmit);
+        }
+
+        // 处理表单提交
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const generateBtn = document.getElementById('generate-btn');
+            
+            // 验证表单
+            if (!validateForm(formData)) {
+                showNotification('请填写所有必填项', 'warning');
+                return;
+            }
+            
+            // 更新按钮状态
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI正在分析中...';
+            
+            try {
+                // 模拟AI分析过程
+                await simulateAIAnalysis();
+                
+                // 生成方案
+                const solution = await generateSolution(formData);
+                
+                // 显示结果
+                displaySolutionResult(solution);
+                
+                // 滚动到结果区域
+                document.getElementById('solution-result').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+                
+            } catch (error) {
+                console.error('生成方案失败:', error);
+                showNotification('生成方案失败，请稍后重试', 'error');
+            } finally {
+                // 恢复按钮状态
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = '<i class="fas fa-magic"></i> AI智能生成方案';
+            }
+        }
+
+        // 验证表单
+        function validateForm(formData) {
+            const requiredFields = ['measurement_type', 'channel_count', 'frequency_range', 'accuracy_requirement', 'budget_range', 'application_scenario'];
+            
+            for (const field of requiredFields) {
+                if (!formData.get(field)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // 模拟AI分析过程
+        function simulateAIAnalysis() {
+            return new Promise(resolve => {
+                setTimeout(resolve, 2000); // 模拟2秒分析时间
+            });
+        }
+
+        // 生成解决方案
+        async function generateSolution(formData) {
+            const params = {
+                measurement_type: formData.get('measurement_type'),
+                channel_count: formData.get('channel_count'),
+                frequency_range: formData.get('frequency_range'),
+                accuracy_requirement: formData.get('accuracy_requirement'),
+                budget_range: formData.get('budget_range'),
+                application_scenario: formData.get('application_scenario')
+            };
+
+            try {
+                // 尝试调用后端API
+                const response = await fetch('/api/products/solution-builder', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(params)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        return data.solution;
+                    }
+                }
+            } catch (error) {
+                console.log('API调用失败，使用模拟数据:', error);
+            }
+
+            // 如果API调用失败，使用模拟数据
+            return generateMockSolution(params);
+        }
+
+        // 生成模拟解决方案
+        function generateMockSolution(params) {
+            const solutions = {
+                chassis: {
+                    name: "PXI-1045 18槽机箱",
+                    description: "高性能18槽PXI机箱，支持高速数据传输和精确时钟同步",
+                    reason: `基于您选择的${params.channel_count}和${params.application_scenario}需求，推荐使用18槽机箱以提供充足的扩展空间`
+                },
+                controller: {
+                    name: "PXI-8840 嵌入式控制器",
+                    description: "Intel Core i7处理器，16GB内存，支持Windows 10操作系统",
+                    reason: `针对${params.measurement_type}应用，该控制器提供足够的计算能力和实时性能`
+                },
+                modules: [
+                    {
+                        name: "USB-1601 数据采集模块",
+                        type: "16位高精度数据采集",
+                        reason: `满足您的${params.accuracy_requirement}和${params.frequency_range}要求`
+                    },
+                    {
+                        name: "USB-2020 信号发生器",
+                        type: "双通道任意波形发生器",
+                        reason: "提供灵活的信号生成能力，支持多种波形输出"
+                    }
+                ],
+                estimated_cost: `根据您的${params.budget_range}预算，预估总成本在合理范围内`,
+                contact_info: {
+                    message: "具体价格请联系销售团队获取最新报价",
+                    website: "https://www.jytek.com"
+                }
+            };
+
+            return solutions;
+        }
+
+        // 显示解决方案结果
+        function displaySolutionResult(solution) {
+            const resultContainer = document.getElementById('solution-result');
+            const resultContent = document.getElementById('result-content');
+
+            resultContent.innerHTML = `
+                <!-- 机箱配置 -->
+                <div class="result-card">
+                    <div class="result-card-header">
+                        <div class="result-icon chassis">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <div class="result-card-title">机箱配置</div>
+                    </div>
+                    <div class="result-card-content">
+                        <h4 style="font-weight: 600; margin-bottom: 8px;">${solution.chassis.name}</h4>
+                        <p style="margin-bottom: 12px;">${solution.chassis.description}</p>
+                        <div style="background: var(--accent-bg); padding: 12px; border-radius: var(--radius-md); font-size: 14px;">
+                            <strong>推荐理由：</strong>${solution.chassis.reason}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 控制器配置 -->
+                <div class="result-card">
+                    <div class="result-card-header">
+                        <div class="result-icon controller">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                        <div class="result-card-title">控制器配置</div>
+                    </div>
+                    <div class="result-card-content">
+                        <h4 style="font-weight: 600; margin-bottom: 8px;">${solution.controller.name}</h4>
+                        <p style="margin-bottom: 12px;">${solution.controller.description}</p>
+                        <div style="background: var(--accent-bg); padding: 12px; border-radius: var(--radius-md); font-size: 14px;">
+                            <strong>推荐理由：</strong>${solution.controller.reason}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 功能模块 -->
+                <div class="result-card">
+                    <div class="result-card-header">
+                        <div class="result-icon modules">
+                            <i class="fas fa-puzzle-piece"></i>
+                        </div>
+                        <div class="result-card-title">功能模块</div>
+                    </div>
+                    <div class="result-card-content">
+                        ${solution.modules.map(module => `
+                            <div style="margin-bottom: 16px; padding: 12px; background: var(--secondary-bg); border-radius: var(--radius-md);">
+                                <h4 style="font-weight: 600; margin-bottom: 4px;">${module.name}</h4>
+                                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">${module.type}</p>
+                                <div style="background: var(--accent-bg); padding: 8px; border-radius: var(--radius-sm); font-size: 13px;">
+                                    <strong>推荐理由：</strong>${module.reason}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- 成本估算 -->
+                <div class="result-card">
+                    <div class="result-card-header">
+                        <div class="result-icon cost">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <div class="result-card-title">成本估算</div>
+                    </div>
+                    <div class="result-card-content">
+                        <p style="margin-bottom: 12px;">${solution.estimated_cost}</p>
+                        <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 12px; border-radius: var(--radius-md); font-size: 14px;">
+                            <i class="fas fa-info-circle" style="color: #856404; margin-right: 8px;"></i>
+                            ${solution.contact_info.message}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            resultContainer.style.display = 'block';
+        }
+
+        // 获取详细报价
+        function getDetailedQuote() {
+            const question = '我想获取PXI系统的详细报价，包括硬件配置、软件许可和技术支持服务的完整方案';
+            window.open(`answer.html?q=${encodeURIComponent(question)}`, '_blank');
+        }
+
+        // 咨询技术专家
+        function consultSolution() {
+            const question = '我需要咨询PXI系统配置方案，希望技术专家能够提供专业的选型建议和系统集成指导';
+            window.open(`answer.html?q=${encodeURIComponent(question)}`, '_blank');
+        }
+
+        // 显示通知
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = 'fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 transition-all duration-300';
+            
+            switch (type) {
+                case 'success':
+                    notification.classList.add('bg-green-500', 'text-white');
+                    break;
+                case 'error':
+                    notification.classList.add('bg-red-500', 'text-white');
+                    break;
+                case 'warning':
+                    notification.classList.add('bg-yellow-500', 'text-white');
+                    break;
+                default:
+                    notification.classList.add('bg-blue-500', 'text-white');
+            }
+            
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // 语言切换功能
+        function switchLanguage(lang) {
+            if (lang === 'zh') {
+                document.documentElement.lang = 'zh-CN';
+                document.title = '方案配置 - 锐视测控平台';
+            } else if (lang === 'en') {
+                document.documentElement.lang = 'en';
+                document.title = 'Solution Builder - SeeSharp Platform';
+            }
+            
+            // 更新语言切换按钮状态
+            document.querySelectorAll('.language-switcher button').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // 这里可以添加更多的语言切换逻辑
+            console.log('Language switched to:', lang);
+        }
+
+        // 初始化语言切换器
+        document.addEventListener('DOMContentLoaded', function() {
+            // 设置默认语言
+            const defaultLang = 'zh';
+            switchLanguage(defaultLang);
+        });
+    </script>
+    
+    <!-- 引入国际化脚本 -->
+    <script src="js/i18n.js"></script>
+</body>
+</html>

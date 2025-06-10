@@ -40,8 +40,8 @@ const i18nConfig = {
             home: "首页",
             platform: "锐视测控平台",
             products: "产品中心",
-            solutions: "解决方案",
-            support: "技术支持",
+            solutions: "方案配置",
+            support: "知识库",
             about: "关于我们",
             contact: "官网",
             language: "语言",
@@ -366,6 +366,9 @@ const i18nConfig = {
         knowledgeBase: {
             title: "技术知识库",
             subtitle: "PXI技术文档管理和AI智能检索",
+            heroTitle: "知识库",
+            heroSubtitle: "技术文档搜索、上传与管理中心",
+            backHome: "返回首页",
             tabs: {
                 search: "搜索文档",
                 upload: "上传文档",
@@ -373,22 +376,30 @@ const i18nConfig = {
             },
             search: {
                 placeholder: "搜索技术文档、产品手册、应用笔记...",
+                button: "搜索",
                 categories: {
                     systemArchitecture: "系统架构",
                     productSpecs: "产品规格",
                     softwareDevelopment: "软件开发",
                     applicationNotes: "应用笔记"
                 },
+                categoryDescs: {
+                    systemArchitecture: "PXI系统架构文档",
+                    productSpecs: "产品技术规格书",
+                    softwareDevelopment: "开发指南和API文档",
+                    applicationNotes: "应用案例和解决方案"
+                },
                 results: "搜索结果",
                 popular: "热门文档",
                 noDocuments: "暂无文档，请先上传一些技术资料",
-                loadFailed: "加载失败，请稍后重试"
+                loadFailed: "加载失败，请稍后重试",
+                loading: "加载文档列表..."
             },
             upload: {
                 title: "上传技术文档",
                 selectFile: "选择文件",
                 dragDrop: "点击选择文件或拖拽文件到此处",
-                supportedFormats: "支持 PDF, Word, TXT, Markdown 格式",
+                supportedFormats: "支持 PDF, Word, TXT, Markdown 格式，最大 50MB",
                 category: "文档分类",
                 categories: {
                     general: "通用文档",
@@ -399,8 +410,9 @@ const i18nConfig = {
                     troubleshooting: "故障排除"
                 },
                 upload: "上传文档",
+                uploading: "上传中...",
+                processing: "处理中...",
                 reset: "重置",
-                uploading: "正在上传...",
                 success: "上传成功！",
                 failed: "上传失败",
                 selectFileFirst: "请选择要上传的文件"
@@ -413,7 +425,12 @@ const i18nConfig = {
                 confirmDelete: "确定要删除这个文档吗？此操作不可撤销。",
                 deleteSuccess: "文档删除成功",
                 deleteFailed: "删除文档失败，请稍后重试",
-                refreshed: "文档列表已刷新"
+                refreshed: "文档列表已刷新",
+                loading: "加载文档列表...",
+                empty: "暂无文档",
+                emptyDesc: "请先上传一些技术资料",
+                loadFailed: "加载失败",
+                loadFailedDesc: "请稍后重试"
             },
             support: {
                 needHelp: "需要技术支持或更多资料？",
@@ -468,8 +485,8 @@ const i18nConfig = {
             home: "Home",
             platform: "SeeSharp Platform",
             products: "Products",
-            solutions: "Solutions",
-            support: "Support",
+            solutions: "Solution Builder",
+            support: "Knowledge Base",
             about: "About",
             contact: "Contact",
             language: "Language",

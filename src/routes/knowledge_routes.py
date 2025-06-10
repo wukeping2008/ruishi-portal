@@ -31,27 +31,30 @@ def get_documents():
         page = int(request.args.get('page', 1))
         per_page = int(request.args.get('per_page', 10))
         
-        # 获取所有文档
-        all_docs = knowledge_base.get_all_documents()
+        # 使用数据库知识库搜索文档
+        if search:
+            all_docs = knowledge_base.search_documents(search, limit=100)
+        else:
+            # 由于新的数据库知识库没有get_all_documents方法，我们使用空搜索来获取所有文档
+            all_docs = knowledge_base.search_documents('', limit=1000)
         
         # 分类筛选
         if category:
-            all_docs = [doc for doc in all_docs if doc.doc_type == category]
+            all_docs = [doc for doc in all_docs if doc.get('category') == category]
         
-        # 搜索筛选
-        if search:
-            all_docs = knowledge_base.search_documents(search, limit=100)
-        
-        # 转换为字典格式
+        # 转换为API格式
         documents = []
         for doc in all_docs:
-            doc_dict = doc.to_dict()
-            doc_dict.update({
-                'file_size': f"{len(doc.content) / 1024:.1f} KB",
-                'keywords': doc.content[:100].split()[:5],  # 简单提取关键词
-                'content_summary': doc.content[:200] + "..." if len(doc.content) > 200 else doc.content
+            documents.append({
+                'doc_id': doc.get('id'),
+                'filename': doc.get('original_filename', doc.get('title', 'Unknown')),
+                'title': doc.get('title'),
+                'doc_type': doc.get('category', 'general'),
+                'file_size': f"{doc.get('file_size', 0) / 1024:.1f} KB" if doc.get('file_size') else "Unknown",
+                'upload_time': doc.get('upload_time'),
+                'content_summary': doc.get('content_summary', ''),
+                'category': doc.get('category', 'general')
             })
-            documents.append(doc_dict)
         
         # 分页
         total = len(documents)

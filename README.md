@@ -54,9 +54,7 @@ cd src && python main.py
 open http://localhost:8083
 ```
 
-**🎮 体验账号**
-- 管理员：`admin` / `admin123`
-- 在线地址：[https://ruishi.jytek.com](https://ruishi.jytek.com) *(即将上线)*
+
 
 ---
 

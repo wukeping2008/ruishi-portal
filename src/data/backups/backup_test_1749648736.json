@@ -1,0 +1,35 @@
+{
+  "timestamp": "2025-06-11T21:32:16.897423",
+  "trigger": "test",
+  "database_backup": {
+    "prompt_templates": [
+      {
+        "id": 1,
+        "name": "simple_config",
+        "category": "simple",
+        "template_content": "{\"company_name\": \"\\u6d4b\\u8bd5\\u516c\\u53f8\", \"main_product\": \"\\u6d4b\\u8bd5\\u4ea7\\u54c1\", \"response_style\": \"professional\", \"focus_areas\": [\"\\u6d4b\\u8bd5\\u9886\\u57df1\", \"\\u6d4b\\u8bd5\\u9886\\u57df2\"]}",
+        "variables": "{}",
+        "priority": 1,
+        "is_active": 1,
+        "created_at": "2025-06-11 13:32:16",
+        "updated_at": "2025-06-11 13:32:16"
+      },
+      {
+        "id": 2,
+        "name": "template_test_category_1749648736",
+        "category": "test_category",
+        "template_content": "这是测试模板内容 {question} {knowledge_content}",
+        "variables": "[\"question\", \"knowledge_content\"]",
+        "priority": 1,
+        "is_active": 1,
+        "created_at": "2025-06-11 13:32:16",
+        "updated_at": "2025-06-11 13:32:16"
+      }
+    ],
+    "json_configs": [],
+    "layered_prompts": [],
+    "optimization_logs": [],
+    "user_preferences": [],
+    "config_versions": []
+  }
+}

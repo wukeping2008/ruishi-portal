@@ -1,0 +1,51 @@
+{
+  "timestamp": "2025-06-11T21:32:16.897699",
+  "summary": {
+    "total": 4,
+    "passed": 2,
+    "failed": 2,
+    "success_rate": 50.0
+  },
+  "results": [
+    {
+      "test_case": 1,
+      "mode": "simple",
+      "question": "请介绍简仪科技的主要产品",
+      "success": true,
+      "prompt_length": 190,
+      "missing_keywords": [],
+      "prompt_preview": "\n## 重要：请优先基于以下知识库内容回答用户问题\n\n这是测试知识库内容，包含JYTEK AI Agent、MISD方法等相关信息...\n\n你是简仪科技的专业AI助手。\n\n我们的主要产品是锐视测控平台，专注于PXI系统, 数据采集等领域。\n\n用户问题：请介绍简仪科技的主要产品\n\n请提供专业、准确的回答，重点介绍我们的技术优势和产品特色。\n\n请基于知识库内容提供详细、准确的回答。"
+    },
+    {
+      "test_case": 2,
+      "mode": "template",
+      "question": "如何解决PXI数据采集中的故障问题？",
+      "success": true,
+      "prompt_length": 117,
+      "missing_keywords": [],
+      "prompt_preview": "你是简仪科技技术支持工程师。\n\n这是测试知识库内容，包含JYTEK AI Agent、MISD方法等相关信息...\n\n用户问题：如何解决PXI数据采集中的故障问题？\n\n请提供详细的技术支持和解决方案，包括问题分析、解决步骤和预防措施。"
+    },
+    {
+      "test_case": 3,
+      "mode": "intelligent",
+      "question": "什么是MISD方法？",
+      "success": false,
+      "prompt_length": 154,
+      "missing_keywords": [
+        "模块仪器软件词典"
+      ],
+      "prompt_preview": "你是简仪科技（JYTEK）锐视测控平台的专业AI助手。\n\n## 重要：请优先基于以下知识库内容回答用户问题\n这是测试知识库内容，包含JYTEK AI Agent、MISD方法等相关信息...\n\n作为产品专家，请重点介绍相关产品特性和优势。\n\n\n## 用户问题：什么是MISD方法？\n\n请提供专业、准确的回答。"
+    },
+    {
+      "test_case": 4,
+      "mode": "expert",
+      "question": "简仪科技的教育解决方案有哪些？",
+      "success": false,
+      "prompt_length": 245,
+      "missing_keywords": [
+        "培训"
+      ],
+      "prompt_preview": "你是简仪科技（JYTEK）锐视测控平台的专业AI助手。\n简仪科技成立于2016年，专注于测试测量技术创新。\n核心产品：锐视测控平台（SeeSharp Platform）\n技术特色：开源测控解决方案、国产自主可控、AI集成\n官网：www.jytek.com\n\n请基于简仪科技的专业背景，提供准确的技术解答。\n\n\n\n## 用户问题：简仪科技的教育解决方案有哪些？\n\n## 回答要求：\n请基于以上分层指导原..."
+    }
+  ]
+}

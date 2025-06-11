@@ -22,9 +22,10 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file upload
 # Import routes after Flask app creation
 try:
     from routes.llm_routes import llm_bp
-    from routes.product_routes import product_bp
     from routes.knowledge_routes import knowledge_bp
+    from routes.product_routes import product_bp
     from routes.admin_routes import admin_bp
+    from routes.prompt_routes import prompt_bp
     from models.llm_models import initialize_llm_providers
     
     # Register blueprints
@@ -32,6 +33,7 @@ try:
     app.register_blueprint(product_bp)
     app.register_blueprint(knowledge_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(prompt_bp)
     
     print("所有蓝图已成功注册")
 except ImportError as e:

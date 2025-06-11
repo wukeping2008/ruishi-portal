@@ -1,4 +1,4 @@
-# 🚀 锐视测控平台 | Ruishi Control Platform
+# 🚀 锐视测控平台 | SeeSharp Platform
 
 <div align="center">
 

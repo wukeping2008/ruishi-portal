@@ -304,21 +304,36 @@ def get_prompt_template(prompt_type: str) -> str:
 # 组合提示词
 def build_enhanced_prompt(question: str, context_type: str = 'company', additional_context: str = '') -> str:
     """构建增强的提示词"""
-    base_template = get_prompt_template(context_type)
     
-    enhanced_prompt = f"""{base_template}
+    # 如果有知识库内容，优先使用知识库内容回答
+    if additional_context and "相关知识库内容：" in additional_context:
+        knowledge_content = additional_context.replace("相关知识库内容：\n", "")
+        
+        enhanced_prompt = f"""你是简仪科技（JYTEK）锐视测控平台的专业AI助手。
 
-{additional_context}
+## 重要：请优先基于以下知识库内容回答用户问题
+
+{knowledge_content}
+
+## 用户问题：{question}
+
+## 回答要求：
+1. **优先使用上述知识库内容**：直接引用和解释知识库中的相关信息
+2. **结合简仪科技背景**：体现简仪科技的技术优势和产品特色
+3. **提供具体信息**：包含具体的产品型号、技术参数、应用案例等
+4. **实用性导向**：提供可操作的技术建议和解决方案
+5. **专业准确**：确保技术信息的准确性和专业性
+
+请基于知识库内容提供详细、准确的回答。如果知识库内容不足以完全回答问题，可以补充相关的简仪科技技术信息。"""
+        
+    else:
+        # 没有知识库内容时，使用简化的提示词
+        enhanced_prompt = f"""你是简仪科技（JYTEK）锐视测控平台的专业AI助手。
+
+简仪科技成立于2016年，专注于测试测量技术创新，核心产品是锐视测控平台（SeeSharp Platform），特色是开源测控解决方案和AI集成技术。
 
 用户问题：{question}
 
-请基于上述简仪科技的专业知识，提供准确、详细、有帮助的回答。在回答中：
-1. 体现简仪科技的技术优势和产品特色
-2. 突出锐视测控平台和MISD方法的价值
-3. 在适当时候推荐相关产品和解决方案
-4. 提供实用的技术建议和最佳实践
-5. 如需更详细信息，引导用户访问官网 www.jytek.com
-
-请用专业、友好的语调回答，确保信息准确可靠。"""
+请提供专业、准确的回答，重点介绍简仪科技的相关产品和技术解决方案。"""
     
     return enhanced_prompt

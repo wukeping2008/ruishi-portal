@@ -610,11 +610,15 @@ async function deleteDocument(documentId) {
 // 加载统计信息
 async function loadStatistics() {
     try {
+        // 加载基础统计
         const response = await fetch('/admin/statistics');
         const data = await response.json();
         
         if (data.success) {
             const stats = data.statistics;
+            
+            // 更新概览数据
+            document.getElementById('stats-total-conversations').textContent = stats.total_conversations || 0;
             
             // 显示文档类型统计
             displayTypeStats(stats.documents_by_type || {});
@@ -622,8 +626,278 @@ async function loadStatistics() {
             // 显示AI提供商统计
             displayProviderStats(stats.conversations_by_provider || {});
         }
+        
+        // 加载详细统计
+        await loadDetailedStatistics();
+        
     } catch (error) {
         console.error('加载统计信息失败:', error);
+    }
+}
+
+// 加载详细统计信息
+async function loadDetailedStatistics() {
+    try {
+        // 并行加载各种统计数据
+        const [
+            keywordResponse,
+            userResponse,
+            documentUsageResponse,
+            triggerResponse,
+            conversationsResponse
+        ] = await Promise.all([
+            fetch('/admin/keyword-statistics'),
+            fetch('/admin/user-statistics'),
+            fetch('/admin/document-usage-statistics'),
+            fetch('/admin/trigger-statistics'),
+            fetch('/admin/detailed-conversations?per_page=10')
+        ]);
+
+        // 处理关键词统计
+        if (keywordResponse.ok) {
+            const keywordData = await keywordResponse.json();
+            if (keywordData.success) {
+                displayKeywordStats(keywordData.keyword_statistics);
+            }
+        }
+
+        // 处理用户统计
+        if (userResponse.ok) {
+            const userData = await userResponse.json();
+            if (userData.success) {
+                displayUserStats(userData.user_statistics);
+            }
+        }
+
+        // 处理文档使用统计
+        if (documentUsageResponse.ok) {
+            const docUsageData = await documentUsageResponse.json();
+            if (docUsageData.success) {
+                displayDocumentUsageStats(docUsageData.document_statistics);
+            }
+        }
+
+        // 处理触发类型统计
+        if (triggerResponse.ok) {
+            const triggerData = await triggerResponse.json();
+            if (triggerData.success) {
+                displayTriggerStats(triggerData.trigger_statistics);
+            }
+        }
+
+        // 处理详细对话记录
+        if (conversationsResponse.ok) {
+            const conversationsData = await conversationsResponse.json();
+            if (conversationsData.success) {
+                displayDetailedConversations(conversationsData.conversations);
+            }
+        }
+
+    } catch (error) {
+        console.error('加载详细统计失败:', error);
+    }
+}
+
+// 显示关键词统计
+function displayKeywordStats(keywordStats) {
+    const container = document.getElementById('keyword-stats');
+    const totalKeywords = document.getElementById('stats-total-keywords');
+    
+    if (!keywordStats.hot_keywords || keywordStats.hot_keywords.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center py-4 col-span-full">暂无关键词数据</p>';
+        totalKeywords.textContent = '0';
+        return;
+    }
+    
+    totalKeywords.textContent = keywordStats.hot_keywords.length;
+    
+    container.innerHTML = keywordStats.hot_keywords.slice(0, 12).map(item => `
+        <div class="bg-gray-50 p-3 rounded-lg text-center">
+            <div class="text-sm font-medium text-gray-900">${item.keyword}</div>
+            <div class="text-xs text-gray-500">${item.frequency}次</div>
+        </div>
+    `).join('');
+}
+
+// 显示用户统计
+function displayUserStats(userStats) {
+    const container = document.getElementById('user-type-stats');
+    const activeUsers = document.getElementById('stats-active-users');
+    
+    activeUsers.textContent = userStats.today_active_users || 0;
+    
+    if (!userStats.user_type_distribution || Object.keys(userStats.user_type_distribution).length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center py-4">暂无用户数据</p>';
+        return;
+    }
+    
+    const total = Object.values(userStats.user_type_distribution).reduce((sum, count) => sum + count, 0);
+    
+    container.innerHTML = Object.entries(userStats.user_type_distribution).map(([type, count]) => {
+        const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
+        const typeName = type === 'guest' ? '游客' : '注册用户';
+        return `
+            <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-600">${typeName}</span>
+                <div class="flex items-center space-x-2">
+                    <div class="w-16 bg-gray-200 rounded-full h-2">
+                        <div class="bg-green-600 h-2 rounded-full" style="width: ${percentage}%"></div>
+                    </div>
+                    <span class="text-sm font-medium text-gray-900">${count}</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// 显示文档使用统计
+function displayDocumentUsageStats(docStats) {
+    const container = document.getElementById('document-usage-stats');
+    const docAssociation = document.getElementById('stats-doc-association');
+    
+    docAssociation.textContent = `${docStats.document_association_rate || 0}%`;
+    
+    if (!docStats.popular_documents || docStats.popular_documents.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center py-4">暂无文档使用数据</p>';
+        return;
+    }
+    
+    container.innerHTML = docStats.popular_documents.slice(0, 10).map(doc => `
+        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div class="flex items-center space-x-3">
+                <i class="fas fa-file-alt text-gray-400"></i>
+                <span class="text-sm font-medium text-gray-900">${doc.document_name}</span>
+            </div>
+            <span class="text-sm text-gray-500">${doc.usage_count}次</span>
+        </div>
+    `).join('');
+}
+
+// 显示触发类型统计
+function displayTriggerStats(triggerStats) {
+    const container = document.getElementById('trigger-type-stats');
+    
+    if (!triggerStats.trigger_distribution || Object.keys(triggerStats.trigger_distribution).length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center py-4">暂无触发数据</p>';
+        return;
+    }
+    
+    const total = Object.values(triggerStats.trigger_distribution).reduce((sum, count) => sum + count, 0);
+    
+    container.innerHTML = Object.entries(triggerStats.trigger_distribution).map(([type, count]) => {
+        const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
+        const typeName = type === 'question' ? '问答触发' : '模块触发';
+        return `
+            <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-600">${typeName}</span>
+                <div class="flex items-center space-x-2">
+                    <div class="w-16 bg-gray-200 rounded-full h-2">
+                        <div class="bg-blue-600 h-2 rounded-full" style="width: ${percentage}%"></div>
+                    </div>
+                    <span class="text-sm font-medium text-gray-900">${count}</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// 显示详细对话记录
+function displayDetailedConversations(conversations) {
+    const container = document.getElementById('detailed-conversations');
+    
+    if (!conversations || conversations.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center py-4">暂无对话记录</p>';
+        return;
+    }
+    
+    container.innerHTML = conversations.map(conv => `
+        <div class="border border-gray-200 rounded-lg p-4">
+            <div class="flex justify-between items-start mb-2">
+                <div class="flex items-center space-x-2">
+                    <span class="px-2 py-1 text-xs rounded-full ${conv.user_type === 'guest' ? 'bg-gray-100 text-gray-800' : 'bg-blue-100 text-blue-800'}">
+                        ${conv.user_type === 'guest' ? '游客' : '注册用户'}
+                    </span>
+                    <span class="px-2 py-1 text-xs rounded-full bg-purple-100 text-purple-800">
+                        ${conv.ai_provider}
+                    </span>
+                    <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
+                        ${conv.trigger_type === 'question' ? '问答' : '模块'}
+                    </span>
+                </div>
+                <span class="text-xs text-gray-500">${formatDate(conv.created_at)}</span>
+            </div>
+            <div class="text-sm text-gray-900 mb-2">${conv.question}</div>
+            <div class="flex justify-between items-center text-xs text-gray-500">
+                <div class="flex items-center space-x-4">
+                    <span>IP: ${conv.user_ip}</span>
+                    ${conv.response_time ? `<span>响应: ${conv.response_time.toFixed(2)}s</span>` : ''}
+                    ${conv.keywords && conv.keywords.length > 0 ? `<span>关键词: ${conv.keywords.length}个</span>` : ''}
+                    ${conv.related_files && conv.related_files.length > 0 ? `<span>关联文档: ${conv.related_files.length}个</span>` : ''}
+                </div>
+                ${conv.rating ? `<span class="text-yellow-600">评分: ${conv.rating}/5</span>` : ''}
+            </div>
+            ${conv.keywords && conv.keywords.length > 0 ? `
+                <div class="mt-2 flex flex-wrap gap-1">
+                    ${conv.keywords.slice(0, 8).map(keyword => `
+                        <span class="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded">${keyword}</span>
+                    `).join('')}
+                    ${conv.keywords.length > 8 ? `<span class="text-xs text-gray-500">+${conv.keywords.length - 8}个</span>` : ''}
+                </div>
+            ` : ''}
+            ${conv.related_files && conv.related_files.length > 0 ? `
+                <div class="mt-2">
+                    <div class="text-xs text-gray-600 mb-1">关联文档:</div>
+                    <div class="flex flex-wrap gap-1">
+                        ${conv.related_files.slice(0, 5).map(filename => `
+                            <span class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded flex items-center">
+                                <i class="fas fa-file-alt mr-1"></i>${filename}
+                            </span>
+                        `).join('')}
+                        ${conv.related_files.length > 5 ? `<span class="text-xs text-gray-500">+${conv.related_files.length - 5}个文档</span>` : ''}
+                    </div>
+                </div>
+            ` : ''}
+        </div>
+    `).join('');
+}
+
+// 刷新关键词统计
+async function refreshKeywordStats() {
+    try {
+        const response = await fetch('/admin/keyword-statistics');
+        const data = await response.json();
+        
+        if (data.success) {
+            displayKeywordStats(data.keyword_statistics);
+            showNotification('关键词统计已刷新', 'success');
+        }
+    } catch (error) {
+        console.error('刷新关键词统计失败:', error);
+        showNotification('刷新失败', 'error');
+    }
+}
+
+// 刷新对话记录
+async function refreshConversations() {
+    try {
+        const userType = document.getElementById('filter-user-type').value;
+        const aiProvider = document.getElementById('filter-ai-provider').value;
+        
+        const params = new URLSearchParams();
+        if (userType) params.append('user_type', userType);
+        if (aiProvider) params.append('ai_provider', aiProvider);
+        params.append('per_page', '10');
+        
+        const response = await fetch(`/admin/detailed-conversations?${params}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            displayDetailedConversations(data.conversations);
+            showNotification('对话记录已刷新', 'success');
+        }
+    } catch (error) {
+        console.error('刷新对话记录失败:', error);
+        showNotification('刷新失败', 'error');
     }
 }
 

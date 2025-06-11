@@ -6,8 +6,10 @@ API routes for LLM integration in Ruishi Control Platform
 from flask import Blueprint, request, jsonify
 import json
 import os
+import time
 from models.llm_models import model_selector
-from models.knowledge import knowledge_base
+from models.enhanced_knowledge import enhanced_knowledge_base
+from models.ai_conversation import ai_conversation_manager
 from config.jytek_prompts import build_enhanced_prompt, get_prompt_template
 
 # Create blueprint
@@ -45,7 +47,10 @@ def ask_question():
         context_type = data.get('context_type', 'company')  # 新增：上下文类型
         
         # 获取知识库相关内容
-        relevant_content = knowledge_base.get_relevant_content(question, max_docs=3)
+        relevant_content = enhanced_knowledge_base.get_relevant_content(question, max_docs=3)
+        print(f"DEBUG: 知识库搜索结果长度: {len(relevant_content) if relevant_content else 0}")
+        if relevant_content:
+            print(f"DEBUG: 知识库内容预览: {relevant_content[:200]}...")
         
         # 智能判断问题类型并选择合适的提示词模板
         question_lower = question.lower()
@@ -67,6 +72,9 @@ def ask_question():
             additional_context=f"相关知识库内容：\n{relevant_content}" if relevant_content else ""
         )
         
+        # 记录开始时间
+        start_time = time.time()
+        
         # Generate response from LLM
         response = model_selector.ask_question(
             question=enhanced_question,
@@ -75,10 +83,71 @@ def ask_question():
             options=options
         )
         
+        # 计算响应时间
+        response_time = time.time() - start_time
+        
         # 添加知识库信息到响应
         response['has_knowledge_base_content'] = bool(relevant_content)
         if relevant_content:
-            response['knowledge_base_sources'] = len(knowledge_base.search_documents(question, limit=3))
+            response['knowledge_base_sources'] = len(enhanced_knowledge_base.search_documents(question, limit=3))
+        
+        # 记录AI对话到数据库
+        try:
+            # 获取用户信息
+            user_ip = request.environ.get('REMOTE_ADDR', 'unknown')
+            user_agent = request.headers.get('User-Agent', 'unknown')
+            session_id = request.headers.get('X-Session-ID') or request.cookies.get('session_id', f"guest_{user_ip}_{int(time.time())}")
+            
+            # 检查是否为注册用户
+            user_id = None
+            user_type = 'guest'
+            auth_token = request.headers.get('Authorization') or request.cookies.get('admin_session')
+            if auth_token:
+                from models.database import user_manager
+                user = user_manager.verify_session(auth_token)
+                if user:
+                    user_id = user['id']
+                    user_type = 'registered'
+            
+            # 获取相关文档列表
+            related_docs = []
+            if relevant_content:
+                docs = enhanced_knowledge_base.search_documents(question, limit=3)
+                related_docs = [
+                    {
+                        'id': doc.get('id'),
+                        'filename': doc.get('original_filename', ''),
+                        'title': doc.get('title', ''),
+                        'category': doc.get('category', ''),
+                        'file_type': doc.get('file_type', ''),
+                        'relevance_score': doc.get('relevance_score', 0)
+                    }
+                    for doc in docs if doc.get('id')  # 确保有有效的文档ID
+                ]
+            
+            # 记录对话
+            conversation_id = ai_conversation_manager.record_conversation(
+                question=question,
+                answer=response.get('content', ''),
+                ai_provider=response.get('provider', 'unknown'),
+                ai_model=response.get('model', 'unknown'),
+                user_id=user_id,
+                session_id=session_id,
+                user_type=user_type,
+                user_ip=user_ip,
+                user_agent=user_agent,
+                trigger_type='question',
+                related_documents=related_docs if related_docs else None,
+                response_time=response_time
+            )
+            
+            # 添加对话ID到响应
+            if conversation_id:
+                response['conversation_id'] = conversation_id
+                
+        except Exception as e:
+            # 记录失败不影响主要功能
+            print(f"记录AI对话失败: {e}")
         
         return jsonify(response)
     

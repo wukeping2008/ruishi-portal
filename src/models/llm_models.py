@@ -76,8 +76,8 @@ class ClaudeProvider(LLMProvider):
             temperature = kwargs.get('temperature', 0.7)
             max_tokens = kwargs.get('max_tokens', 2000)
             
-            # 添加简仪科技和PXI专业上下文
-            enhanced_prompt = self._enhance_prompt_with_context(prompt)
+            # 直接使用传入的prompt，不再重复添加上下文
+            enhanced_prompt = prompt
             
             # For development/testing without API key
             if not self.api_key or self.api_key == "":
@@ -228,8 +228,8 @@ class VolcesDeepseekProvider(LLMProvider):
             temperature = kwargs.get('temperature', 0.7)
             max_tokens = kwargs.get('max_tokens', self.max_tokens)
             
-            # 添加简仪科技和PXI专业上下文
-            enhanced_prompt = self._enhance_prompt_with_context(prompt)
+            # 直接使用传入的prompt，不再重复添加上下文
+            enhanced_prompt = prompt
             
             # For development/testing without API key
             if not self.api_key or self.api_key == "":
@@ -370,8 +370,8 @@ class QwenPlusProvider(LLMProvider):
             temperature = kwargs.get('temperature', 0.7)
             max_tokens = kwargs.get('max_tokens', self.max_tokens)
             
-            # 添加简仪科技和PXI专业上下文
-            enhanced_prompt = self._enhance_prompt_with_context(prompt)
+            # 直接使用传入的prompt，不再重复添加上下文
+            enhanced_prompt = prompt
             
             # For development/testing without API key
             if not self.api_key or self.api_key == "":
@@ -508,8 +508,8 @@ class GeminiProvider(LLMProvider):
             temperature = kwargs.get('temperature', 0.7)
             max_tokens = kwargs.get('max_tokens', 2000)
             
-            # 添加简仪科技和PXI专业上下文
-            enhanced_prompt = self._enhance_prompt_with_context(prompt)
+            # 直接使用传入的prompt，不再重复添加上下文
+            enhanced_prompt = prompt
             
             # For development/testing without API key
             if not self.api_key or self.api_key == "":

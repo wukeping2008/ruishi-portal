@@ -109,15 +109,63 @@ class DatabaseManager:
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     user_id INTEGER,
                     session_id TEXT,
+                    user_type TEXT DEFAULT 'guest',
+                    user_ip TEXT,
+                    user_agent TEXT,
                     question TEXT NOT NULL,
                     answer TEXT,
                     ai_provider TEXT,
                     ai_model TEXT,
+                    trigger_type TEXT DEFAULT 'question',
+                    keywords TEXT,
                     related_documents TEXT,
+                    document_names TEXT,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     response_time REAL,
                     rating INTEGER,
                     FOREIGN KEY (user_id) REFERENCES users (id)
+                )
+            ''')
+            
+            # 创建关键词统计表
+            conn.execute('''
+                CREATE TABLE IF NOT EXISTS keyword_statistics (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    keyword TEXT NOT NULL,
+                    frequency INTEGER DEFAULT 1,
+                    source_type TEXT DEFAULT 'question',
+                    last_used TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE(keyword, source_type)
+                )
+            ''')
+            
+            # 创建文档关键词表
+            conn.execute('''
+                CREATE TABLE IF NOT EXISTS document_keywords (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    document_id INTEGER,
+                    keyword TEXT NOT NULL,
+                    frequency INTEGER DEFAULT 1,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (document_id) REFERENCES documents (id),
+                    UNIQUE(document_id, keyword)
+                )
+            ''')
+            
+            # 创建用户会话统计表
+            conn.execute('''
+                CREATE TABLE IF NOT EXISTS user_session_stats (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    session_id TEXT,
+                    user_type TEXT DEFAULT 'guest',
+                    user_ip TEXT,
+                    first_visit TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    last_activity TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    total_questions INTEGER DEFAULT 0,
+                    total_ai_calls INTEGER DEFAULT 0,
+                    pages_visited TEXT,
+                    UNIQUE(session_id)
                 )
             ''')
             

@@ -254,15 +254,154 @@
                 <!-- 统计分析 -->
                 <div id="statistics-section" class="section hidden">
                     <h2 class="text-2xl font-bold text-gray-900 mb-6">统计分析</h2>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    
+                    <!-- AI使用统计概览 -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                         <div class="bg-white p-6 rounded-lg shadow">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">文档类型分布</h3>
-                            <div id="type-stats" class="space-y-3"></div>
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                                    <i class="fas fa-comments text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium text-gray-600">总对话数</p>
+                                    <p id="stats-total-conversations" class="text-2xl font-bold text-gray-900">-</p>
+                                </div>
+                            </div>
                         </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-green-100 text-green-600">
+                                    <i class="fas fa-users text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium text-gray-600">活跃用户</p>
+                                    <p id="stats-active-users" class="text-2xl font-bold text-gray-900">-</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                                    <i class="fas fa-tags text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium text-gray-600">关键词数</p>
+                                    <p id="stats-total-keywords" class="text-2xl font-bold text-gray-900">-</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                                    <i class="fas fa-file-alt text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium text-gray-600">文档关联率</p>
+                                    <p id="stats-doc-association" class="text-2xl font-bold text-gray-900">-</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 详细统计图表 -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                         <div class="bg-white p-6 rounded-lg shadow">
                             <h3 class="text-lg font-semibold text-gray-900 mb-4">AI提供商使用统计</h3>
-                            <div id="provider-stats" class="space-y-3"></div>
+                            <div id="provider-stats" class="space-y-3">
+                                <div class="text-center py-4">
+                                    <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-600 mx-auto"></div>
+                                    <p class="text-gray-500 mt-2">加载中...</p>
+                                </div>
+                            </div>
                         </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">用户类型分布</h3>
+                            <div id="user-type-stats" class="space-y-3">
+                                <div class="text-center py-4">
+                                    <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-600 mx-auto"></div>
+                                    <p class="text-gray-500 mt-2">加载中...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">触发类型统计</h3>
+                            <div id="trigger-type-stats" class="space-y-3">
+                                <div class="text-center py-4">
+                                    <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-600 mx-auto"></div>
+                                    <p class="text-gray-500 mt-2">加载中...</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">文档类型分布</h3>
+                            <div id="type-stats" class="space-y-3">
+                                <div class="text-center py-4">
+                                    <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-600 mx-auto"></div>
+                                    <p class="text-gray-500 mt-2">加载中...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 热门关键词 -->
+                    <div class="bg-white p-6 rounded-lg shadow mb-8">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold text-gray-900">热门关键词</h3>
+                            <button onclick="refreshKeywordStats()" class="text-blue-600 hover:text-blue-800">
+                                <i class="fas fa-sync-alt mr-1"></i>刷新
+                            </button>
+                        </div>
+                        <div id="keyword-stats" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                            <div class="text-center py-4">
+                                <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-600 mx-auto"></div>
+                                <p class="text-gray-500 mt-2">加载中...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 文档使用排行 -->
+                    <div class="bg-white p-6 rounded-lg shadow mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">文档使用排行</h3>
+                        <div id="document-usage-stats" class="space-y-3">
+                            <div class="text-center py-4">
+                                <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-600 mx-auto"></div>
+                                <p class="text-gray-500 mt-2">加载中...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 详细对话记录 -->
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold text-gray-900">详细对话记录</h3>
+                            <div class="flex space-x-2">
+                                <select id="filter-user-type" class="px-3 py-1 border border-gray-300 rounded text-sm">
+                                    <option value="">所有用户类型</option>
+                                    <option value="guest">游客</option>
+                                    <option value="registered">注册用户</option>
+                                </select>
+                                <select id="filter-ai-provider" class="px-3 py-1 border border-gray-300 rounded text-sm">
+                                    <option value="">所有AI提供商</option>
+                                    <option value="claude">Claude</option>
+                                    <option value="gemini">Gemini</option>
+                                    <option value="volcesDeepseek">Volces Deepseek</option>
+                                    <option value="qwen-plus">Qwen Plus</option>
+                                </select>
+                                <button onclick="refreshConversations()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                                    <i class="fas fa-sync-alt mr-1"></i>刷新
+                                </button>
+                            </div>
+                        </div>
+                        <div id="detailed-conversations" class="space-y-4">
+                            <div class="text-center py-4">
+                                <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-600 mx-auto"></div>
+                                <p class="text-gray-500 mt-2">加载中...</p>
+                            </div>
+                        </div>
+                        <div id="conversations-pagination" class="mt-4 flex justify-center"></div>
                     </div>
                 </div>
             </div>

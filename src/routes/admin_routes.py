@@ -6,8 +6,10 @@ Admin backend routes for Ruishi Control Platform
 from flask import Blueprint, request, jsonify, session, send_file, render_template_string
 from functools import wraps
 import os
+import json
 import logging
 from models.database import user_manager, document_manager, db_manager
+from models.ai_conversation import ai_conversation_manager
 
 logger = logging.getLogger(__name__)
 
@@ -267,16 +269,9 @@ def get_statistics():
         cursor = conn.execute('SELECT COUNT(*) as total FROM users WHERE is_active = 1')
         stats['total_users'] = cursor.fetchone()['total']
         
-        # AI对话统计
-        cursor = conn.execute('SELECT COUNT(*) as total FROM ai_conversations')
-        stats['total_conversations'] = cursor.fetchone()['total']
-        
-        cursor = conn.execute('''
-            SELECT ai_provider, COUNT(*) as count 
-            FROM ai_conversations 
-            GROUP BY ai_provider
-        ''')
-        stats['conversations_by_provider'] = {row['ai_provider']: row['count'] for row in cursor.fetchall()}
+        # 使用新的AI对话管理器获取统计
+        ai_stats = ai_conversation_manager.get_conversation_statistics()
+        stats.update(ai_stats)
         
         # 最近上传的文档
         cursor = conn.execute('''
@@ -305,6 +300,256 @@ def get_statistics():
     except Exception as e:
         logger.error(f"获取统计信息失败: {e}")
         return jsonify({'error': '获取统计信息失败'}), 500
+
+@admin_bp.route('/ai-statistics', methods=['GET'])
+@require_admin
+def get_ai_statistics():
+    """获取详细的AI统计信息"""
+    try:
+        # 获取AI对话统计
+        conversation_stats = ai_conversation_manager.get_conversation_statistics()
+        
+        # 获取AI提供商性能统计
+        provider_performance = ai_conversation_manager.get_provider_performance()
+        
+        # 获取最近的对话记录
+        recent_conversations = ai_conversation_manager.get_recent_conversations(limit=20)
+        
+        return jsonify({
+            'success': True,
+            'conversation_statistics': conversation_stats,
+            'provider_performance': provider_performance,
+            'recent_conversations': recent_conversations
+        })
+        
+    except Exception as e:
+        logger.error(f"获取AI统计信息失败: {e}")
+        return jsonify({'error': '获取AI统计信息失败'}), 500
+
+@admin_bp.route('/ai-conversations/<int:conversation_id>/rate', methods=['POST'])
+@require_admin
+def rate_conversation(conversation_id):
+    """为AI对话评分"""
+    try:
+        data = request.json
+        rating = data.get('rating')
+        
+        if not rating or rating not in [1, 2, 3, 4, 5]:
+            return jsonify({'error': '评分必须是1-5之间的整数'}), 400
+        
+        success = ai_conversation_manager.rate_conversation(conversation_id, rating)
+        
+        if success:
+            return jsonify({
+                'success': True,
+                'message': '评分成功'
+            })
+        else:
+            return jsonify({'error': '对话不存在或评分失败'}), 404
+            
+    except Exception as e:
+        logger.error(f"对话评分失败: {e}")
+        return jsonify({'error': '对话评分失败'}), 500
+
+@admin_bp.route('/comprehensive-statistics', methods=['GET'])
+@require_admin
+def get_comprehensive_statistics():
+    """获取综合统计信息"""
+    try:
+        comprehensive_stats = ai_conversation_manager.get_comprehensive_statistics()
+        
+        return jsonify({
+            'success': True,
+            'statistics': comprehensive_stats
+        })
+        
+    except Exception as e:
+        logger.error(f"获取综合统计信息失败: {e}")
+        return jsonify({'error': '获取综合统计信息失败'}), 500
+
+@admin_bp.route('/keyword-statistics', methods=['GET'])
+@require_admin
+def get_keyword_statistics():
+    """获取关键词统计"""
+    try:
+        limit = int(request.args.get('limit', 50))
+        keyword_stats = ai_conversation_manager.get_keyword_statistics(limit=limit)
+        
+        return jsonify({
+            'success': True,
+            'keyword_statistics': keyword_stats
+        })
+        
+    except Exception as e:
+        logger.error(f"获取关键词统计失败: {e}")
+        return jsonify({'error': '获取关键词统计失败'}), 500
+
+@admin_bp.route('/user-statistics', methods=['GET'])
+@require_admin
+def get_user_statistics():
+    """获取用户统计"""
+    try:
+        user_stats = ai_conversation_manager.get_user_statistics()
+        
+        return jsonify({
+            'success': True,
+            'user_statistics': user_stats
+        })
+        
+    except Exception as e:
+        logger.error(f"获取用户统计失败: {e}")
+        return jsonify({'error': '获取用户统计失败'}), 500
+
+@admin_bp.route('/document-usage-statistics', methods=['GET'])
+@require_admin
+def get_document_usage_statistics():
+    """获取文档使用统计"""
+    try:
+        document_stats = ai_conversation_manager.get_document_usage_statistics()
+        
+        return jsonify({
+            'success': True,
+            'document_statistics': document_stats
+        })
+        
+    except Exception as e:
+        logger.error(f"获取文档使用统计失败: {e}")
+        return jsonify({'error': '获取文档使用统计失败'}), 500
+
+@admin_bp.route('/trigger-statistics', methods=['GET'])
+@require_admin
+def get_trigger_statistics():
+    """获取触发类型统计"""
+    try:
+        trigger_stats = ai_conversation_manager.get_trigger_type_statistics()
+        
+        return jsonify({
+            'success': True,
+            'trigger_statistics': trigger_stats
+        })
+        
+    except Exception as e:
+        logger.error(f"获取触发类型统计失败: {e}")
+        return jsonify({'error': '获取触发类型统计失败'}), 500
+
+@admin_bp.route('/detailed-conversations', methods=['GET'])
+@require_admin
+def get_detailed_conversations():
+    """获取详细的对话记录"""
+    try:
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', 20))
+        user_type = request.args.get('user_type')
+        ai_provider = request.args.get('ai_provider')
+        
+        conn = db_manager.get_connection()
+        
+        # 构建查询条件
+        where_conditions = []
+        params = []
+        
+        if user_type:
+            where_conditions.append('user_type = ?')
+            params.append(user_type)
+        
+        if ai_provider:
+            where_conditions.append('ai_provider = ?')
+            params.append(ai_provider)
+        
+        where_clause = ' AND '.join(where_conditions)
+        if where_clause:
+            where_clause = 'WHERE ' + where_clause
+        
+        # 获取总数
+        count_sql = f'SELECT COUNT(*) as total FROM ai_conversations {where_clause}'
+        cursor = conn.execute(count_sql, params)
+        total = cursor.fetchone()['total']
+        
+        # 获取分页数据
+        offset = (page - 1) * per_page
+        data_sql = f'''
+            SELECT 
+                ac.id, ac.user_type, ac.user_ip, ac.question, ac.ai_provider, ac.ai_model,
+                ac.trigger_type, ac.keywords, ac.document_names, ac.created_at, 
+                ac.response_time, ac.rating, ac.related_documents
+            FROM ai_conversations ac
+            {where_clause}
+            ORDER BY ac.created_at DESC 
+            LIMIT ? OFFSET ?
+        '''
+        params.extend([per_page, offset])
+        
+        cursor = conn.execute(data_sql, params)
+        conversations = []
+        
+        for row in cursor.fetchall():
+            # 解析JSON字段
+            keywords = []
+            document_names = []
+            related_files = []
+            
+            try:
+                if row['keywords']:
+                    keywords = json.loads(row['keywords'])
+            except (json.JSONDecodeError, TypeError):
+                pass
+            
+            try:
+                if row['document_names']:
+                    document_names = json.loads(row['document_names'])
+            except (json.JSONDecodeError, TypeError):
+                pass
+            
+            # 获取关联文档的原始文件名
+            try:
+                if row['related_documents']:
+                    related_docs = json.loads(row['related_documents'])
+                    if related_docs:
+                        # 获取文档的原始文件名
+                        doc_ids = [str(doc.get('id')) for doc in related_docs if doc.get('id')]
+                        if doc_ids:
+                            placeholders = ','.join(['?' for _ in doc_ids])
+                            doc_cursor = conn.execute(f'''
+                                SELECT original_filename 
+                                FROM documents 
+                                WHERE id IN ({placeholders}) AND is_active = 1
+                            ''', doc_ids)
+                            related_files = [doc_row['original_filename'] for doc_row in doc_cursor.fetchall()]
+            except (json.JSONDecodeError, TypeError):
+                pass
+            
+            conversations.append({
+                'id': row['id'],
+                'user_type': row['user_type'],
+                'user_ip': row['user_ip'],
+                'question': row['question'][:200] + '...' if len(row['question']) > 200 else row['question'],
+                'ai_provider': row['ai_provider'],
+                'ai_model': row['ai_model'],
+                'trigger_type': row['trigger_type'],
+                'keywords': keywords,
+                'document_names': document_names,
+                'related_files': related_files,  # 新增：关联的原始文件名
+                'created_at': row['created_at'],
+                'response_time': row['response_time'],
+                'rating': row['rating']
+            })
+        
+        conn.close()
+        
+        return jsonify({
+            'success': True,
+            'conversations': conversations,
+            'pagination': {
+                'page': page,
+                'per_page': per_page,
+                'total': total,
+                'pages': (total + per_page - 1) // per_page
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"获取详细对话记录失败: {e}")
+        return jsonify({'error': '获取详细对话记录失败'}), 500
 
 @admin_bp.route('/dashboard', methods=['GET'])
 def admin_dashboard():

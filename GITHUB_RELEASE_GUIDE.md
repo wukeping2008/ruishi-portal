@@ -1,277 +1,200 @@
-# GitHub 开源发布指南
+# 📚 GitHub发布指南 | GitHub Release Guide
 
-本文档提供了将锐视测控平台发布到GitHub的完整步骤指南。
+本指南将帮助您将锐视测控平台项目发布到GitHub。
 
-## 📋 发布前检查清单
-
-### ✅ 必需文件
-- [x] `README.md` - 项目介绍和使用指南
-- [x] `LICENSE` - MIT开源许可证
-- [x] `CONTRIBUTING.md` - 贡献指南
-- [x] `CHANGELOG.md` - 版本更新记录
-- [x] `.gitignore` - Git忽略文件配置
-- [x] `requirements.txt` - Python依赖列表
-- [x] `src/config.json.example` - 配置文件模板
-
-### ✅ 代码准备
-- [x] 移除敏感信息 (API密钥已移至config.json.example)
-- [x] 代码注释完整
-- [x] 文档齐全
-- [x] 项目结构清晰
-
-## 🚀 GitHub发布步骤
+## 🚀 快速发布步骤
 
 ### 1. 创建GitHub仓库
 
-1. **登录GitHub**
-   - 访问 https://github.com
-   - 登录您的GitHub账户
+1. 登录 [GitHub](https://github.com)
+2. 点击右上角的 "+" 按钮，选择 "New repository"
+3. 填写仓库信息：
+   - **Repository name**: `ruishi-portal`
+   - **Description**: `🚀 锐视测控平台 - 基于AI技术的智能化PXI测控解决方案平台`
+   - **Visibility**: Public (推荐) 或 Private
+   - **不要**勾选 "Initialize this repository with a README"
+4. 点击 "Create repository"
 
-2. **创建新仓库**
-   ```
-   仓库名称: ruishi-portal
-   描述: 锐视测控平台 - AI增强的开源PXI测控解决方案
-   可见性: Public (公开)
-   初始化: 不要初始化README、.gitignore或许可证
-   ```
-
-### 2. 本地Git初始化
-
-在项目根目录执行以下命令：
+### 2. 连接本地仓库到GitHub
 
 ```bash
-# 初始化Git仓库
-cd ruishi_portal
-git init
-
-# 添加所有文件
-git add .
-
-# 首次提交
-git commit -m "feat: 初始化锐视测控平台开源项目
-
-- 添加多AI集成系统 (Claude, Gemini, Volces Deepseek, Qwen Plus)
-- 实现智能模型选择器
-- 完整的中英文国际化支持
-- 知识库管理系统
-- 智能产品配置器
-- 响应式Web界面
-- 完整的开源文档"
-
-# 添加远程仓库 (替换为您的GitHub用户名)
+# 添加远程仓库 (替换YOUR_USERNAME为你的GitHub用户名)
 git remote add origin https://github.com/YOUR_USERNAME/ruishi-portal.git
 
-# 推送到GitHub
+# 推送代码到GitHub
 git branch -M main
 git push -u origin main
 ```
 
-### 3. 配置GitHub仓库
+### 3. 验证发布
 
-#### 3.1 仓库设置
-1. 进入仓库设置页面
-2. 在"General"部分：
-   - 确认仓库描述
-   - 添加网站链接 (如果有)
-   - 添加主题标签：`pxi`, `ai`, `测控`, `python`, `flask`, `javascript`
+访问你的GitHub仓库页面，确认：
+- ✅ 所有文件已正确上传
+- ✅ README.md正确显示
+- ✅ 项目描述和标签正确
 
-#### 3.2 创建Release
-1. 点击"Releases"
-2. 点击"Create a new release"
-3. 填写发布信息：
-   ```
-   Tag version: v1.0.0
-   Release title: 锐视测控平台 v1.0.0 - 首次开源发布
-   
-   描述:
-   🎉 **锐视测控平台首次开源发布！**
-   
-   ## 🌟 主要特性
-   - 🤖 多AI集成系统 (支持4个AI提供商)
-   - 🧠 智能模型选择器
-   - 🌍 完整的中英文国际化
-   - 📚 知识库管理系统
-   - 🔧 智能产品配置器
-   - 📱 响应式Web界面
-   
-   ## 📊 项目统计
-   - 总代码量: 8,833 行
-   - 支持语言: Python, JavaScript, HTML
-   - AI提供商: 4 个
-   - 页面数量: 4 个
-   
-   ## 🚀 快速开始
-   1. 克隆项目: `git clone https://github.com/YOUR_USERNAME/ruishi-portal.git`
-   2. 安装依赖: `pip install -r requirements.txt`
-   3. 配置API: 复制 `src/config.json.example` 为 `src/config.json`
-   4. 启动应用: `cd src && python main.py`
-   
-   详细使用说明请查看 [README.md](README.md)
-   ```
+## 📋 发布前检查清单
 
-#### 3.3 设置GitHub Pages (可选)
-如果要部署静态演示页面：
-1. 进入"Settings" > "Pages"
-2. 选择源分支
-3. 配置自定义域名 (可选)
+### 🔒 安全检查
+- [ ] 确认 `src/config.json` 已被 `.gitignore` 忽略
+- [ ] 检查没有API密钥被意外提交
+- [ ] 验证数据库文件不包含敏感信息
+- [ ] 确认上传的文档不包含机密内容
 
-### 4. 社区功能配置
+### 📁 文件检查
+- [ ] README.md 内容完整且格式正确
+- [ ] LICENSE 文件存在
+- [ ] requirements.txt 包含所有依赖
+- [ ] .gitignore 配置完善
+- [ ] 项目结构清晰
 
-#### 4.1 Issue模板
-创建 `.github/ISSUE_TEMPLATE/` 目录并添加模板：
+### 🧪 功能测试
+- [ ] 本地服务正常启动
+- [ ] AI问答功能正常
+- [ ] 文档上传功能正常
+- [ ] 管理后台可访问
+- [ ] 所有页面响应正常
 
-**Bug报告模板** (`.github/ISSUE_TEMPLATE/bug_report.md`):
-```markdown
----
-name: Bug报告
-about: 创建一个Bug报告来帮助我们改进
-title: '[BUG] '
-labels: 'bug'
-assignees: ''
----
+## 🏷️ 创建Release版本
 
-## Bug描述
-简要描述遇到的问题
-
-## 环境信息
-- 操作系统: [例如 macOS 12.0]
-- Python版本: [例如 3.9.7]
-- 浏览器: [例如 Chrome 96.0]
-
-## 重现步骤
-1. 打开应用
-2. 点击 '...'
-3. 输入 '...'
-4. 看到错误
-
-## 期望行为
-描述您期望发生什么
-
-## 实际行为
-描述实际发生了什么
-
-## 截图
-如果适用，请添加截图
-```
-
-**功能请求模板** (`.github/ISSUE_TEMPLATE/feature_request.md`):
-```markdown
----
-name: 功能请求
-about: 建议一个新功能
-title: '[FEATURE] '
-labels: 'enhancement'
-assignees: ''
----
-
-## 功能描述
-详细描述建议的功能
-
-## 使用场景
-什么情况下会用到这个功能
-
-## 实现建议
-如果有的话，提供实现思路
-
-## 优先级
-- [ ] 高
-- [ ] 中
-- [ ] 低
-```
-
-#### 4.2 Pull Request模板
-创建 `.github/pull_request_template.md`:
-```markdown
-## 变更描述
-简要描述此PR的变更内容
-
-## 变更类型
-- [ ] Bug修复
-- [ ] 新功能
-- [ ] 文档更新
-- [ ] 代码重构
-- [ ] 性能优化
-- [ ] 其他
-
-## 测试
-- [ ] 已添加测试用例
-- [ ] 所有测试通过
-- [ ] 手动测试通过
-
-## 检查清单
-- [ ] 代码遵循项目规范
-- [ ] 已更新相关文档
-- [ ] 已添加必要的注释
-- [ ] 无破坏性变更
-
-## 相关Issue
-关闭 #(issue编号)
-```
-
-### 5. 推广和维护
-
-#### 5.1 README徽章
-在README.md中添加状态徽章：
-```markdown
-![GitHub stars](https://img.shields.io/github/stars/YOUR_USERNAME/ruishi-portal?style=social)
-![GitHub forks](https://img.shields.io/github/forks/YOUR_USERNAME/ruishi-portal?style=social)
-![GitHub issues](https://img.shields.io/github/issues/YOUR_USERNAME/ruishi-portal)
-![GitHub license](https://img.shields.io/github/license/YOUR_USERNAME/ruishi-portal)
-![Python version](https://img.shields.io/badge/Python-3.9+-green?logo=python)
-```
-
-#### 5.2 社区建设
-- 及时回复Issues和Pull Requests
-- 定期更新文档
-- 发布新版本时更新CHANGELOG.md
-- 参与相关技术社区讨论
-
-## 📝 发布后的维护
-
-### 版本管理
+### 1. 创建标签
 ```bash
-# 创建新版本标签
-git tag -a v1.1.0 -m "Release version 1.1.0"
-git push origin v1.1.0
+# 创建v1.0.0标签
+git tag -a v1.0.0 -m "🚀 锐视测控平台 v1.0.0 正式发布
 
-# 在GitHub上创建对应的Release
+✨ 主要功能:
+- AI智能问答系统
+- 知识库管理
+- PXI产品展示
+- 管理后台
+- 提示词优化系统
+
+🎯 适用场景:
+- 工业自动化测试
+- 教育科研实验
+- 技术支持服务"
+
+# 推送标签到GitHub
+git push origin v1.0.0
 ```
 
-### 持续集成 (可选)
-考虑添加GitHub Actions进行自动化：
-- 代码质量检查
-- 自动化测试
-- 自动部署
+### 2. 在GitHub上创建Release
 
-### 文档维护
-- 保持README.md更新
-- 及时更新API文档
-- 维护CHANGELOG.md
+1. 进入GitHub仓库页面
+2. 点击右侧的 "Releases"
+3. 点击 "Create a new release"
+4. 选择刚创建的标签 `v1.0.0`
+5. 填写Release信息：
 
-## 🎯 成功指标
+**Release title**: `🚀 锐视测控平台 v1.0.0`
 
-### 短期目标 (1-3个月)
-- [ ] 获得50+ GitHub Stars
-- [ ] 收到第一个Pull Request
-- [ ] 建立活跃的Issue讨论
+**Release notes**:
+```markdown
+## 🎉 锐视测控平台 v1.0.0 正式发布！
 
-### 中期目标 (3-6个月)
-- [ ] 获得200+ GitHub Stars
-- [ ] 有5+贡献者
-- [ ] 发布3+个版本更新
+### ✨ 核心功能
+- 🤖 **AI智能问答系统**: 支持Claude、Gemini、Deepseek、Qwen Plus多模型
+- 📚 **知识库管理系统**: 文档上传、搜索、分类管理
+- 🛠️ **PXI产品展示**: 完整的产品线和方案配置
+- 📊 **管理后台**: 用户管理、数据统计、系统监控
+- 🎯 **提示词优化系统**: 多模式配置管理
 
-### 长期目标 (6-12个月)
-- [ ] 获得500+ GitHub Stars
-- [ ] 建立活跃的开发者社区
-- [ ] 成为PXI测控领域的知名开源项目
+### 🎨 技术特色
+- 现代化UI设计 (Apple风格简洁美学)
+- 响应式布局 (完美适配各种设备)
+- 智能路由算法 (自动选择最佳AI模型)
+- 模块化架构 (Flask + SQLite + RESTful API)
 
-## 📞 支持
+### 🚀 快速开始
+```bash
+git clone https://github.com/YOUR_USERNAME/ruishi-portal.git
+cd ruishi-portal
+pip install -r requirements.txt
+cd src && python main.py
+```
 
-如果在发布过程中遇到问题，可以：
-- 查看GitHub官方文档
-- 联系项目维护者
-- 在相关技术社区寻求帮助
+### 📖 文档
+- [快速开始指南](QUICK_START.md)
+- [部署指南](DEPLOYMENT_GUIDE.md)
+- [API文档](README.md#-api文档)
+
+### 🏢 关于简仪科技
+专业的PXI模块化测控解决方案提供商
+- 官网: https://www.jytek.com
+- 邮箱: info@jytek.com
+```
+
+6. 点击 "Publish release"
+
+## 🌟 优化GitHub仓库
+
+### 1. 添加仓库标签 (Topics)
+在仓库主页点击设置图标，添加标签：
+- `pxi`
+- `ai`
+- `flask`
+- `python`
+- `automation`
+- `instrumentation`
+- `jytek`
+- `measurement`
+
+### 2. 设置仓库描述
+```
+🚀 锐视测控平台 - 基于AI技术的智能化PXI测控解决方案平台 | AI-Powered PXI Control Platform
+```
+
+### 3. 添加网站链接
+如果有在线演示，在仓库设置中添加网站链接。
+
+### 4. 启用GitHub Pages (可选)
+如果想要托管静态演示页面：
+1. 进入仓库设置
+2. 找到 "Pages" 部分
+3. 选择源分支 (通常是main)
+4. 选择文件夹 (/ 或 /docs)
+
+## 📢 推广和分享
+
+### 1. 社交媒体分享
+- 在LinkedIn、Twitter等平台分享项目
+- 使用相关标签: #PXI #AI #OpenSource #JYTEK
+
+### 2. 技术社区
+- 在相关技术论坛分享
+- 提交到awesome列表
+- 参与开源项目展示
+
+### 3. 文档和博客
+- 写技术博客介绍项目
+- 制作使用教程视频
+- 参与技术会议演讲
+
+## 🔄 持续维护
+
+### 1. 定期更新
+- 修复bug和安全问题
+- 添加新功能
+- 更新依赖包
+
+### 2. 社区互动
+- 及时回复Issues
+- 审查Pull Requests
+- 维护项目文档
+
+### 3. 版本管理
+- 遵循语义化版本控制
+- 维护CHANGELOG
+- 定期发布新版本
+
+## 📞 获取帮助
+
+如果在发布过程中遇到问题：
+
+1. **GitHub官方文档**: https://docs.github.com
+2. **Git教程**: https://git-scm.com/docs
+3. **简仪科技支持**: info@jytek.com
 
 ---
 
-**祝您的开源项目发布成功！** 🚀
+**🌟 祝您发布成功！让我们一起构建更好的PXI测控生态系统！**

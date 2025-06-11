@@ -9,7 +9,7 @@ import logging
 from typing import Dict, Any
 import traceback
 
-from ..models.prompt_system import prompt_system_manager
+from models.prompt_system import prompt_system_manager
 
 # 创建蓝图
 prompt_bp = Blueprint('prompt', __name__, url_prefix='/api/prompt')
@@ -64,13 +64,23 @@ def get_available_modes():
             if mode_key in modes:
                 available_modes[mode_key] = modes[mode_key]
         
+        # 转换为前端期望的数组格式
+        modes_array = []
+        for mode_id, mode_info in available_modes.items():
+            mode_data = mode_info.copy()
+            mode_data['id'] = mode_id
+            mode_data['icon'] = {
+                'simple': '🚀',
+                'template': '📄', 
+                'json': '📝',
+                'intelligent': '🧠',
+                'expert': '🏗️'
+            }.get(mode_id, '⚙️')
+            modes_array.append(mode_data)
+        
         return jsonify({
             'success': True,
-            'data': {
-                'modes': available_modes,
-                'user_level': user_level,
-                'total_modes': len(available_modes)
-            }
+            'modes': modes_array
         })
         
     except Exception as e:
@@ -171,7 +181,8 @@ def simple_config():
 def get_template_categories():
     """获取模板分类"""
     try:
-        manager = prompt_system_manager.get_mode_manager('template')
+        user_level = request.args.get('user_level', 'expert')
+        manager = prompt_system_manager.get_mode_manager('template', user_level)
         config = manager.load_config()
         
         return jsonify({
@@ -227,7 +238,9 @@ def save_template():
 def json_config():
     """JSON配置模式"""
     try:
-        manager = prompt_system_manager.get_mode_manager('json')
+        # 获取用户权限级别，默认为expert（管理员后台）
+        user_level = request.args.get('user_level', 'expert')
+        manager = prompt_system_manager.get_mode_manager('json', user_level)
         
         if request.method == 'GET':
             # 获取配置
@@ -240,7 +253,24 @@ def json_config():
         elif request.method == 'POST':
             # 保存配置
             data = request.get_json()
-            config = data.get('config', {})
+            if not data:
+                return jsonify({
+                    'success': False,
+                    'error': '请求数据为空'
+                }), 400
+            
+            # 从请求中获取配置数据，支持多种格式
+            config = data.get('config', data)  # 如果没有config字段，使用整个data
+            
+            # 如果config是字符串，尝试解析为JSON
+            if isinstance(config, str):
+                try:
+                    config = json.loads(config)
+                except json.JSONDecodeError as e:
+                    return jsonify({
+                        'success': False,
+                        'error': f'JSON格式错误: {str(e)}'
+                    }), 400
             
             # 验证JSON格式
             validator = prompt_system_manager.config_validator
@@ -317,7 +347,8 @@ def analyze_question_intent():
                 'error': '问题不能为空'
             }), 400
         
-        manager = prompt_system_manager.get_mode_manager('intelligent')
+        user_level = request.args.get('user_level', 'expert')
+        manager = prompt_system_manager.get_mode_manager('intelligent', user_level)
         intent_scores = manager.intent_analyzer.analyze_intent(question)
         
         return jsonify({
@@ -340,7 +371,8 @@ def analyze_question_intent():
 def get_optimization_suggestions():
     """获取优化建议"""
     try:
-        manager = prompt_system_manager.get_mode_manager('intelligent')
+        user_level = request.args.get('user_level', 'expert')
+        manager = prompt_system_manager.get_mode_manager('intelligent', user_level)
         optimizations = manager._get_applicable_optimizations({})
         
         return jsonify({
@@ -362,7 +394,8 @@ def get_optimization_suggestions():
 def get_expert_layers():
     """获取专家模式层级配置"""
     try:
-        manager = prompt_system_manager.get_mode_manager('expert')
+        user_level = request.args.get('user_level', 'expert')
+        manager = prompt_system_manager.get_mode_manager('expert', user_level)
         config = manager.load_config()
         
         layers_info = {
@@ -486,12 +519,12 @@ def test_prompt():
         
         return jsonify({
             'success': True,
-            'data': {
-                'prompt': prompt,
-                'analysis': analysis,
-                'test_question': question,
-                'mode': mode
-            }
+            'generated_prompt': prompt,
+            'mode': mode,
+            'prompt_length': len(prompt),
+            'estimated_tokens': int(len(prompt.split()) * 1.3),
+            'complexity_score': _calculate_complexity_score(prompt),
+            'has_knowledge': 'knowledge_content' in context and bool(context['knowledge_content'])
         })
         
     except Exception as e:

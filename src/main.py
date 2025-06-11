@@ -25,20 +25,33 @@ try:
     from routes.knowledge_routes import knowledge_bp
     from routes.product_routes import product_bp
     from routes.admin_routes import admin_bp
-    from routes.prompt_routes import prompt_bp
-    from models.llm_models import initialize_llm_providers
     
     # Register blueprints
     app.register_blueprint(llm_bp)
     app.register_blueprint(product_bp)
     app.register_blueprint(knowledge_bp)
     app.register_blueprint(admin_bp)
-    app.register_blueprint(prompt_bp)
     
-    print("所有蓝图已成功注册")
+    print("基础蓝图已成功注册")
 except ImportError as e:
-    print(f"导入模块失败: {e}")
+    print(f"导入基础模块失败: {e}")
     print("将以简化模式运行")
+
+# Try to import prompt routes separately
+try:
+    from routes.prompt_routes import prompt_bp
+    app.register_blueprint(prompt_bp)
+    print("提示词蓝图已成功注册")
+except ImportError as e:
+    print(f"导入提示词模块失败: {e}")
+    print("提示词功能将不可用")
+
+# Try to initialize LLM providers
+try:
+    from models.llm_models import initialize_llm_providers
+    print("LLM模块导入成功")
+except ImportError as e:
+    print(f"导入LLM模块失败: {e}")
 
 # Load configuration
 def load_config():
@@ -119,6 +132,156 @@ def company_info():
         'website': 'https://www.jytek.com',
         'description': '专业的PXI模块化测控解决方案提供商'
     })
+
+# 简化的提示词API端点
+@app.route('/api/prompt/modes')
+def get_prompt_modes():
+    """获取提示词模式"""
+    user_level = request.args.get('user_level', 'basic')
+    
+    modes = {
+        'simple': {
+            'name': '简单模式',
+            'description': '快速配置，适合新手',
+            'difficulty': 1,
+            'features': ['一键生成', '基础配置', '快速上手']
+        },
+        'template': {
+            'name': '模板模式',
+            'description': '可视化编辑，日常维护',
+            'difficulty': 2,
+            'features': ['模板编辑', '变量替换', '实时预览']
+        },
+        'json': {
+            'name': 'JSON模式',
+            'description': '高级配置，批量管理',
+            'difficulty': 3,
+            'features': ['JSON配置', '批量导入', '复杂规则']
+        },
+        'intelligent': {
+            'name': '智能模式',
+            'description': 'AI驱动，自动优化',
+            'difficulty': 2,
+            'features': ['意图分析', '智能优化', '效果跟踪']
+        },
+        'expert': {
+            'name': '专家模式',
+            'description': '分层架构，企业级',
+            'difficulty': 4,
+            'features': ['分层管理', '继承规则', '权限控制']
+        }
+    }
+    
+    return jsonify({
+        'success': True,
+        'data': {
+            'modes': modes,
+            'user_level': user_level,
+            'total_modes': len(modes)
+        }
+    })
+
+@app.route('/api/prompt/build', methods=['POST'])
+def build_prompt():
+    """构建提示词"""
+    try:
+        data = request.get_json()
+        question = data.get('question', '')
+        mode = data.get('mode', 'simple')
+        context = data.get('context', {})
+        
+        if not question:
+            return jsonify({
+                'success': False,
+                'error': '问题不能为空'
+            }), 400
+        
+        # 简化的提示词生成逻辑
+        if mode == 'simple':
+            prompt = f"""你是简仪科技（JYTEK）锐视测控平台的专业AI助手。
+
+我们的主要产品是锐视测控平台，专注于PXI系统、数据采集等领域。
+
+用户问题：{question}
+
+请提供专业、准确的回答，重点介绍我们的技术优势和产品特色。"""
+        
+        elif mode == 'template':
+            prompt = f"""你是简仪科技技术专家。
+
+{context.get('knowledge_content', '')}
+
+用户问题：{question}
+
+请根据问题类型提供专业的技术解答。"""
+        
+        else:
+            prompt = f"""你是简仪科技的AI助手。
+
+用户问题：{question}
+
+请提供专业回答。"""
+        
+        return jsonify({
+            'success': True,
+            'data': {
+                'prompt': prompt,
+                'mode': mode,
+                'question': question,
+                'length': len(prompt)
+            }
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/prompt/test', methods=['POST'])
+def test_prompt():
+    """测试提示词"""
+    try:
+        data = request.get_json()
+        question = data.get('question', '')
+        mode = data.get('mode', 'simple')
+        
+        if not question:
+            return jsonify({
+                'success': False,
+                'error': '测试问题不能为空'
+            }), 400
+        
+        # 生成测试提示词
+        prompt = f"""你是简仪科技的AI助手。
+
+用户问题：{question}
+
+请提供专业回答。"""
+        
+        # 分析提示词
+        analysis = {
+            'length': len(prompt),
+            'estimated_tokens': len(prompt.split()) * 1.3,
+            'complexity_score': 2.5,
+            'has_knowledge_content': False
+        }
+        
+        return jsonify({
+            'success': True,
+            'data': {
+                'prompt': prompt,
+                'analysis': analysis,
+                'test_question': question,
+                'mode': mode
+            }
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
 
 # Enable CORS for development
 @app.after_request

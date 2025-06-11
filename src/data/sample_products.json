@@ -1,0 +1,245 @@
+{
+  "products": [
+    {
+      "id": "GPS0000001-01",
+      "name": "OCXO GPS同步模块",
+      "category": "GPS",
+      "price": 5250,
+      "currency": "CNY",
+      "description": "OCXO, GPS同步模块，用于精确数据时间戳、系统时钟设置、基于PPS到达的门控数据采集。",
+      "specifications": {
+        "功能": "GPS同步、数据时间戳、系统时钟设置",
+        "应用": "门控数据采集",
+        "特性": "OCXO晶振、PPS信号"
+      },
+      "stock_status": "现货",
+      "lead_time": "3个月",
+      "update_date": "2022-02-19",
+      "manual_url": "http://www.jytek.com/products?product_id=230"
+    },
+    {
+      "id": "JA3001085-02",
+      "name": "25针micro-D转GPIB线缆",
+      "category": "Controller Accessory",
+      "price": 1135,
+      "currency": "CNY",
+      "description": "25针micro-D转GPIB线缆，长度1米。",
+      "specifications": {
+        "接口类型": "25针micro-D转GPIB",
+        "线缆长度": "1米",
+        "应用": "控制器配件"
+      },
+      "stock_status": "现货",
+      "lead_time": "3个月",
+      "update_date": "2024-10-09",
+      "manual_url": "http://www.jytek.com/products?product_id=454"
+    },
+    {
+      "id": "JA3001544-01",
+      "name": "PCIe-PXIe系统扩展2M线缆套件",
+      "category": "PXI/PXIe bus expansion",
+      "price": 3274.34,
+      "currency": "CNY",
+      "description": "2M线缆套件，用于PCIe-PXIe系统扩展。",
+      "specifications": {
+        "线缆长度": "2米",
+        "应用": "PCIe-PXIe系统扩展",
+        "类型": "线缆套件"
+      },
+      "stock_status": "现货",
+      "lead_time": "3个月",
+      "update_date": "2024-07-19",
+      "manual_url": "https://www.jytek.com/products?product_id=504"
+    },
+    {
+      "id": "JA3001544-02",
+      "name": "PCIe-PXIe系统扩展5M线缆套件",
+      "category": "PXI/PXIe bus expansion",
+      "price": 4568.14,
+      "currency": "CNY",
+      "description": "5M线缆套件，用于PCIe-PXIe系统扩展。",
+      "specifications": {
+        "线缆长度": "5米",
+        "应用": "PCIe-PXIe系统扩展",
+        "类型": "线缆套件"
+      },
+      "stock_status": "现货",
+      "lead_time": "3个月",
+      "update_date": "2024-07-19",
+      "manual_url": "https://www.jytek.com/products?product_id=505"
+    },
+    {
+      "id": "JY2005510-01",
+      "name": "32通道AI多功能I/O卡",
+      "category": "PXIe DAQ",
+      "price": 14261.06,
+      "currency": "CNY",
+      "description": "32通道AI (18位, 2 MS/s), 4通道AO (16位, 2.86MS/s), 48路DIO PXIe多功能I/O卡。",
+      "specifications": {
+        "AI通道": "32通道SE/16通道DIFF",
+        "AI分辨率": "18位",
+        "AI采样率": "2.0M/1Ch; 1.0M/N Ch",
+        "AO通道": "4通道",
+        "AO分辨率": "16位",
+        "AO更新率": "2.86M/1Ch",
+        "数字I/O": "48路",
+        "输入模式": "RSE/NRSE/DIFF",
+        "量程": "0.1/0.2/0.5/1/2/5/10V"
+      },
+      "stock_status": "现货",
+      "lead_time": "3个月",
+      "update_date": "2023-03-24",
+      "manual_url": "http://www.jytek.com/products?product_id=231",
+      "cable": "JY2006868-02",
+      "terminal_block": "JY2000068-04"
+    },
+    {
+      "id": "JY2016301-01",
+      "name": "32通道24位PXIe RTD温度输入卡",
+      "category": "PXIe DAQ",
+      "price": 11902.70,
+      "currency": "CNY",
+      "description": "32通道24位PXIe RTD温度输入卡，支持PT100 RTD传感器。",
+      "specifications": {
+        "通道数": "32/20",
+        "分辨率": "24位",
+        "采样率": "800 S/s",
+        "接线方式": "3线/4线",
+        "测量范围": "0-400Ω (PT100 RTD)",
+        "精度": "210ppm"
+      },
+      "stock_status": "现货",
+      "lead_time": "3个月",
+      "update_date": "2024-05-29",
+      "manual_url": "http://www.jytek.com/products?product_id=236",
+      "cable": "JY7996916-01",
+      "terminal_block": "JY2000068-04"
+    },
+    {
+      "id": "JY2016302-01",
+      "name": "32通道24位PXIe热电偶温度输入卡",
+      "category": "PXIe DAQ",
+      "price": 8808,
+      "currency": "CNY",
+      "description": "32通道24位PXIe热电偶温度输入卡，支持多种热电偶类型。",
+      "specifications": {
+        "通道数": "32",
+        "分辨率": "24位",
+        "采样率": "800 S/s",
+        "热电偶类型": "R/S/B/J/T/E/K/N/C/A",
+        "测量范围": "±78.125 mV",
+        "精度": "450PPM"
+      },
+      "stock_status": "现货",
+      "lead_time": "3个月",
+      "update_date": "2022-04-01",
+      "manual_url": "http://www.jytek.com/products?product_id=240",
+      "cable": "JY2026868-01",
+      "terminal_block": "JY2010068-01"
+    },
+    {
+      "id": "JY9138008-10",
+      "name": "3U PXIe Intel Core i5控制器",
+      "category": "PXIe Controllers",
+      "price": 39970,
+      "currency": "CNY",
+      "description": "3U PXIe Intel Core i5-7440EQ 2.9GHz系统控制器，配备8GB内存、240GB SSD、Windows 10 Enterprise LTSC 64位。",
+      "specifications": {
+        "处理器": "Intel Core i5-7440EQ",
+        "主频": "2.9GHz",
+        "内存": "8GB",
+        "存储": "240GB SSD",
+        "操作系统": "Windows 10 Enterprise LTSC 64位",
+        "尺寸": "3U"
+      },
+      "stock_status": "现货",
+      "lead_time": "3个月",
+      "update_date": "2024-10-09",
+      "manual_url": "http://www.jytek.com/products?product_id=247"
+    },
+    {
+      "id": "JA2315001-02",
+      "name": "3U 5槽PXIe Gen2机箱",
+      "category": "PXIe Chassis",
+      "price": 9393.02,
+      "currency": "CNY",
+      "description": "3U 5槽PXIe Gen2机箱，配备全混合外设槽和通用AC电源。",
+      "specifications": {
+        "PXI Express链路": "Gen2 X16",
+        "系统带宽": "8 GB/s",
+        "槽位带宽": "2 GB/s",
+        "总槽位": "5",
+        "系统槽": "1",
+        "混合槽": "4",
+        "槽位冷却能力": "58W (0°C ~ 40°C), 38W (0°C ~ 50°C)"
+      },
+      "stock_status": "现货",
+      "lead_time": "3个月",
+      "update_date": "2022-02-19",
+      "manual_url": "http://www.jytek.com/products?product_id=374"
+    },
+    {
+      "id": "JA2315002-03",
+      "name": "3U 5槽PXIe Gen3机箱",
+      "category": "PXIe Chassis",
+      "price": 12621.88,
+      "currency": "CNY",
+      "description": "3U 5槽PXIe Gen3机箱，配备全混合外设槽和通用AC电源。",
+      "specifications": {
+        "PXI Express链路": "Gen3 X16",
+        "系统带宽": "16 GB/s",
+        "槽位带宽": "4 GB/s",
+        "总槽位": "5",
+        "系统槽": "1",
+        "混合槽": "4",
+        "槽位冷却能力": "58W (0°C ~ 40°C), 38W (0°C ~ 50°C)"
+      },
+      "stock_status": "现货",
+      "lead_time": "3个月",
+      "update_date": "2022-02-19",
+      "manual_url": "http://www.jytek.com/products?product_id=374"
+    },
+    {
+      "id": "JY2722010-01",
+      "name": "3U 18槽全混合PXI Express Gen3机箱",
+      "category": "PXIe Chassis",
+      "price": 63637.93,
+      "currency": "CNY",
+      "description": "3U 18槽全混合PXI Express Gen3机箱，配备高功率电源，24 GB/s系统带宽。",
+      "specifications": {
+        "PXI Express链路": "Gen3 X24",
+        "系统带宽": "24 GB/s",
+        "槽位带宽": "8 GB/s",
+        "总槽位": "18",
+        "系统槽": "1",
+        "混合槽": "17",
+        "槽位冷却能力": "58W (0°C ~ 40°C), 38W (0°C ~ 55°C)"
+      },
+      "stock_status": "现货",
+      "lead_time": "1个月",
+      "update_date": "2025-02-21",
+      "manual_url": "http://www.jytek.com/products?product_id=429"
+    },
+    {
+      "id": "JY2722020-01",
+      "name": "3U 18槽全混合PXI Express Gen2机箱",
+      "category": "PXIe Chassis",
+      "price": 43525.81,
+      "currency": "CNY",
+      "description": "3U 18槽全混合PXI Express Gen2机箱，8 GB/s系统带宽。",
+      "specifications": {
+        "PXI Express链路": "Gen2 X16",
+        "系统带宽": "8 GB/s",
+        "槽位带宽": "2 GB/s & 4 GB/s",
+        "总槽位": "18",
+        "系统槽": "1",
+        "混合槽": "17",
+        "槽位冷却能力": "58W (0°C ~ 40°C), 38W (0°C ~ 55°C)"
+      },
+      "stock_status": "现货",
+      "lead_time": "1个月",
+      "update_date": "2025-02-21",
+      "manual_url": "http://www.jytek.com/products?product_id=429"
+    }
+  ]
+}

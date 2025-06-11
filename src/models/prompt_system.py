@@ -207,14 +207,28 @@ class SimplePromptManager(BasePromptManager):
         """构建简单模式提示词"""
         config = self.load_config()
         
+        # 获取配置字段，使用默认值作为后备
+        company_name = config.get('company_name', self.default_config['company_name'])
+        main_product = config.get('main_product', self.default_config['main_product'])
+        tech_field = config.get('tech_field', ', '.join(self.default_config['focus_areas']))
+        style = config.get('style', self.default_config['response_style'])
+        
+        # 根据回答风格调整语调
+        style_prompts = {
+            'professional': '请提供专业、严谨的回答',
+            'friendly': '请用友好、亲切的语调回答',
+            'technical': '请提供详细的技术解释和原理说明'
+        }
+        style_instruction = style_prompts.get(style, style_prompts['professional'])
+        
         # 基础提示词模板
-        base_template = f"""你是{config['company_name']}的专业AI助手。
+        base_template = f"""你是{company_name}的专业AI助手。
 
-我们的主要产品是{config['main_product']}，专注于{', '.join(config['focus_areas'])}等领域。
+我们的主要产品是{main_product}，专注于{tech_field}等领域。
 
 用户问题：{question}
 
-请提供专业、准确的回答，重点介绍我们的技术优势和产品特色。"""
+{style_instruction}，重点介绍我们的技术优势和产品特色。"""
         
         # 根据知识库内容调整
         if context.get('knowledge_content'):

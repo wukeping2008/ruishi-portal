@@ -143,6 +143,9 @@ function showSection(sectionName) {
         case 'statistics':
             loadStatistics();
             break;
+        case 'prompts':
+            loadPromptManagement();
+            break;
     }
 }
 
@@ -999,4 +1002,470 @@ function showNotification(message, type = 'info') {
     setTimeout(() => {
         notification.remove();
     }, 3000);
+}
+
+// ==================== 提示词管理功能 ====================
+
+// 加载提示词管理
+async function loadPromptManagement() {
+    try {
+        // 加载管理模式
+        await loadPromptModes();
+        
+        // 设置学习阈值滑块事件
+        const thresholdSlider = document.getElementById('learning-threshold');
+        if (thresholdSlider) {
+            thresholdSlider.addEventListener('input', function() {
+                document.getElementById('threshold-value').textContent = this.value;
+            });
+        }
+        
+    } catch (error) {
+        console.error('加载提示词管理失败:', error);
+        showNotification('加载提示词管理失败', 'error');
+    }
+}
+
+// 加载提示词模式
+async function loadPromptModes() {
+    try {
+        // 管理员后台默认使用expert权限级别
+        const response = await fetch('/api/prompt/modes?user_level=expert');
+        const data = await response.json();
+        
+        if (data.success) {
+            displayPromptModes(data.modes);
+        } else {
+            throw new Error(data.error || '加载模式失败');
+        }
+    } catch (error) {
+        console.error('加载提示词模式失败:', error);
+        const container = document.getElementById('prompt-modes');
+        container.innerHTML = '<p class="text-red-500 text-center py-4">加载模式失败，请刷新重试</p>';
+    }
+}
+
+// 显示提示词模式
+function displayPromptModes(modes) {
+    const container = document.getElementById('prompt-modes');
+    
+    container.innerHTML = modes.map(mode => `
+        <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow cursor-pointer" onclick="selectPromptMode('${mode.id}')">
+            <div class="text-center mb-4">
+                <div class="text-4xl mb-2">${mode.icon}</div>
+                <h4 class="text-lg font-semibold text-gray-900">${mode.name}</h4>
+                <p class="text-sm text-gray-600 mt-1">${mode.description}</p>
+            </div>
+            <div class="mb-4">
+                <div class="flex items-center justify-between text-sm">
+                    <span class="text-gray-600">难度</span>
+                    <div class="flex">
+                        ${Array.from({length: 5}, (_, i) => 
+                            `<i class="fas fa-star ${i < mode.difficulty ? 'text-yellow-400' : 'text-gray-300'}"></i>`
+                        ).join('')}
+                    </div>
+                </div>
+            </div>
+            <div class="space-y-2">
+                ${mode.features.map(feature => `
+                    <div class="flex items-center text-sm text-gray-600">
+                        <i class="fas fa-check text-green-500 mr-2"></i>
+                        <span>${feature}</span>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `).join('');
+}
+
+// 选择提示词模式
+function selectPromptMode(modeId) {
+    // 隐藏所有配置区域
+    document.querySelectorAll('[id$="-mode-config"]').forEach(el => {
+        el.classList.add('hidden');
+    });
+    
+    // 显示选中的配置区域
+    const configElement = document.getElementById(`${modeId}-mode-config`);
+    if (configElement) {
+        configElement.classList.remove('hidden');
+        
+        // 滚动到配置区域
+        configElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+        // 加载对应模式的配置
+        loadModeConfig(modeId);
+    }
+    
+    showNotification(`已选择${getModeDisplayName(modeId)}`, 'info');
+}
+
+// 获取模式显示名称
+function getModeDisplayName(modeId) {
+    const names = {
+        'simple': '简单模式',
+        'template': '模板模式',
+        'json': 'JSON模式',
+        'intelligent': '智能模式',
+        'expert': '专家模式'
+    };
+    return names[modeId] || modeId;
+}
+
+// 加载模式配置
+async function loadModeConfig(modeId) {
+    try {
+        // 管理员后台使用expert权限级别
+        const response = await fetch(`/api/prompt/${modeId}/config?user_level=expert`);
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+                populateModeConfig(modeId, data.config);
+            }
+        }
+    } catch (error) {
+        console.log(`加载${modeId}模式配置失败:`, error);
+        // 不显示错误，因为可能是新配置
+    }
+}
+
+// 填充模式配置
+function populateModeConfig(modeId, config) {
+    switch (modeId) {
+        case 'simple':
+            if (config.company_name) document.getElementById('simple-company-name').value = config.company_name;
+            if (config.main_product) document.getElementById('simple-main-product').value = config.main_product;
+            if (config.tech_field) document.getElementById('simple-tech-field').value = config.tech_field;
+            if (config.style) document.getElementById('simple-style').value = config.style;
+            break;
+        case 'template':
+            if (config.template_type) document.getElementById('template-type').value = config.template_type;
+            if (config.content) document.getElementById('template-content').value = config.content;
+            break;
+        case 'json':
+            if (config.json_config) document.getElementById('json-config').value = JSON.stringify(config.json_config, null, 2);
+            break;
+        case 'expert':
+            if (config.foundation_layer) document.getElementById('foundation-layer').value = config.foundation_layer;
+            if (config.business_product) document.getElementById('business-product').value = config.business_product;
+            if (config.business_technical) document.getElementById('business-technical').value = config.business_technical;
+            if (config.business_training) document.getElementById('business-training').value = config.business_training;
+            if (config.personal_preference) document.getElementById('personal-preference').value = config.personal_preference;
+            if (config.personal_industry) document.getElementById('personal-industry').value = config.personal_industry;
+            if (config.personal_custom) document.getElementById('personal-custom').value = config.personal_custom;
+            if (config.priority_strategy) document.getElementById('priority-strategy').value = config.priority_strategy;
+            if (config.conflict_resolution) document.getElementById('conflict-resolution').value = config.conflict_resolution;
+            break;
+    }
+}
+
+// 保存简单模式配置
+async function saveSimpleConfig() {
+    const config = {
+        company_name: document.getElementById('simple-company-name').value,
+        main_product: document.getElementById('simple-main-product').value,
+        tech_field: document.getElementById('simple-tech-field').value,
+        style: document.getElementById('simple-style').value
+    };
+    
+    await savePromptConfig('simple', config);
+}
+
+// 保存模板模式配置
+async function saveTemplateConfig() {
+    const config = {
+        template_type: document.getElementById('template-type').value,
+        content: document.getElementById('template-content').value
+    };
+    
+    await savePromptConfig('template', config);
+}
+
+// 验证JSON配置
+function validateJsonConfig() {
+    const jsonText = document.getElementById('json-config').value;
+    
+    try {
+        JSON.parse(jsonText);
+        showNotification('JSON格式验证通过', 'success');
+        return true;
+    } catch (error) {
+        showNotification(`JSON格式错误: ${error.message}`, 'error');
+        return false;
+    }
+}
+
+// 保存JSON模式配置
+async function saveJsonConfig() {
+    if (!validateJsonConfig()) {
+        return;
+    }
+    
+    const jsonText = document.getElementById('json-config').value;
+    const config = {
+        json_config: JSON.parse(jsonText)
+    };
+    
+    await savePromptConfig('json', config);
+}
+
+// 保存智能模式配置
+async function saveIntelligentConfig() {
+    const config = {
+        intent_product: document.getElementById('intent-product').checked,
+        intent_technical: document.getElementById('intent-technical').checked,
+        intent_sales: document.getElementById('intent-sales').checked,
+        intent_general: document.getElementById('intent-general').checked,
+        optimization_frequency: document.getElementById('optimization-frequency').value,
+        learning_threshold: parseFloat(document.getElementById('learning-threshold').value)
+    };
+    
+    await savePromptConfig('intelligent', config);
+}
+
+// 保存专家模式配置
+async function saveExpertConfig() {
+    const config = {
+        foundation_layer: document.getElementById('foundation-layer').value,
+        business_product: document.getElementById('business-product').value,
+        business_technical: document.getElementById('business-technical').value,
+        business_training: document.getElementById('business-training').value,
+        personal_preference: document.getElementById('personal-preference').value,
+        personal_industry: document.getElementById('personal-industry').value,
+        personal_custom: document.getElementById('personal-custom').value,
+        priority_strategy: document.getElementById('priority-strategy').value,
+        conflict_resolution: document.getElementById('conflict-resolution').value
+    };
+    
+    await savePromptConfig('expert', config);
+}
+
+// 通用保存配置函数
+async function savePromptConfig(mode, config) {
+    try {
+        // 管理员后台使用expert权限级别
+        const response = await fetch(`/api/prompt/${mode}/config?user_level=expert`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(config)
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification(`${getModeDisplayName(mode)}配置保存成功`, 'success');
+        } else {
+            throw new Error(data.error || '保存失败');
+        }
+    } catch (error) {
+        console.error(`保存${mode}配置失败:`, error);
+        showNotification(`保存配置失败: ${error.message}`, 'error');
+    }
+}
+
+// 预览模板效果
+async function previewTemplate() {
+    const templateType = document.getElementById('template-type').value;
+    const content = document.getElementById('template-content').value;
+    
+    if (!content.trim()) {
+        showNotification('请先输入模板内容', 'warning');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/prompt/template/preview', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                template_type: templateType,
+                content: content,
+                variables: {
+                    company_name: '简仪科技',
+                    product_name: '锐视测控平台',
+                    question: '示例问题',
+                    knowledge_content: '示例知识库内容'
+                }
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // 显示预览模态框
+            showPreviewModal('模板预览', data.preview);
+        } else {
+            throw new Error(data.error || '预览失败');
+        }
+    } catch (error) {
+        console.error('预览模板失败:', error);
+        showNotification('预览失败', 'error');
+    }
+}
+
+// 预览专家模式提示词
+async function previewExpertPrompt() {
+    const config = {
+        foundation_layer: document.getElementById('foundation-layer').value,
+        business_product: document.getElementById('business-product').value,
+        business_technical: document.getElementById('business-technical').value,
+        business_training: document.getElementById('business-training').value,
+        personal_preference: document.getElementById('personal-preference').value,
+        personal_industry: document.getElementById('personal-industry').value,
+        personal_custom: document.getElementById('personal-custom').value,
+        priority_strategy: document.getElementById('priority-strategy').value,
+        conflict_resolution: document.getElementById('conflict-resolution').value
+    };
+    
+    try {
+        const response = await fetch('/api/prompt/expert/preview', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(config)
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showPreviewModal('专家模式合成预览', data.preview);
+        } else {
+            throw new Error(data.error || '预览失败');
+        }
+    } catch (error) {
+        console.error('预览专家模式失败:', error);
+        showNotification('预览失败', 'error');
+    }
+}
+
+// 运行智能分析
+async function runIntelligentAnalysis() {
+    try {
+        showNotification('正在运行智能分析...', 'info');
+        
+        const response = await fetch('/api/prompt/intelligent/analysis', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                analyze_conversations: true,
+                optimize_prompts: true
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification('智能分析完成', 'success');
+            
+            // 显示分析结果
+            if (data.analysis) {
+                showPreviewModal('智能分析结果', JSON.stringify(data.analysis, null, 2));
+            }
+        } else {
+            throw new Error(data.error || '分析失败');
+        }
+    } catch (error) {
+        console.error('智能分析失败:', error);
+        showNotification('智能分析失败', 'error');
+    }
+}
+
+// 测试提示词
+async function testPrompt() {
+    const question = document.getElementById('test-question').value.trim();
+    const modeElement = document.getElementById('test-mode');
+    const mode = modeElement ? modeElement.value : 'simple';
+    
+    if (!question) {
+        showNotification('请输入测试问题', 'warning');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/prompt/test', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                question: question,
+                mode: mode
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            displayTestResults(data);
+        } else {
+            throw new Error(data.error || '测试失败');
+        }
+    } catch (error) {
+        console.error('测试提示词失败:', error);
+        showNotification('测试失败', 'error');
+    }
+}
+
+// 显示测试结果
+function displayTestResults(data) {
+    const resultsContainer = document.getElementById('test-results');
+    const analysisContainer = document.getElementById('test-analysis');
+    
+    // 显示生成的提示词
+    resultsContainer.innerHTML = `
+        <div class="space-y-2">
+            <div class="text-sm font-medium text-gray-700">生成的提示词:</div>
+            <div class="text-sm text-gray-900 whitespace-pre-wrap">${data.generated_prompt || '未生成提示词'}</div>
+        </div>
+    `;
+    
+    // 显示分析结果
+    analysisContainer.innerHTML = `
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div>
+                <div class="text-lg font-semibold text-blue-600">${data.mode || '未知'}</div>
+                <div class="text-xs text-gray-500">模式</div>
+            </div>
+            <div>
+                <div class="text-lg font-semibold text-green-600">${data.prompt_length || 0}</div>
+                <div class="text-xs text-gray-500">字符数</div>
+            </div>
+            <div>
+                <div class="text-lg font-semibold text-purple-600">${data.estimated_tokens || 0}</div>
+                <div class="text-xs text-gray-500">预估Token</div>
+            </div>
+            <div>
+                <div class="text-lg font-semibold text-orange-600">${(data.complexity_score || 0).toFixed(1)}/5.0</div>
+                <div class="text-xs text-gray-500">复杂度</div>
+            </div>
+        </div>
+        ${data.has_knowledge ? '<div class="mt-2 text-sm text-green-600"><i class="fas fa-check mr-1"></i>包含知识库内容</div>' : '<div class="mt-2 text-sm text-gray-500"><i class="fas fa-times mr-1"></i>未包含知识库内容</div>'}
+    `;
+}
+
+// 显示预览模态框
+function showPreviewModal(title, content) {
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+    modal.innerHTML = `
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
+            <div class="flex justify-between items-center p-6 border-b">
+                <h3 class="text-lg font-semibold text-gray-900">${title}</h3>
+                <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto max-h-[70vh]">
+                <pre class="whitespace-pre-wrap text-sm text-gray-700 bg-gray-50 p-4 rounded-lg">${content}</pre>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
 }

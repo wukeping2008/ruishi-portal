@@ -3,1315 +3,298 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>产品中心 - 锐视测控平台</title>
-    <meta name="description" content="简仪科技锐视测控平台产品中心，提供数据采集、信号发生、数字I/O、射频微波等专业PXI测控产品">
-    
-    <!-- Font Awesome for icons -->
+    <title>产品中心 - 简仪科技锐视测控平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        :root {
-            /* 主色调 - 受Apple启发的柔和色彩 */
-            --primary-bg: #fafafa;
-            --secondary-bg: #ffffff;
-            --accent-bg: #f5f5f7;
-            --card-bg: #ffffff;
-            
-            /* 文字颜色 - 高对比度但不刺眼 */
-            --text-primary: #1d1d1f;
-            --text-secondary: #6e6e73;
-            --text-accent: #007aff;
-            --text-muted: #86868b;
-            
-            /* 品牌色 - 温和的蓝色系 */
-            --brand-primary: #007aff;
-            --brand-secondary: #5856d6;
-            --brand-accent: #34c759;
-            
-            /* 渐变色 - 柔和不刺眼 */
-            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --gradient-subtle: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-            --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-            
-            /* 阴影 - 微妙的深度 */
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
-            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
-            
-            /* 边框 */
-            --border-light: rgba(0, 0, 0, 0.05);
-            --border-medium: rgba(0, 0, 0, 0.1);
-            
-            /* 圆角 */
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 24px;
-        }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
-            background: var(--primary-bg);
-            color: var(--text-primary);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        /* 导航栏 */
-        .navbar {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
-            border-bottom: 1px solid var(--border-light);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            transition: all 0.3s ease;
-            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-        
-        .nav-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 0;
-        }
-        
-        .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .nav-logo {
-            background: var(--gradient-primary);
-            color: white;
-            padding: 8px 16px;
-            border-radius: var(--radius-md);
-            font-weight: 700;
-            font-size: 16px;
-        }
-        
-        .nav-info h1 {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        
-        .nav-info p {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-        
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        
-        .language-switcher {
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: var(--radius-md);
-            padding: 4px;
-            display: flex;
-            gap: 4px;
-        }
-        
-        .language-switcher button {
-            background: none;
-            border: none;
-            padding: 6px 12px;
-            border-radius: var(--radius-sm);
-            font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            color: var(--text-secondary);
-        }
-        
-        .language-switcher button.active {
-            background: var(--brand-primary);
-            color: white;
-        }
-        
-        .language-switcher button:hover:not(.active) {
-            background: rgba(0, 122, 255, 0.1);
-            color: var(--brand-primary);
-        }
-        
-        .back-button {
-            background: var(--brand-primary);
-            color: white;
-            padding: 8px 16px;
-            border-radius: var(--radius-md);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 14px;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .back-button:hover {
-            background: #0056cc;
-            transform: translateY(-1px);
-        }
-        
-        /* Hero区域 */
-        .hero {
-            background: var(--gradient-hero);
-            color: white;
-            padding: 80px 0;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255,255,255,0.08) 0%, transparent 50%);
-        }
-        
-        .hero-content {
-            position: relative;
-            z-index: 1;
-        }
-        
-        .hero-title {
-            font-size: clamp(36px, 6vw, 56px);
-            font-weight: 700;
-            margin-bottom: 16px;
-            letter-spacing: -0.02em;
-        }
-        
-        .hero-subtitle {
-            font-size: clamp(18px, 3vw, 24px);
-            margin-bottom: 32px;
-            color: rgba(255, 255, 255, 0.9);
-        }
-        
-        /* 主要内容区域 */
-        .main-content {
-            padding: 80px 0;
-        }
-        
-        /* 产品分类网格 */
-        .categories-section {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(30px) saturate(150%);
-            -webkit-backdrop-filter: blur(30px) saturate(150%);
-            border-radius: var(--radius-xl);
-            padding: 40px;
-            margin-bottom: 40px;
-            box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255, 255, 255, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .section-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .section-title {
-            font-size: clamp(28px, 4vw, 36px);
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 12px;
-        }
-        
-        .section-subtitle {
-            font-size: 18px;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-        }
-        
-        .category-card {
-            background: var(--card-bg);
-            border-radius: var(--radius-xl);
-            overflow: hidden;
-            border: 1px solid var(--border-light);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .category-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-xl);
-            border-color: var(--border-medium);
-        }
-        
-        .category-header {
-            padding: 32px 24px;
-            text-align: center;
-            position: relative;
-        }
-        
-        .category-header.data-acquisition { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .category-header.digital-io { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-        .category-header.multimeter { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
-        .category-header.distributed { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .category-header.educational { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
-        .category-header.oscilloscope { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
-        .category-header.signal-generation { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-        .category-header.digitizer { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
-        .category-header.switch { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        
-        .category-icon {
-            width: 64px;
-            height: 64px;
-            margin: 0 auto 16px;
-            border-radius: var(--radius-lg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            color: white;
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        .category-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 8px;
-        }
-        
-        .category-description {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.9);
-        }
-        
-        .category-body {
-            padding: 24px;
-        }
-        
-        .category-stats {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-        
-        .product-count {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-        
-        .category-arrow {
-            color: var(--brand-primary);
-            font-size: 18px;
-        }
-        
-        .category-features {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .category-features li {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .category-features li i {
-            color: var(--brand-primary);
-            width: 16px;
-        }
-        
-        /* 产品展示模态框 */
-        .modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            padding: 20px;
-        }
-        
-        .modal-content {
-            background: white;
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-xl);
-            width: 100%;
-            max-width: 1000px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .modal-header {
-            background: var(--gradient-hero);
-            color: white;
-            padding: 32px;
-            position: relative;
-        }
-        
-        .modal-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255,255,255,0.08) 0%, transparent 50%);
-        }
-        
-        .modal-header-content {
-            position: relative;
-            z-index: 1;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .modal-title {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        
-        .modal-subtitle {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.9);
-        }
-        
-        .modal-close {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: var(--radius-md);
-            transition: all 0.2s ease;
-        }
-        
-        .modal-close:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-        
-        .modal-body {
-            padding: 40px;
-        }
-        
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-        
-        .product-card {
-            background: var(--accent-bg);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            border: 1px solid var(--border-light);
-            transition: all 0.3s ease;
-        }
-        
-        .product-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
-            border-color: var(--brand-primary);
-        }
-        
-        .product-name {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-        }
-        
-        .product-category {
-            font-size: 14px;
-            color: var(--brand-primary);
-            margin-bottom: 12px;
-        }
-        
-        .product-description {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-            line-height: 1.5;
-        }
-        
-        .product-specs {
-            margin-bottom: 16px;
-        }
-        
-        .spec-item {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            margin-bottom: 4px;
-        }
-        
-        .spec-label {
-            color: var(--text-secondary);
-        }
-        
-        .spec-value {
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-        
-        .product-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-        
-        .product-tag {
-            background: var(--brand-primary);
-            color: white;
-            font-size: 12px;
-            padding: 4px 8px;
-            border-radius: var(--radius-sm);
-        }
-        
-        .product-actions {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .product-btn {
-            flex: 1;
-            padding: 10px 16px;
-            border: none;
-            border-radius: var(--radius-md);
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-        
-        .product-btn.primary {
-            background: var(--brand-primary);
-            color: white;
-        }
-        
-        .product-btn.primary:hover {
-            background: #0056cc;
-            transform: translateY(-1px);
-        }
-        
-        .product-btn.secondary {
-            background: var(--accent-bg);
-            color: var(--text-primary);
-            border: 1px solid var(--border-light);
-        }
-        
-        .product-btn.secondary:hover {
-            background: var(--secondary-bg);
-            border-color: var(--brand-primary);
-        }
-        
-        .modal-footer {
-            padding: 32px 40px;
-            border-top: 1px solid var(--border-light);
-            text-align: center;
-        }
-        
-        .modal-footer-text {
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-        }
-        
-        .modal-footer-actions {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-        
-        .footer-btn {
-            padding: 12px 24px;
-            border-radius: var(--radius-lg);
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .footer-btn.primary {
-            background: #dc2626;
-            color: white;
-        }
-        
-        .footer-btn.primary:hover {
-            background: #b91c1c;
-            transform: translateY(-1px);
-        }
-        
-        .footer-btn.secondary {
-            background: var(--brand-primary);
-            color: white;
-        }
-        
-        .footer-btn.secondary:hover {
-            background: #0056cc;
-            transform: translateY(-1px);
-        }
-        
-        /* 空状态 */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-secondary);
-        }
-        
-        .empty-icon {
-            font-size: 64px;
-            color: var(--text-muted);
-            margin-bottom: 16px;
-        }
-        
-        .empty-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        
-        .empty-desc {
-            font-size: 16px;
-        }
-        
-        /* 加载状态 */
-        .loading {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-            color: var(--text-secondary);
-        }
-        
-        .loading-spinner {
-            width: 24px;
-            height: 24px;
-            border: 3px solid var(--accent-bg);
-            border-top: 3px solid var(--brand-primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 12px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 16px;
-            }
-            
-            .hero {
-                padding: 60px 0;
-            }
-            
-            .main-content {
-                padding: 60px 0;
-            }
-            
-            .categories-grid {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-            
-            .products-grid {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-            
-            .modal {
-                padding: 10px;
-            }
-            
-            .modal-header,
-            .modal-body,
-            .modal-footer {
-                padding: 20px;
-            }
-            
-            .nav-actions {
-                flex-direction: column;
-                gap: 8px;
-            }
-        }
+        .product-card:hover { transform: translateY(-2px); transition: all 0.3s ease; }
+        .category-filter.active { background-color: #3b82f6; color: white; }
+        .price-badge { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .stock-available { color: #10b981; }
+        .stock-unavailable { color: #ef4444; }
+        .spec-table th { background-color: #f8fafc; }
+        .loading-spinner { animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     </style>
 </head>
-<body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-content">
-                <div class="nav-brand">
-                    <div class="nav-logo">SeeSharp</div>
-                    <div class="nav-info">
-                        <h1>简仪科技</h1>
-                        <p>产品中心</p>
+<body class="bg-gray-50">
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-sm border-b sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-xl font-bold text-gray-900">简仪科技 - 产品中心</h1>
                     </div>
                 </div>
-                <div class="nav-actions">
-                    <div class="language-switcher">
-                        <button data-lang="zh" onclick="switchLanguage('zh')">中文</button>
-                        <button data-lang="en" onclick="switchLanguage('en')">EN</button>
-                    </div>
-                    <a href="index.html" class="back-button">
-                        <i class="fas fa-arrow-left"></i>
-                        返回首页
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-gray-600 hover:text-gray-900">
+                        <i class="fas fa-home mr-2"></i>返回首页
+                    </a>
+                    <a href="/chat" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-comments mr-2"></i>AI助手
                     </a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1 class="hero-title">
-                    <i class="fas fa-microchip" style="margin-right: 16px;"></i>
-                    产品中心
-                </h1>
-                <p class="hero-subtitle">
-                    专业PXI模块化测控产品与解决方案
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Main Content -->
-    <div class="container">
-        <div class="main-content">
-            <!-- Product Categories -->
-            <div class="categories-section">
-                <div class="section-header">
-                    <h2 class="section-title">产品分类</h2>
-                    <p class="section-subtitle">
-                        简仪科技提供全系列PXI模块化测控产品，满足不同应用场景的专业需求
-                    </p>
-                </div>
+    <!-- 页面头部 -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="text-4xl font-bold mb-4">简仪科技产品中心</h1>
+                <p class="text-xl opacity-90 mb-8">专业的PXI/PXIe测试测量解决方案</p>
                 
-                <div class="categories-grid" id="product-categories">
-                    <div class="loading">
-                        <div class="loading-spinner"></div>
-                        <span>加载产品分类...</span>
+                <!-- 搜索栏 -->
+                <div class="max-w-2xl mx-auto">
+                    <div class="relative">
+                        <input type="text" id="search-input" placeholder="搜索产品型号、名称或关键词..." 
+                               class="w-full px-6 py-4 text-gray-900 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-white">
+                        <button onclick="searchProducts()" class="absolute right-2 top-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg">
+                            <i class="fas fa-search"></i>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript -->
-    <script>
-        // 产品分类数据
-        const productCategories = {
-            'data_acquisition': {
-                name: '数据采集设备',
-                description: '高精度数据采集模块和设备',
-                icon: 'fas fa-chart-line',
-                class: 'data-acquisition',
-                features: ['高精度采集', '多通道支持', '实时处理', '灵活配置'],
-                products: [
-                    {
-                        id: 'usb-1601',
-                        name: 'USB-1601 数据采集模块',
-                        category: '16位高精度数据采集',
-                        description: '16位分辨率，8路模拟输入，250kS/s采样率，支持多种触发模式，适用于高精度测量应用',
-                        specifications: {
-                            '分辨率': '16位',
-                            '通道数': '8路AI',
-                            '采样率': '250kS/s',
-                            '输入范围': '±10V',
-                            '精度': '±0.05%'
-                        },
-                        applications: ['振动测试', '温度监控', '电压测量', '传感器接口'],
-                        tags: ['高精度', '多通道', 'USB接口']
-                    },
-                    {
-                        id: 'pxi-1234',
-                        name: 'PXI-1234 高速数据采集卡',
-                        category: '高速同步采集',
-                        description: '24位分辨率，32路同步采集，1MS/s采样率，支持PXI总线，适用于多通道同步测量',
-                        specifications: {
-                            '分辨率': '24位',
-                            '通道数': '32路AI',
-                            '采样率': '1MS/s',
-                            '同步精度': '<1ns',
-                            '接口': 'PXI'
-                        },
-                        applications: ['结构测试', '声学测量', '多点监控', '同步分析'],
-                        tags: ['高速', '同步', 'PXI总线']
-                    },
-                    {
-                        id: 'usb-1208',
-                        name: 'USB-1208 便携式数据采集器',
-                        category: '便携式数据采集',
-                        description: '8路12位数据采集，便携式设计，USB供电，适用于现场测试和移动应用',
-                        specifications: {
-                            '分辨率': '12位',
-                            '通道数': '8路AI',
-                            '采样率': '50kS/s',
-                            '输入范围': '±5V',
-                            '接口': 'USB'
-                        },
-                        applications: ['现场测试', '便携测量', '教学实验', '快速验证'],
-                        tags: ['便携式', '即插即用', '经济型']
-                    }
-                ]
-            },
-            'digital_io': {
-                name: '数字I/O',
-                description: '高速数字I/O和控制模块',
-                icon: 'fas fa-microchip',
-                class: 'digital-io',
-                features: ['高速I/O', '可编程逻辑', '实时控制', '多种协议'],
-                products: [
-                    {
-                        id: 'usb-6501',
-                        name: 'USB-6501 数字I/O模块',
-                        category: '24路数字I/O',
-                        description: '24路数字I/O，5V TTL兼容，支持输入输出配置，适用于数字控制和监控应用',
-                        specifications: {
-                            '通道数': '24路DIO',
-                            '电平': '5V TTL',
-                            '更新率': '1MHz',
-                            '驱动能力': '24mA',
-                            '接口': 'USB'
-                        },
-                        applications: ['设备控制', '状态监控', '逻辑测试', '自动化控制'],
-                        tags: ['数字I/O', 'TTL', '高速']
-                    },
-                    {
-                        id: 'pxi-6528',
-                        name: 'PXI-6528 数字I/O卡',
-                        category: '48路数字I/O',
-                        description: '48路数字I/O，支持5V/3.3V逻辑电平，高速更新，适用于复杂数字控制应用',
-                        specifications: {
-                            '通道数': '48路DIO',
-                            '电平': '5V/3.3V',
-                            '更新率': '10MHz',
-                            '驱动能力': '64mA',
-                            '接口': 'PXI'
-                        },
-                        applications: ['复杂控制', '协议仿真', '高速测试', '系统集成'],
-                        tags: ['高密度', '多电平', 'PXI总线']
-                    }
-                ]
-            },
-            'digital_multimeter': {
-                name: '数字万用表',
-                description: '高精度数字万用表模块',
-                icon: 'fas fa-tachometer-alt',
-                class: 'multimeter',
-                features: ['高精度测量', '多种量程', '自动量程', '数据记录'],
-                products: [
-                    {
-                        id: 'usb-dmm',
-                        name: 'USB-DMM 数字万用表',
-                        category: '6.5位数字万用表',
-                        description: '6.5位分辨率数字万用表，支持电压、电流、电阻、频率等多种测量功能',
-                        specifications: {
-                            '分辨率': '6.5位',
-                            '直流电压': '100mV-1000V',
-                            '直流电流': '100μA-3A',
-                            '电阻': '100Ω-100MΩ',
-                            '精度': '±0.0035%'
-                        },
-                        applications: ['精密测量', '校准验证', '质量检测', '研发测试'],
-                        tags: ['高精度', '多功能', '自动量程']
-                    },
-                    {
-                        id: 'pxi-dmm',
-                        name: 'PXI-DMM 高精度万用表',
-                        category: '7.5位PXI万用表',
-                        description: '7.5位超高精度PXI数字万用表，适用于高精度测量和校准应用',
-                        specifications: {
-                            '分辨率': '7.5位',
-                            '直流电压': '100mV-1000V',
-                            '直流电流': '1μA-3A',
-                            '电阻': '1Ω-1GΩ',
-                            '精度': '±0.0015%'
-                        },
-                        applications: ['标准校准', '精密测量', '计量检测', '科研实验'],
-                        tags: ['超高精度', 'PXI总线', '计量级']
-                    }
-                ]
-            },
-            'distributed_acquisition': {
-                name: '分布式采集',
-                description: '分布式数据采集系统',
-                icon: 'fas fa-network-wired',
-                class: 'distributed',
-                features: ['分布式架构', '网络同步', '远程监控', '大规模部署'],
-                products: [
-                    {
-                        id: 'net-daq',
-                        name: 'NET-DAQ 网络数据采集器',
-                        category: '网络分布式采集',
-                        description: '基于以太网的分布式数据采集器，支持远程配置和监控，适用于大规模分布式测量',
-                        specifications: {
-                            '通道数': '16路AI',
-                            '分辨率': '16位',
-                            '采样率': '100kS/s',
-                            '网络接口': '以太网',
-                            '同步精度': '<10μs'
-                        },
-                        applications: ['结构健康监测', '环境监测', '工业自动化', '远程测试'],
-                        tags: ['网络化', '分布式', '远程监控']
-                    },
-                    {
-                        id: 'wireless-daq',
-                        name: 'Wireless-DAQ 无线采集器',
-                        category: '无线数据采集',
-                        description: '无线数据采集器，支持WiFi/蓝牙连接，电池供电，适用于移动和无线测量应用',
-                        specifications: {
-                            '通道数': '8路AI',
-                            '分辨率': '14位',
-                            '采样率': '50kS/s',
-                            '无线协议': 'WiFi/蓝牙',
-                            '电池续航': '8小时'
-                        },
-                        applications: ['移动测试', '野外监测', '无线传感', '便携应用'],
-                        tags: ['无线', '便携', '低功耗']
-                    }
-                ]
-            },
-            'educational_kit': {
-                name: '教育套件',
-                description: '专为教学和科研设计的实验套件',
-                icon: 'fas fa-graduation-cap',
-                class: 'educational',
-                features: ['教学友好', '实验指导', '模块化设计', '安全可靠'],
-                products: [
-                    {
-                        id: 'edu-basic',
-                        name: 'EDU-Basic 基础教学套件',
-                        category: '基础教学实验',
-                        description: '面向本科教学的基础实验套件，包含数据采集、信号发生、数字I/O等基础功能',
-                        specifications: {
-                            '数据采集': '8路16位',
-                            '信号发生': '2路12位',
-                            '数字I/O': '16路',
-                            '接口': 'USB',
-                            '软件': '教学版LabVIEW'
-                        },
-                        applications: ['本科教学', '基础实验', '课程设计', '毕业设计'],
-                        tags: ['教学版', '基础功能', '易上手']
-                    },
-                    {
-                        id: 'edu-advanced',
-                        name: 'EDU-Advanced 高级教学套件',
-                        category: '高级教学实验',
-                        description: '面向研究生和科研的高级实验套件，支持复杂信号处理和控制算法验证',
-                        specifications: {
-                            '数据采集': '16路24位',
-                            '信号发生': '4路16位',
-                            '数字I/O': '32路',
-                            '接口': 'USB/以太网',
-                            '软件': '完整版开发环境'
-                        },
-                        applications: ['研究生教学', '科研项目', '算法验证', '系统开发'],
-                        tags: ['科研级', '高性能', '全功能']
-                    }
-                ]
-            },
-            'oscilloscope': {
-                name: '示波器',
-                description: '高性能数字示波器模块',
-                icon: 'fas fa-wave-square',
-                class: 'oscilloscope',
-                features: ['高带宽', '高采样率', '深存储', '丰富触发'],
-                products: [
-                    {
-                        id: 'usb-scope',
-                        name: 'USB-Scope 便携示波器',
-                        category: '便携式示波器',
-                        description: '便携式USB示波器，双通道100MHz带宽，适用于现场调试和移动测试',
-                        specifications: {
-                            '通道数': '2通道',
-                            '带宽': '100MHz',
-                            '采样率': '1GS/s',
-                            '存储深度': '1Mpts',
-                            '接口': 'USB'
-                        },
-                        applications: ['现场调试', '电路分析', '信号测试', '教学演示'],
-                        tags: ['便携式', '即插即用', '高性价比']
-                    },
-                    {
-                        id: 'pxi-scope',
-                        name: 'PXI-Scope 高性能示波器',
-                        category: 'PXI数字示波器',
-                        description: '高性能PXI数字示波器，4通道500MHz带宽，深存储，适用于复杂信号分析',
-                        specifications: {
-                            '通道数': '4通道',
-                            '带宽': '500MHz',
-                            '采样率': '2.5GS/s',
-                            '存储深度': '64Mpts',
-                            '接口': 'PXI'
-                        },
-                        applications: ['信号分析', '协议解码', '系统测试', '研发验证'],
-                        tags: ['高带宽', '深存储', 'PXI总线']
-                    }
-                ]
-            },
-            'signal_generator': {
-                name: '信号发生器',
-                description: '任意波形和信号发生器模块',
-                icon: 'fas fa-broadcast-tower',
-                class: 'signal-generation',
-                features: ['任意波形', '高精度输出', '多通道同步', '灵活编程'],
-                products: [
-                    {
-                        id: 'usb-2020',
-                        name: 'USB-2020 任意波形发生器',
-                        category: '双通道信号发生器',
-                        description: '双通道任意波形输出，14位分辨率，100MS/s采样率，支持标准波形和自定义波形',
-                        specifications: {
-                            '分辨率': '14位',
-                            '通道数': '2路AO',
-                            '采样率': '100MS/s',
-                            '频率范围': 'DC-40MHz',
-                            '幅度范围': '±10V'
-                        },
-                        applications: ['信号仿真', '激励源', '校准信号', '测试激励'],
-                        tags: ['任意波形', '高频率', 'USB接口']
-                    },
-                    {
-                        id: 'pxi-awg',
-                        name: 'PXI-AWG 高速波形发生器',
-                        category: '高速任意波形发生器',
-                        description: '高速PXI任意波形发生器，16位分辨率，1GS/s采样率，支持复杂波形生成',
-                        specifications: {
-                            '分辨率': '16位',
-                            '通道数': '2路AO',
-                            '采样率': '1GS/s',
-                            '频率范围': 'DC-400MHz',
-                            '幅度范围': '±5V'
-                        },
-                        applications: ['高速信号测试', '通信仿真', '雷达测试', '射频激励'],
-                        tags: ['高速', '高精度', 'PXI总线']
-                    }
-                ]
-            },
-            'digitizer': {
-                name: '数字化仪',
-                description: '高速数字化仪和波形记录仪',
-                icon: 'fas fa-digital-tachograph',
-                class: 'digitizer',
-                features: ['高速采样', '深存储', '实时处理', '流盘记录'],
-                products: [
-                    {
-                        id: 'pxi-digitizer',
-                        name: 'PXI-Digitizer 高速数字化仪',
-                        category: '高速数字化仪',
-                        description: '高速PXI数字化仪，双通道1GS/s采样率，深存储，适用于高速信号捕获和分析',
-                        specifications: {
-                            '分辨率': '12位',
-                            '通道数': '2通道',
-                            '采样率': '1GS/s',
-                            '带宽': '500MHz',
-                            '存储深度': '512MB'
-                        },
-                        applications: ['高速信号捕获', '瞬态分析', '雷达信号', '通信测试'],
-                        tags: ['高速采样', '深存储', '实时处理']
-                    },
-                    {
-                        id: 'streaming-digitizer',
-                        name: 'Streaming-Digitizer 流盘数字化仪',
-                        category: '流盘数字化仪',
-                        description: '支持连续流盘记录的数字化仪，可长时间连续记录高速数据到硬盘',
-                        specifications: {
-                            '分辨率': '14位',
-                            '通道数': '4通道',
-                            '采样率': '200MS/s',
-                            '流盘速率': '800MB/s',
-                            '记录时长': '无限制'
-                        },
-                        applications: ['长时间记录', '大数据采集', '连续监测', '故障捕获'],
-                        tags: ['流盘记录', '长时间', '大容量']
-                    }
-                ]
-            },
-            'switch_module': {
-                name: '开关模块',
-                description: '多路开关和矩阵开关模块',
-                icon: 'fas fa-toggle-on',
-                class: 'switch',
-                features: ['多路切换', '矩阵开关', '低接触电阻', '高可靠性'],
-                products: [
-                    {
-                        id: 'pxi-switch',
-                        name: 'PXI-Switch 多路开关',
-                        category: '多路开关模块',
-                        description: '32路单刀单掷开关模块，低接触电阻，高可靠性，适用于信号路由和测试切换',
-                        specifications: {
-                            '开关数量': '32路SPST',
-                            '接触电阻': '<0.5Ω',
-                            '开关寿命': '10^7次',
-                            '切换时间': '<2ms',
-                            '接口': 'PXI'
-                        },
-                        applications: ['信号路由', '测试切换', '故障注入', '系统配置'],
-                        tags: ['多路开关', '低阻抗', '高可靠']
-                    },
-                    {
-                        id: 'matrix-switch',
-                        name: 'Matrix-Switch 矩阵开关',
-                        category: '矩阵开关模块',
-                        description: '8×8矩阵开关模块，支持任意路径连接，适用于复杂信号路由和自动化测试',
-                        specifications: {
-                            '矩阵规模': '8×8',
-                            '接触电阻': '<0.3Ω',
-                            '隔离度': '>80dB',
-                            '带宽': 'DC-100MHz',
-                            '接口': 'PXI'
-                        },
-                        applications: ['自动化测试', '信号矩阵', '多点测试', '系统集成'],
-                        tags: ['矩阵开关', '高隔离', '宽带']
-                    }
-                ]
-            }
-        };
-
-        // 页面加载完成后初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            displayProductCategories();
-            initializeLanguageSwitcher();
-        });
-
-        // 显示产品分类
-        function displayProductCategories() {
-            const container = document.getElementById('product-categories');
-            container.innerHTML = '';
-
-            Object.entries(productCategories).forEach(([categoryId, category]) => {
-                const productCount = category.products ? category.products.length : 0;
-                
-                const categoryCard = document.createElement('div');
-                categoryCard.className = 'category-card';
-                categoryCard.onclick = () => showCategoryProducts(categoryId, category);
-                
-                categoryCard.innerHTML = `
-                    <div class="category-header ${category.class}">
-                        <div class="category-icon">
-                            <i class="${category.icon}"></i>
-                        </div>
-                        <h3 class="category-title">${category.name}</h3>
-                        <p class="category-description">${category.description}</p>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- 侧边栏 - 分类和筛选 -->
+            <div class="lg:w-1/4">
+                <div class="bg-white rounded-lg shadow-sm p-6 sticky top-24">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">产品分类</h3>
+                    
+                    <!-- 分类筛选 -->
+                    <div id="category-filters" class="space-y-2 mb-6">
+                        <button onclick="filterByCategory('')" class="category-filter active w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-gray-100">
+                            全部产品
+                        </button>
+                        <!-- 分类将通过JavaScript动态加载 -->
                     </div>
-                    <div class="category-body">
-                        <div class="category-stats">
-                            <span class="product-count">${productCount} 个产品</span>
-                            <i class="fas fa-arrow-right category-arrow"></i>
-                        </div>
-                        <ul class="category-features">
-                            ${category.features.map(feature => 
-                                `<li><i class="fas fa-check"></i>${feature}</li>`
-                            ).join('')}
-                        </ul>
-                    </div>
-                `;
-                
-                container.appendChild(categoryCard);
-            });
-        }
 
-        // 显示分类产品
-        function showCategoryProducts(categoryId, category) {
-            const modal = document.createElement('div');
-            modal.className = 'modal';
-            modal.innerHTML = `
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <div class="modal-header-content">
-                            <div>
-                                <h2 class="modal-title">${category.name}</h2>
-                                <p class="modal-subtitle">${category.description}</p>
+                    <!-- 价格筛选 -->
+                    <h4 class="font-medium text-gray-900 mb-3">价格范围</h4>
+                    <div class="space-y-2 mb-6">
+                        <label class="flex items-center">
+                            <input type="checkbox" value="0-1000" class="price-filter mr-2">
+                            <span class="text-sm">¥0 - ¥1,000</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" value="1000-5000" class="price-filter mr-2">
+                            <span class="text-sm">¥1,000 - ¥5,000</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" value="5000-10000" class="price-filter mr-2">
+                            <span class="text-sm">¥5,000 - ¥10,000</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" value="10000-50000" class="price-filter mr-2">
+                            <span class="text-sm">¥10,000 - ¥50,000</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" value="50000+" class="price-filter mr-2">
+                            <span class="text-sm">¥50,000+</span>
+                        </label>
+                    </div>
+
+                    <!-- 库存状态筛选 -->
+                    <h4 class="font-medium text-gray-900 mb-3">库存状态</h4>
+                    <div class="space-y-2 mb-6">
+                        <label class="flex items-center">
+                            <input type="checkbox" value="现货" class="stock-filter mr-2">
+                            <span class="text-sm">现货</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" value="无现货" class="stock-filter mr-2">
+                            <span class="text-sm">无现货</span>
+                        </label>
+                    </div>
+
+                    <button onclick="applyFilters()" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                        应用筛选
+                    </button>
+                    <button onclick="clearFilters()" class="w-full mt-2 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50">
+                        清除筛选
+                    </button>
+                </div>
+            </div>
+
+            <!-- 主内容区 -->
+            <div class="lg:w-3/4">
+                <!-- 排序和视图选项 -->
+                <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-center">
+                        <div class="flex items-center space-x-4 mb-4 sm:mb-0">
+                            <span class="text-gray-600">排序方式:</span>
+                            <select id="sort-select" onchange="sortProducts()" class="border border-gray-300 rounded-lg px-3 py-1 text-sm">
+                                <option value="name">按名称</option>
+                                <option value="price-asc">价格从低到高</option>
+                                <option value="price-desc">价格从高到低</option>
+                                <option value="update-date">更新时间</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-gray-600">视图:</span>
+                            <button onclick="setView('grid')" id="grid-view-btn" class="p-2 rounded-lg bg-blue-600 text-white">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                            <button onclick="setView('list')" id="list-view-btn" class="p-2 rounded-lg text-gray-600 hover:bg-gray-100">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 产品列表 -->
+                <div id="products-container">
+                    <!-- 加载状态 -->
+                    <div id="loading-state" class="text-center py-12">
+                        <div class="loading-spinner rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-600 mx-auto mb-4"></div>
+                        <p class="text-gray-600">正在加载产品...</p>
+                    </div>
+
+                    <!-- 产品网格视图 -->
+                    <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 hidden">
+                        <!-- 产品卡片将通过JavaScript动态生成 -->
+                    </div>
+
+                    <!-- 产品列表视图 -->
+                    <div id="products-list" class="space-y-4 hidden">
+                        <!-- 产品列表项将通过JavaScript动态生成 -->
+                    </div>
+
+                    <!-- 空状态 -->
+                    <div id="empty-state" class="text-center py-12 hidden">
+                        <i class="fas fa-search text-4xl text-gray-400 mb-4"></i>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">未找到相关产品</h3>
+                        <p class="text-gray-600">请尝试调整搜索条件或筛选器</p>
+                    </div>
+                </div>
+
+                <!-- 分页 -->
+                <div id="pagination" class="mt-8 flex justify-center hidden">
+                    <!-- 分页控件将通过JavaScript动态生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 产品详情模态框 -->
+    <div id="product-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-screen overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-6">
+                    <h2 id="modal-product-name" class="text-2xl font-bold text-gray-900"></h2>
+                    <button onclick="closeProductModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- 产品基本信息 -->
+                    <div>
+                        <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                            <h3 class="font-semibold text-gray-900 mb-3">基本信息</h3>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">产品型号:</span>
+                                    <span id="modal-part-number" class="font-medium"></span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">产品分类:</span>
+                                    <span id="modal-category" class="font-medium"></span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">价格:</span>
+                                    <span id="modal-price" class="font-medium text-blue-600"></span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">库存状态:</span>
+                                    <span id="modal-stock-status" class="font-medium"></span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">供货周期:</span>
+                                    <span id="modal-delivery-period" class="font-medium"></span>
+                                </div>
                             </div>
-                            <button class="modal-close" onclick="closeModal(this)">
-                                <i class="fas fa-times"></i>
-                            </button>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <h3 class="font-semibold text-gray-900 mb-3">产品描述</h3>
+                            <p id="modal-description" class="text-gray-700 text-sm leading-relaxed"></p>
                         </div>
                     </div>
-                    
-                    <div class="modal-body">
-                        <div class="products-grid">
-                            ${generateProductCards(category.products || [])}
-                        </div>
-                    </div>
-                    
-                    <div class="modal-footer">
-                        <p class="modal-footer-text">需要更多产品信息或技术支持？</p>
-                        <div class="modal-footer-actions">
-                            <a href="https://www.jytek.com" target="_blank" class="footer-btn primary">
-                                <i class="fas fa-external-link-alt"></i>访问简仪科技官网
-                            </a>
-                            <button onclick="askCategoryQuestion('${category.name}')" class="footer-btn secondary">
-                                <i class="fas fa-question-circle"></i>AI技术咨询
-                            </button>
+
+                    <!-- 产品规格 -->
+                    <div>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <h3 class="font-semibold text-gray-900 mb-3">技术规格</h3>
+                            <div id="modal-specifications" class="text-sm">
+                                <!-- 规格表将通过JavaScript动态生成 -->
+                            </div>
                         </div>
                     </div>
                 </div>
-            `;
-            
-            document.body.appendChild(modal);
-            
-            // 点击背景关闭模态框
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    document.body.removeChild(modal);
-                }
-            });
-        }
 
-        // 生成产品卡片
-        function generateProductCards(products) {
-            if (!products || products.length === 0) {
-                return `
-                    <div class="empty-state">
-                        <i class="fas fa-box-open empty-icon"></i>
-                        <h3 class="empty-title">该分类暂无产品信息</h3>
-                        <p class="empty-desc">请访问官网获取最新产品信息</p>
-                    </div>
-                `;
-            }
-            
-            return products.map(product => `
-                <div class="product-card">
-                    <h3 class="product-name">${product.name}</h3>
-                    <p class="product-category">${product.category}</p>
-                    <p class="product-description">${product.description}</p>
-                    
-                    <div class="product-specs">
-                        ${Object.entries(product.specifications || {}).map(([key, value]) => 
-                            `<div class="spec-item">
-                                <span class="spec-label">${key}:</span>
-                                <span class="spec-value">${value}</span>
-                            </div>`
-                        ).join('')}
-                    </div>
-                    
-                    <div class="product-tags">
-                        ${(product.tags || []).map(tag => 
-                            `<span class="product-tag">${tag}</span>`
-                        ).join('')}
-                    </div>
-                    
-                    <div class="product-actions">
-                        <button onclick="askProductQuestion('${product.name}')" class="product-btn primary">
-                            <i class="fas fa-question-circle"></i>AI咨询
-                        </button>
-                        <button onclick="requestQuote('${product.name}')" class="product-btn secondary">
-                            <i class="fas fa-calculator"></i>获取报价
-                        </button>
-                    </div>
+                <div class="mt-8 flex space-x-4">
+                    <button onclick="contactSales()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg">
+                        <i class="fas fa-envelope mr-2"></i>联系销售
+                    </button>
+                    <button onclick="downloadDatasheet()" class="border border-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-50">
+                        <i class="fas fa-download mr-2"></i>下载资料
+                    </button>
+                    <button onclick="askAI()" class="border border-blue-600 text-blue-600 px-6 py-2 rounded-lg hover:bg-blue-50">
+                        <i class="fas fa-robot mr-2"></i>询问AI
+                    </button>
                 </div>
-            `).join('');
-        }
+            </div>
+        </div>
+    </div>
 
-        // 关闭模态框
-        function closeModal(button) {
-            const modal = button.closest('.modal');
-            if (modal) {
-                document.body.removeChild(modal);
-            }
-        }
+    <!-- 页脚 -->
+    <footer class="bg-gray-900 text-white py-12 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">简仪科技</h3>
+                    <p class="text-gray-400 text-sm">专业的测试测量解决方案提供商，致力于为客户提供高质量的PXI/PXIe产品和服务。</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">产品分类</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white">PXIe控制器</a></li>
+                        <li><a href="#" class="hover:text-white">数据采集卡</a></li>
+                        <li><a href="#" class="hover:text-white">任意波形发生器</a></li>
+                        <li><a href="#" class="hover:text-white">数字化仪</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">技术支持</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white">技术文档</a></li>
+                        <li><a href="#" class="hover:text-white">驱动下载</a></li>
+                        <li><a href="#" class="hover:text-white">应用案例</a></li>
+                        <li><a href="/chat" class="hover:text-white">AI助手</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">联系我们</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><i class="fas fa-phone mr-2"></i>400-123-4567</li>
+                        <li><i class="fas fa-envelope mr-2"></i>info@jytek.com</li>
+                        <li><i class="fas fa-map-marker-alt mr-2"></i>上海市浦东新区</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
+                <p>&copy; 2024 简仪科技. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
 
-        // 询问产品问题
-        function askProductQuestion(productName) {
-            const question = `请详细介绍${productName}的技术特点、应用场景和选型建议`;
-            const answerUrl = `answer.html?q=${encodeURIComponent(question)}`;
-            window.open(answerUrl, '_blank');
-        }
-
-        // 询问分类问题
-        function askCategoryQuestion(categoryName) {
-            const question = `请介绍简仪科技在${categoryName}领域的产品特色和技术优势`;
-            const answerUrl = `answer.html?q=${encodeURIComponent(question)}`;
-            window.open(answerUrl, '_blank');
-        }
-
-        // 请求报价
-        function requestQuote(productName) {
-            const question = `我想了解${productName}的详细报价和采购信息，包括技术规格、价格和交付周期`;
-            const answerUrl = `answer.html?q=${encodeURIComponent(question)}`;
-            window.open(answerUrl, '_blank');
-        }
-
-        // 语言切换功能
-        function switchLanguage(lang) {
-            if (lang === 'zh') {
-                document.documentElement.lang = 'zh-CN';
-                document.title = '产品中心 - 锐视测控平台';
-            } else if (lang === 'en') {
-                document.documentElement.lang = 'en';
-                document.title = 'Product Center - SeeSharp Platform';
-            }
-            
-            // 更新语言切换按钮状态
-            document.querySelectorAll('.language-switcher button').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.getAttribute('data-lang') === lang) {
-                    btn.classList.add('active');
-                }
-            });
-            
-            console.log('Language switched to:', lang);
-        }
-
-        // 初始化语言切换器
-        function initializeLanguageSwitcher() {
-            const defaultLang = 'zh';
-            switchLanguage(defaultLang);
-        }
-    </script>
+    <script src="/js/products.js"></script>
 </body>
 </html>

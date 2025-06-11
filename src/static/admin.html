@@ -54,6 +54,9 @@
                     <a href="#" onclick="showSection('statistics')" class="sidebar-item flex items-center px-4 py-2 text-gray-700 rounded-lg">
                         <i class="fas fa-chart-bar mr-3"></i>统计分析
                     </a>
+                    <a href="#" onclick="showSection('prompts')" class="sidebar-item flex items-center px-4 py-2 text-gray-700 rounded-lg">
+                        <i class="fas fa-brain mr-3"></i>提示词管理
+                    </a>
                 </nav>
             </div>
         </div>
@@ -402,6 +405,314 @@
                             </div>
                         </div>
                         <div id="conversations-pagination" class="mt-4 flex justify-center"></div>
+                    </div>
+                </div>
+
+                <!-- 提示词管理 -->
+                <div id="prompts-section" class="section hidden">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">提示词管理</h2>
+                    
+                    <!-- 提示词模式选择 -->
+                    <div class="bg-white p-6 rounded-lg shadow mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">选择管理模式</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="prompt-modes">
+                            <!-- 模式卡片将通过JavaScript动态加载 -->
+                            <div class="text-center py-8">
+                                <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600 mx-auto"></div>
+                                <p class="text-gray-500 mt-2">加载管理模式...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 简单模式配置 -->
+                    <div id="simple-mode-config" class="bg-white p-6 rounded-lg shadow mb-6 hidden">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">🚀 简单模式配置</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">公司名称</label>
+                                <input type="text" id="simple-company-name" value="简仪科技" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">主要产品</label>
+                                <input type="text" id="simple-main-product" value="锐视测控平台" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">技术领域</label>
+                                <input type="text" id="simple-tech-field" value="PXI系统、数据采集" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">回答风格</label>
+                                <select id="simple-style" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="professional">专业严谨</option>
+                                    <option value="friendly">友好亲切</option>
+                                    <option value="technical">技术详细</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <button onclick="saveSimpleConfig()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                                <i class="fas fa-save mr-2"></i>保存配置
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 模板模式配置 -->
+                    <div id="template-mode-config" class="bg-white p-6 rounded-lg shadow mb-6 hidden">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">📄 模板模式配置</h3>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">选择模板类型</label>
+                                <select id="template-type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="product_intro">产品介绍</option>
+                                    <option value="technical_support">技术支持</option>
+                                    <option value="sales_inquiry">销售咨询</option>
+                                    <option value="general_qa">通用问答</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">模板变量</label>
+                                <div class="text-sm text-gray-600">
+                                    <span class="inline-block bg-gray-100 px-2 py-1 rounded mr-2 mb-2">{company_name}</span>
+                                    <span class="inline-block bg-gray-100 px-2 py-1 rounded mr-2 mb-2">{product_name}</span>
+                                    <span class="inline-block bg-gray-100 px-2 py-1 rounded mr-2 mb-2">{question}</span>
+                                    <span class="inline-block bg-gray-100 px-2 py-1 rounded mr-2 mb-2">{knowledge_content}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">提示词模板</label>
+                            <textarea id="template-content" rows="8" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="输入提示词模板..."></textarea>
+                        </div>
+                        <div class="mt-4 flex space-x-4">
+                            <button onclick="saveTemplateConfig()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                                <i class="fas fa-save mr-2"></i>保存模板
+                            </button>
+                            <button onclick="previewTemplate()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
+                                <i class="fas fa-eye mr-2"></i>预览效果
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- JSON模式配置 -->
+                    <div id="json-mode-config" class="bg-white p-6 rounded-lg shadow mb-6 hidden">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">📝 JSON模式配置</h3>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">JSON配置</label>
+                                <textarea id="json-config" rows="12" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm" placeholder='{"prompts": {"default": "你是简仪科技的AI助手..."}}'></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">配置说明</label>
+                                <div class="text-sm text-gray-600 space-y-2">
+                                    <p><strong>基本结构：</strong></p>
+                                    <pre class="bg-gray-100 p-2 rounded text-xs">{
+  "prompts": {
+    "default": "默认提示词",
+    "product": "产品相关提示词",
+    "technical": "技术支持提示词"
+  },
+  "variables": {
+    "company": "简仪科技",
+    "platform": "锐视测控平台"
+  }
+}</pre>
+                                    <p><strong>支持的字段：</strong></p>
+                                    <ul class="list-disc list-inside space-y-1">
+                                        <li>prompts: 提示词模板</li>
+                                        <li>variables: 变量定义</li>
+                                        <li>rules: 回答规则</li>
+                                        <li>conditions: 条件判断</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex space-x-4">
+                            <button onclick="validateJsonConfig()" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg">
+                                <i class="fas fa-check mr-2"></i>验证JSON
+                            </button>
+                            <button onclick="saveJsonConfig()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                                <i class="fas fa-save mr-2"></i>保存配置
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 智能模式配置 -->
+                    <div id="intelligent-mode-config" class="bg-white p-6 rounded-lg shadow mb-6 hidden">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">🧠 智能模式配置</h3>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-3">意图分析设置</h4>
+                                <div class="space-y-3">
+                                    <label class="flex items-center">
+                                        <input type="checkbox" id="intent-product" checked class="mr-2">
+                                        <span>产品咨询识别</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" id="intent-technical" checked class="mr-2">
+                                        <span>技术支持识别</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" id="intent-sales" checked class="mr-2">
+                                        <span>销售询价识别</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" id="intent-general" checked class="mr-2">
+                                        <span>通用问答识别</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-3">优化策略</h4>
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">优化频率</label>
+                                        <select id="optimization-frequency" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option value="realtime">实时优化</option>
+                                            <option value="daily">每日优化</option>
+                                            <option value="weekly">每周优化</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">学习阈值</label>
+                                        <input type="range" id="learning-threshold" min="0.1" max="1.0" step="0.1" value="0.7" class="w-full">
+                                        <span class="text-sm text-gray-500">当前值: <span id="threshold-value">0.7</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex space-x-4">
+                            <button onclick="runIntelligentAnalysis()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
+                                <i class="fas fa-brain mr-2"></i>运行分析
+                            </button>
+                            <button onclick="saveIntelligentConfig()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                                <i class="fas fa-save mr-2"></i>保存配置
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 专家模式配置 -->
+                    <div id="expert-mode-config" class="bg-white p-6 rounded-lg shadow mb-6 hidden">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">🏗️ 专家模式 - 分层架构管理</h3>
+                        
+                        <!-- 基础层 -->
+                        <div class="border border-gray-200 rounded-lg p-4 mb-4">
+                            <h4 class="font-medium text-gray-900 mb-3 flex items-center">
+                                <span class="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
+                                基础层 (Foundation)
+                            </h4>
+                            <p class="text-sm text-gray-600 mb-3">公司核心信息，所有回答的基础</p>
+                            <textarea id="foundation-layer" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="输入基础层提示词..."></textarea>
+                        </div>
+
+                        <!-- 业务层 -->
+                        <div class="border border-gray-200 rounded-lg p-4 mb-4">
+                            <h4 class="font-medium text-gray-900 mb-3 flex items-center">
+                                <span class="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+                                业务层 (Business)
+                            </h4>
+                            <p class="text-sm text-gray-600 mb-3">场景特定的专业提示词</p>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">产品咨询</label>
+                                    <textarea id="business-product" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="产品相关提示词..."></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">技术支持</label>
+                                    <textarea id="business-technical" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="技术支持提示词..."></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">教育培训</label>
+                                    <textarea id="business-training" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="培训相关提示词..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 个性化层 -->
+                        <div class="border border-gray-200 rounded-lg p-4 mb-4">
+                            <h4 class="font-medium text-gray-900 mb-3 flex items-center">
+                                <span class="w-3 h-3 bg-purple-500 rounded-full mr-2"></span>
+                                个性化层 (Personalization)
+                            </h4>
+                            <p class="text-sm text-gray-600 mb-3">用户自定义和偏好设置</p>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">用户偏好</label>
+                                    <textarea id="personal-preference" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="用户偏好设置..."></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">行业定制</label>
+                                    <textarea id="personal-industry" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="行业定制内容..."></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">个人设置</label>
+                                    <textarea id="personal-custom" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="个人设置..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 继承规则配置 -->
+                        <div class="border border-gray-200 rounded-lg p-4 mb-4">
+                            <h4 class="font-medium text-gray-900 mb-3">继承规则配置</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">优先级策略</label>
+                                    <select id="priority-strategy" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <option value="override">覆盖模式</option>
+                                        <option value="merge">合并模式</option>
+                                        <option value="append">追加模式</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">冲突解决</label>
+                                    <select id="conflict-resolution" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <option value="higher-priority">高优先级优先</option>
+                                        <option value="user-defined">用户定义优先</option>
+                                        <option value="latest">最新配置优先</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex space-x-4">
+                            <button onclick="saveExpertConfig()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                                <i class="fas fa-save mr-2"></i>保存分层配置
+                            </button>
+                            <button onclick="previewExpertPrompt()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
+                                <i class="fas fa-eye mr-2"></i>预览合成效果
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 提示词测试 -->
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">🧪 提示词测试</h3>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">测试问题</label>
+                                <textarea id="test-question" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="输入问题测试提示词效果..."></textarea>
+                                <div class="mt-4 flex space-x-4">
+                                    <button onclick="testPrompt()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                                        <i class="fas fa-flask mr-2"></i>测试提示词
+                                    </button>
+                                    <select id="test-mode" class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <option value="simple">简单模式</option>
+                                        <option value="template">模板模式</option>
+                                        <option value="json">JSON模式</option>
+                                        <option value="intelligent">智能模式</option>
+                                        <option value="expert">专家模式</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">测试结果</label>
+                                <div id="test-results" class="border border-gray-300 rounded-lg p-4 h-32 overflow-y-auto bg-gray-50">
+                                    <p class="text-gray-500 text-center">点击"测试提示词"查看结果</p>
+                                </div>
+                                <div id="test-analysis" class="mt-4 text-sm text-gray-600">
+                                    <!-- 测试分析结果将显示在这里 -->
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

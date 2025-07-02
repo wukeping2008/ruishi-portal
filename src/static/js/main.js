@@ -172,10 +172,20 @@ async function loadProductCategories() {
         const data = await response.json();
         
         if (data.success) {
-            productCategories = data.categories;
-            displayProductCategories();
+            // 显示答案
+            showAnswer(question, data.answer);
+            
+            // 触发AI搜索完成事件，让推荐系统处理
+            const aiSearchEvent = new CustomEvent('aiSearchCompleted', {
+                detail: {
+                    question: question,
+                    answer: data.answer,
+                    timestamp: new Date().toISOString()
+                }
+            });
+            document.dispatchEvent(aiSearchEvent);
         } else {
-            throw new Error(data.error || '加载产品分类失败');
+            showNotification(data.error || '获取回答失败', 'error');
         }
     } catch (error) {
         console.error('加载产品分类失败:', error);

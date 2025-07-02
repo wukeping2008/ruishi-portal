@@ -25,14 +25,17 @@ try:
     from routes.knowledge_routes import knowledge_bp
     from routes.product_routes import product_bp
     from routes.admin_routes import admin_bp
+    from routes.recommendation_routes import recommendation_bp
     
     # Register blueprints
     app.register_blueprint(llm_bp)
     app.register_blueprint(product_bp)
     app.register_blueprint(knowledge_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(recommendation_bp)
     
     print("基础蓝图已成功注册")
+    print("AI智能推荐系统已启用")
 except ImportError as e:
     print(f"导入基础模块失败: {e}")
     print("将以简化模式运行")

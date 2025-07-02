@@ -1396,7 +1396,8 @@ async function testPrompt() {
             },
             body: JSON.stringify({
                 question: question,
-                mode: mode
+                mode: mode,
+                user_level: 'expert'  // 管理后台使用expert权限
             })
         });
         
@@ -1409,7 +1410,7 @@ async function testPrompt() {
         }
     } catch (error) {
         console.error('测试提示词失败:', error);
-        showNotification('测试失败', 'error');
+        showNotification(`测试失败: ${error.message}`, 'error');
     }
 }
 

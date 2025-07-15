@@ -1,0 +1,519 @@
+/* 产品页面专用样式 */
+
+/* 自定义变量 */
+:root {
+    --jytek-blue: #1e40af;
+    --jytek-light-blue: #3b82f6;
+    --jytek-gray: #6b7280;
+    --border-radius: 8px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* 产品卡片样式 */
+.product-card {
+    transition: all 0.3s ease;
+    border: 1px solid #e5e7eb;
+    position: relative;
+    overflow: hidden;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--jytek-light-blue);
+}
+
+.product-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--jytek-blue), var(--jytek-light-blue));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover::before {
+    transform: scaleX(1);
+}
+
+/* 产品图片占位符 */
+.product-image-placeholder {
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+    font-size: 2rem;
+    height: 200px;
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
+}
+
+/* 价格标签 */
+.price-badge {
+    background: linear-gradient(135deg, var(--jytek-blue), var(--jytek-light-blue));
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* 库存状态样式 */
+.stock-available {
+    color: #059669;
+}
+
+.stock-unavailable {
+    color: #dc2626;
+}
+
+.stock-limited {
+    color: #d97706;
+}
+
+/* 筛选面板样式 */
+.filter-panel {
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+.filter-panel::-webkit-scrollbar {
+    width: 4px;
+}
+
+.filter-panel::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 2px;
+}
+
+.filter-panel::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 2px;
+}
+
+.filter-panel::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* 分类筛选按钮 */
+.category-filter {
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.category-filter:hover {
+    background-color: #f8fafc;
+    border-color: var(--jytek-light-blue);
+}
+
+.category-filter.active {
+    background-color: var(--jytek-blue) !important;
+    color: white !important;
+    border-color: var(--jytek-blue);
+}
+
+/* 搜索建议样式 */
+.search-suggestion-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid #f3f4f6;
+    transition: background-color 0.2s ease;
+}
+
+.search-suggestion-item:hover {
+    background-color: #f8fafc;
+}
+
+.search-suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.search-suggestion-highlight {
+    background-color: #fef3c7;
+    font-weight: 600;
+}
+
+/* 活跃筛选标签 */
+.filter-tag {
+    background-color: var(--jytek-blue);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-tag .remove-tag {
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.filter-tag .remove-tag:hover {
+    opacity: 1;
+}
+
+/* 产品列表视图样式 */
+.product-list-item {
+    transition: all 0.2s ease;
+    border: 1px solid #e5e7eb;
+}
+
+.product-list-item:hover {
+    border-color: var(--jytek-light-blue);
+    box-shadow: var(--shadow-md);
+}
+
+/* 对比功能样式 */
+.compare-checkbox {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 10;
+}
+
+.compare-item {
+    background-color: #f3f4f6;
+    border: 1px solid #d1d5db;
+    border-radius: var(--border-radius);
+    padding: 0.5rem;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.compare-item .remove-compare {
+    cursor: pointer;
+    color: #6b7280;
+    transition: color 0.2s ease;
+}
+
+.compare-item .remove-compare:hover {
+    color: #374151;
+}
+
+/* AI助手样式 */
+.ai-message {
+    margin-bottom: 1rem;
+}
+
+.ai-message.user {
+    text-align: right;
+}
+
+.ai-message.user .message-content {
+    background-color: var(--jytek-blue);
+    color: white;
+    margin-left: 2rem;
+}
+
+.ai-message.assistant .message-content {
+    background-color: #f3f4f6;
+    color: #374151;
+    margin-right: 2rem;
+}
+
+.message-content {
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius);
+    display: inline-block;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+/* 加载动画 */
+.loading-spinner {
+    border: 2px solid #f3f4f6;
+    border-top: 2px solid var(--jytek-blue);
+    border-radius: 50%;
+    width: 1rem;
+    height: 1rem;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 脉冲加载动画 */
+.pulse-loading {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: .5;
+    }
+}
+
+/* 产品规格表格样式 */
+.specs-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.specs-table th,
+.specs-table td {
+    padding: 0.5rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.specs-table th {
+    background-color: #f9fafb;
+    font-weight: 600;
+    color: #374151;
+}
+
+.specs-table tr:hover {
+    background-color: #f9fafb;
+}
+
+/* 对比表格样式 */
+.compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.compare-table th,
+.compare-table td {
+    padding: 0.75rem;
+    text-align: center;
+    border: 1px solid #e5e7eb;
+    vertical-align: top;
+}
+
+.compare-table th {
+    background-color: #f9fafb;
+    font-weight: 600;
+    color: #374151;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.compare-table .spec-name {
+    text-align: left;
+    font-weight: 500;
+    background-color: #f9fafb;
+    position: sticky;
+    left: 0;
+    z-index: 5;
+}
+
+.compare-table .highlight {
+    background-color: #fef3c7;
+    font-weight: 600;
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+    .filter-panel {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 50;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .filter-panel.active {
+        transform: translateX(0);
+    }
+    
+    .filter-panel .filter-content {
+        background-color: white;
+        width: 320px;
+        height: 100%;
+        overflow-y: auto;
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .product-card {
+        margin-bottom: 1rem;
+    }
+    
+    .products-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .toolbar {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .toolbar .controls {
+        justify-content: space-between;
+        width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    .compare-bar {
+        padding: 0.75rem;
+    }
+    
+    .compare-bar .compare-info {
+        font-size: 0.75rem;
+    }
+    
+    .compare-items {
+        display: none;
+    }
+    
+    .modal-content {
+        margin: 1rem;
+        max-height: calc(100vh - 2rem);
+    }
+}
+
+/* 工具提示样式 */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: #374151;
+    color: white;
+    text-align: center;
+    border-radius: var(--border-radius);
+    padding: 0.5rem;
+    font-size: 0.75rem;
+    position: absolute;
+    z-index: 1000;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #374151 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* 无障碍访问增强 */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* 焦点样式 */
+.focus-visible:focus {
+    outline: 2px solid var(--jytek-blue);
+    outline-offset: 2px;
+}
+
+/* 打印样式 */
+@media print {
+    .filter-panel,
+    .toolbar,
+    .compare-bar,
+    .modal {
+        display: none !important;
+    }
+    
+    .product-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+    
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+}
+
+/* 深色模式支持 */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #1f2937;
+        --text-color: #f9fafb;
+        --border-color: #374151;
+        --card-bg: #374151;
+    }
+    
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+    }
+    
+    .product-card {
+        background-color: var(--card-bg);
+        border-color: var(--border-color);
+    }
+    
+    .filter-panel {
+        background-color: var(--card-bg);
+    }
+}
+
+/* 高对比度模式支持 */
+@media (prefers-contrast: high) {
+    .product-card {
+        border-width: 2px;
+    }
+    
+    .category-filter.active {
+        border-width: 2px;
+    }
+    
+    .price-badge {
+        border: 2px solid white;
+    }
+}
+
+/* 减少动画模式支持 */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

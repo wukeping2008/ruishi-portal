@@ -6,31 +6,20 @@
     <title>产品中心 - 简仪科技锐视测控平台</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .category-card {
-            transition: all 0.3s ease;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    <link rel="stylesheet" href="css/products.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'jytek-blue': '#1e40af',
+                        'jytek-light-blue': '#3b82f6',
+                        'jytek-gray': '#6b7280'
+                    }
+                }
+            }
         }
-        .category-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
-        }
-        .category-icon {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            transition: all 0.3s ease;
-        }
-        .category-card:hover .category-icon {
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            transform: scale(1.1);
-        }
-        .hero-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .feature-badge {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        }
-    </style>
+    </script>
 </head>
 <body class="bg-gray-50">
     <!-- 导航栏 -->
@@ -49,381 +38,386 @@
                     <a href="/knowledge.html" class="text-gray-600 hover:text-gray-900 transition-colors">
                         <i class="fas fa-book mr-2"></i>知识库
                     </a>
-                    <a href="/" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
-                        <i class="fas fa-comments mr-2"></i>AI助手
-                    </a>
+                    <button id="ai-assistant-btn" class="bg-jytek-blue hover:bg-jytek-light-blue text-white px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-robot mr-2"></i>AI助手
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- 页面头部 -->
-    <div class="hero-gradient text-white py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center">
-                <h1 class="text-5xl font-bold mb-6">简仪科技产品中心</h1>
-                <p class="text-xl opacity-90 mb-8 max-w-3xl mx-auto">
-                    专业的PXI/PXIe测试测量解决方案提供商<br>
-                    为您提供高质量、高性能的测控产品和服务
-                </p>
-                <div class="flex justify-center space-x-4">
-                    <span class="feature-badge text-white px-4 py-2 rounded-full text-sm font-medium">
-                        <i class="fas fa-award mr-2"></i>行业领先
-                    </span>
-                    <span class="feature-badge text-white px-4 py-2 rounded-full text-sm font-medium">
-                        <i class="fas fa-cog mr-2"></i>模块化设计
-                    </span>
-                    <span class="feature-badge text-white px-4 py-2 rounded-full text-sm font-medium">
-                        <i class="fas fa-shield-alt mr-2"></i>品质保证
-                    </span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 产品分类卡片 -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">产品分类</h2>
-            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                涵盖数据采集、信号发生、数字化仪、控制器等全系列PXI/PXIe产品
-            </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- PXIe控制器 -->
-            <div class="category-card rounded-2xl p-8 text-center cursor-pointer" onclick="viewCategory('controller')">
-                <div class="category-icon w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i class="fas fa-microchip text-3xl text-white"></i>
-                </div>
-                <h3 class="text-2xl font-bold text-gray-900 mb-4">PXIe控制器</h3>
-                <p class="text-gray-600 mb-6 leading-relaxed">
-                    高性能嵌入式控制器，支持多种操作系统，为测试系统提供强大的计算能力和丰富的I/O接口
-                </p>
-                <div class="flex justify-center space-x-4 text-sm text-gray-500 mb-6">
-                    <span><i class="fas fa-cpu mr-1"></i>Intel处理器</span>
-                    <span><i class="fas fa-memory mr-1"></i>大容量内存</span>
-                    <span><i class="fas fa-ethernet mr-1"></i>千兆网口</span>
-                </div>
-                <div class="bg-blue-50 rounded-lg p-4">
-                    <div class="text-blue-600 font-semibold">主要型号</div>
-                    <div class="text-sm text-gray-600 mt-1">JY8068465-01, JY1702524-01, JY3916604-01</div>
-                </div>
-            </div>
-
-            <!-- 数据采集卡 -->
-            <div class="category-card rounded-2xl p-8 text-center cursor-pointer" onclick="viewCategory('daq')">
-                <div class="category-icon w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i class="fas fa-chart-line text-3xl text-white"></i>
-                </div>
-                <h3 class="text-2xl font-bold text-gray-900 mb-4">数据采集卡</h3>
-                <p class="text-gray-600 mb-6 leading-relaxed">
-                    高精度、高速率数据采集解决方案，支持多种信号类型，满足各种测试测量需求
-                </p>
-                <div class="flex justify-center space-x-4 text-sm text-gray-500 mb-6">
-                    <span><i class="fas fa-tachometer-alt mr-1"></i>高采样率</span>
-                    <span><i class="fas fa-crosshairs mr-1"></i>高精度</span>
-                    <span><i class="fas fa-layer-group mr-1"></i>多通道</span>
-                </div>
-                <div class="bg-green-50 rounded-lg p-4">
-                    <div class="text-green-600 font-semibold">主要型号</div>
-                    <div class="text-sm text-gray-600 mt-1">JY2005510-01, JY2016301-01, JY2005315-01</div>
-                </div>
-            </div>
-
-            <!-- 任意波形发生器 -->
-            <div class="category-card rounded-2xl p-8 text-center cursor-pointer" onclick="viewCategory('awg')">
-                <div class="category-icon w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i class="fas fa-wave-square text-3xl text-white"></i>
-                </div>
-                <h3 class="text-2xl font-bold text-gray-900 mb-4">任意波形发生器</h3>
-                <p class="text-gray-600 mb-6 leading-relaxed">
-                    灵活的信号生成解决方案，支持标准波形和自定义波形，满足复杂的信号生成需求
-                </p>
-                <div class="flex justify-center space-x-4 text-sm text-gray-500 mb-6">
-                    <span><i class="fas fa-signal mr-1"></i>任意波形</span>
-                    <span><i class="fas fa-clock mr-1"></i>高频率</span>
-                    <span><i class="fas fa-sliders-h mr-1"></i>可编程</span>
-                </div>
-                <div class="bg-purple-50 rounded-lg p-4">
-                    <div class="text-purple-600 font-semibold">主要型号</div>
-                    <div class="text-sm text-gray-600 mt-1">JA9702000-01, JY5711001-01, JY5711001-03</div>
-                </div>
-            </div>
-
-            <!-- 数字化仪 -->
-            <div class="category-card rounded-2xl p-8 text-center cursor-pointer" onclick="viewCategory('digitizer')">
-                <div class="category-icon w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i class="fas fa-digital-tachograph text-3xl text-white"></i>
-                </div>
-                <h3 class="text-2xl font-bold text-gray-900 mb-4">数字化仪</h3>
-                <p class="text-gray-600 mb-6 leading-relaxed">
-                    高速数字化仪，提供出色的信号捕获和分析能力，适用于高频信号测试和分析
-                </p>
-                <div class="flex justify-center space-x-4 text-sm text-gray-500 mb-6">
-                    <span><i class="fas fa-bolt mr-1"></i>高速采样</span>
-                    <span><i class="fas fa-expand-arrows-alt mr-1"></i>宽带宽</span>
-                    <span><i class="fas fa-memory mr-1"></i>大缓存</span>
-                </div>
-                <div class="bg-orange-50 rounded-lg p-4">
-                    <div class="text-orange-600 font-semibold">主要型号</div>
-                    <div class="text-sm text-gray-600 mt-1">JA9802000-01, JY3771682-01, JY1233714-01</div>
-                </div>
-            </div>
-
-            <!-- PXIe机箱 -->
-            <div class="category-card rounded-2xl p-8 text-center cursor-pointer" onclick="viewCategory('chassis')">
-                <div class="category-icon w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i class="fas fa-server text-3xl text-white"></i>
-                </div>
-                <h3 class="text-2xl font-bold text-gray-900 mb-4">PXIe机箱</h3>
-                <p class="text-gray-600 mb-6 leading-relaxed">
-                    高性能PXIe机箱，提供稳定的电源和信号传输，支持多种槽位配置和扩展需求
-                </p>
-                <div class="flex justify-center space-x-4 text-sm text-gray-500 mb-6">
-                    <span><i class="fas fa-bolt mr-1"></i>高功率</span>
-                    <span><i class="fas fa-expand mr-1"></i>可扩展</span>
-                    <span><i class="fas fa-shield-alt mr-1"></i>稳定可靠</span>
-                </div>
-                <div class="bg-red-50 rounded-lg p-4">
-                    <div class="text-red-600 font-semibold">主要型号</div>
-                    <div class="text-sm text-gray-600 mt-1">JA2315001-02, JY2722010-01, JA2519002-01</div>
-                </div>
-            </div>
-
-            <!-- 数字I/O模块 -->
-            <div class="category-card rounded-2xl p-8 text-center cursor-pointer" onclick="viewCategory('dio')">
-                <div class="category-icon w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i class="fas fa-plug text-3xl text-white"></i>
-                </div>
-                <h3 class="text-2xl font-bold text-gray-900 mb-4">数字I/O模块</h3>
-                <p class="text-gray-600 mb-6 leading-relaxed">
-                    灵活的数字输入输出解决方案，支持多种数字信号标准，满足复杂的数字控制需求
-                </p>
-                <div class="flex justify-center space-x-4 text-sm text-gray-500 mb-6">
-                    <span><i class="fas fa-exchange-alt mr-1"></i>双向I/O</span>
-                    <span><i class="fas fa-layer-group mr-1"></i>多通道</span>
-                    <span><i class="fas fa-shield-alt mr-1"></i>隔离保护</span>
-                </div>
-                <div class="bg-indigo-50 rounded-lg p-4">
-                    <div class="text-indigo-600 font-semibold">主要型号</div>
-                    <div class="text-sm text-gray-600 mt-1">JY2005211-01, JY2005411-01, JY5046684-01</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 技术优势 -->
-    <div class="bg-white py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">技术优势</h2>
-                <p class="text-lg text-gray-600">为什么选择简仪科技的PXI/PXIe产品</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="text-center">
-                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-rocket text-2xl text-blue-600"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">高性能</h3>
-                    <p class="text-gray-600 text-sm">采用最新技术，提供卓越的测试性能</p>
-                </div>
-                <div class="text-center">
-                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-puzzle-piece text-2xl text-green-600"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">模块化</h3>
-                    <p class="text-gray-600 text-sm">灵活的模块化设计，易于扩展和维护</p>
-                </div>
-                <div class="text-center">
-                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-handshake text-2xl text-purple-600"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">可靠性</h3>
-                    <p class="text-gray-600 text-sm">严格的质量控制，确保产品可靠性</p>
-                </div>
-                <div class="text-center">
-                    <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-headset text-2xl text-orange-600"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">技术支持</h3>
-                    <p class="text-gray-600 text-sm">专业的技术团队，提供全方位支持</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 应用领域 -->
-    <div class="bg-gray-50 py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">应用领域</h2>
-                <p class="text-lg text-gray-600">广泛应用于各个行业的测试测量需求</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white rounded-lg p-6 shadow-sm">
-                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                        <i class="fas fa-industry text-xl text-blue-600"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">工业自动化</h3>
-                    <p class="text-gray-600 text-sm">生产线测试、质量控制、设备监控</p>
-                </div>
-                <div class="bg-white rounded-lg p-6 shadow-sm">
-                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                        <i class="fas fa-car text-xl text-green-600"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">汽车电子</h3>
-                    <p class="text-gray-600 text-sm">ECU测试、HIL仿真、电池管理系统测试</p>
-                </div>
-                <div class="bg-white rounded-lg p-6 shadow-sm">
-                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                        <i class="fas fa-satellite text-xl text-purple-600"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">航空航天</h3>
-                    <p class="text-gray-600 text-sm">航电设备测试、雷达系统测试、卫星通信测试</p>
-                </div>
-                <div class="bg-white rounded-lg p-6 shadow-sm">
-                    <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-                        <i class="fas fa-graduation-cap text-xl text-orange-600"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">教育科研</h3>
-                    <p class="text-gray-600 text-sm">实验室建设、科研项目、教学实验</p>
-                </div>
-                <div class="bg-white rounded-lg p-6 shadow-sm">
-                    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
-                        <i class="fas fa-broadcast-tower text-xl text-red-600"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">通信电子</h3>
-                    <p class="text-gray-600 text-sm">5G设备测试、基站测试、射频器件测试</p>
-                </div>
-                <div class="bg-white rounded-lg p-6 shadow-sm">
-                    <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
-                        <i class="fas fa-heartbeat text-xl text-indigo-600"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">医疗设备</h3>
-                    <p class="text-gray-600 text-sm">医疗器械测试、生物信号采集、设备校准</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 联系我们 -->
-    <div class="bg-white py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">需要技术支持？</h2>
-                <p class="text-lg text-gray-600 mb-8">我们的专业团队随时为您提供帮助</p>
-                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                    <a href="/" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors">
-                        <i class="fas fa-robot mr-2"></i>AI智能助手
-                    </a>
-                    <a href="mailto:info@jytek.com" class="border border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-3 rounded-lg font-medium transition-colors">
-                        <i class="fas fa-envelope mr-2"></i>联系销售
-                    </a>
-                    <a href="tel:400-123-4567" class="border border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-lg font-medium transition-colors">
-                        <i class="fas fa-phone mr-2"></i>技术热线
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 页脚 -->
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <h3 class="text-lg font-semibold mb-4">简仪科技</h3>
-                    <p class="text-gray-400 text-sm">专业的测试测量解决方案提供商，致力于为客户提供高质量的PXI/PXIe产品和服务。</p>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-4">产品分类</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="#" class="hover:text-white transition-colors">PXIe控制器</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">数据采集卡</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">任意波形发生器</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">数字化仪</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-4">技术支持</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="/knowledge.html" class="hover:text-white transition-colors">技术文档</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">驱动下载</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">应用案例</a></li>
-                        <li><a href="/" class="hover:text-white transition-colors">AI助手</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-4">联系我们</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li><i class="fas fa-phone mr-2"></i>400-123-4567</li>
-                        <li><i class="fas fa-envelope mr-2"></i>info@jytek.com</li>
-                        <li><i class="fas fa-map-marker-alt mr-2"></i>上海市浦东新区</li>
-                        <li><i class="fas fa-globe mr-2"></i>www.jytek.com</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-                <p>&copy; 2024 简仪科技. 保留所有权利.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        // 查看产品分类
-        function viewCategory(category) {
-            // 这里可以跳转到详细的产品列表页面
-            // 或者显示该分类下的具体产品
-            alert(`即将查看 ${getCategoryName(category)} 产品详情`);
+    <!-- 主要内容区域 -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="flex flex-col lg:flex-row gap-6">
             
-            // 实际应用中可以跳转到详细页面
-            // window.location.href = `/products/category/${category}`;
-        }
+            <!-- 左侧筛选面板 -->
+            <aside class="lg:w-80 flex-shrink-0">
+                <div class="bg-white rounded-lg shadow-sm p-6 sticky top-24">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-lg font-semibold text-gray-900">筛选条件</h2>
+                        <button id="clear-filters" class="text-sm text-jytek-blue hover:text-jytek-light-blue">
+                            <i class="fas fa-times mr-1"></i>清除
+                        </button>
+                    </div>
 
-        // 获取分类中文名称
-        function getCategoryName(category) {
-            const names = {
-                'controller': 'PXIe控制器',
-                'daq': '数据采集卡',
-                'awg': '任意波形发生器',
-                'digitizer': '数字化仪',
-                'chassis': 'PXIe机箱',
-                'dio': '数字I/O模块'
-            };
-            return names[category] || category;
-        }
+                    <!-- 搜索框 -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">产品搜索</label>
+                        <div class="relative">
+                            <input type="text" id="search-input" 
+                                   placeholder="搜索产品名称、型号或关键词..." 
+                                   class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jytek-blue focus:border-transparent">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-search text-gray-400"></i>
+                            </div>
+                        </div>
+                        <!-- 搜索建议 -->
+                        <div id="search-suggestions" class="hidden absolute z-10 w-full bg-white border border-gray-200 rounded-lg shadow-lg mt-1">
+                        </div>
+                    </div>
 
-        // 页面加载完成后的初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            // 添加平滑滚动效果
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                });
-            });
+                    <!-- 产品分类 -->
+                    <div class="mb-6">
+                        <h3 class="text-sm font-medium text-gray-900 mb-3">产品分类</h3>
+                        <div id="category-filters" class="space-y-2">
+                            <button class="category-filter active w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-gray-100 bg-jytek-blue text-white" 
+                                    data-category="">
+                                全部分类 (<span id="total-count">0</span>)
+                            </button>
+                        </div>
+                    </div>
 
-            // 添加卡片悬停效果
-            const cards = document.querySelectorAll('.category-card');
-            cards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-8px)';
-                });
-                
-                card.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0)';
-                });
-            });
-        });
-    </script>
+                    <!-- 价格区间 -->
+                    <div class="mb-6">
+                        <h3 class="text-sm font-medium text-gray-900 mb-3">价格区间</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="price-filter rounded border-gray-300 text-jytek-blue focus:ring-jytek-blue" value="0-5000">
+                                <span class="ml-2 text-sm text-gray-700">¥5,000以下</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="price-filter rounded border-gray-300 text-jytek-blue focus:ring-jytek-blue" value="5000-15000">
+                                <span class="ml-2 text-sm text-gray-700">¥5,000 - ¥15,000</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="price-filter rounded border-gray-300 text-jytek-blue focus:ring-jytek-blue" value="15000-50000">
+                                <span class="ml-2 text-sm text-gray-700">¥15,000 - ¥50,000</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="price-filter rounded border-gray-300 text-jytek-blue focus:ring-jytek-blue" value="50000+">
+                                <span class="ml-2 text-sm text-gray-700">¥50,000以上</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 库存状态 -->
+                    <div class="mb-6">
+                        <h3 class="text-sm font-medium text-gray-900 mb-3">库存状态</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="stock-filter rounded border-gray-300 text-jytek-blue focus:ring-jytek-blue" value="现货">
+                                <span class="ml-2 text-sm text-gray-700">现货</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="stock-filter rounded border-gray-300 text-jytek-blue focus:ring-jytek-blue" value="预订">
+                                <span class="ml-2 text-sm text-gray-700">预订</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 技术规格筛选 -->
+                    <div class="mb-6">
+                        <h3 class="text-sm font-medium text-gray-900 mb-3">技术规格</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs text-gray-600 mb-1">通道数</label>
+                                <select id="channels-filter" class="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-jytek-blue">
+                                    <option value="">不限</option>
+                                    <option value="1-8">1-8通道</option>
+                                    <option value="9-16">9-16通道</option>
+                                    <option value="17-32">17-32通道</option>
+                                    <option value="32+">32通道以上</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-600 mb-1">分辨率</label>
+                                <select id="resolution-filter" class="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-jytek-blue">
+                                    <option value="">不限</option>
+                                    <option value="12">12位</option>
+                                    <option value="16">16位</option>
+                                    <option value="18">18位</option>
+                                    <option value="24">24位</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 应用筛选器按钮 -->
+                    <button id="apply-filters" class="w-full bg-jytek-blue hover:bg-jytek-light-blue text-white py-2 px-4 rounded-lg transition-colors">
+                        <i class="fas fa-filter mr-2"></i>应用筛选
+                    </button>
+                </div>
+            </aside>
+
+            <!-- 右侧主内容区 -->
+            <main class="flex-1">
+                <!-- 工具栏 -->
+                <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <!-- 左侧：结果统计和筛选标签 -->
+                        <div class="flex-1">
+                            <div class="flex items-center gap-4 mb-2">
+                                <span id="results-count" class="text-sm text-gray-600">共 0 个产品</span>
+                                <button id="toggle-mobile-filters" class="lg:hidden text-jytek-blue hover:text-jytek-light-blue">
+                                    <i class="fas fa-filter mr-1"></i>筛选
+                                </button>
+                            </div>
+                            <!-- 活跃筛选标签 -->
+                            <div id="active-filters" class="flex flex-wrap gap-2">
+                            </div>
+                        </div>
+
+                        <!-- 右侧：排序和视图控制 -->
+                        <div class="flex items-center gap-4">
+                            <!-- 排序选择 -->
+                            <div class="flex items-center gap-2">
+                                <label class="text-sm text-gray-600">排序:</label>
+                                <select id="sort-select" class="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-jytek-blue">
+                                    <option value="name">名称</option>
+                                    <option value="price-asc">价格从低到高</option>
+                                    <option value="price-desc">价格从高到低</option>
+                                    <option value="update-date">最新更新</option>
+                                    <option value="popularity">热门程度</option>
+                                </select>
+                            </div>
+
+                            <!-- 视图切换 -->
+                            <div class="flex items-center border border-gray-300 rounded-lg">
+                                <button id="grid-view-btn" class="p-2 rounded-l-lg bg-jytek-blue text-white hover:bg-jytek-light-blue transition-colors">
+                                    <i class="fas fa-th"></i>
+                                </button>
+                                <button id="list-view-btn" class="p-2 rounded-r-lg text-gray-600 hover:bg-gray-100 transition-colors">
+                                    <i class="fas fa-list"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 产品展示区域 -->
+                <div id="products-container">
+                    <!-- 加载状态 -->
+                    <div id="loading-state" class="hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div class="animate-pulse">
+                                <div class="bg-gray-300 h-48 rounded-lg mb-4"></div>
+                                <div class="bg-gray-300 h-4 rounded mb-2"></div>
+                                <div class="bg-gray-300 h-4 rounded w-3/4"></div>
+                            </div>
+                            <div class="animate-pulse">
+                                <div class="bg-gray-300 h-48 rounded-lg mb-4"></div>
+                                <div class="bg-gray-300 h-4 rounded mb-2"></div>
+                                <div class="bg-gray-300 h-4 rounded w-3/4"></div>
+                            </div>
+                            <div class="animate-pulse">
+                                <div class="bg-gray-300 h-48 rounded-lg mb-4"></div>
+                                <div class="bg-gray-300 h-4 rounded mb-2"></div>
+                                <div class="bg-gray-300 h-4 rounded w-3/4"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 网格视图 -->
+                    <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    </div>
+
+                    <!-- 列表视图 -->
+                    <div id="products-list" class="hidden space-y-4">
+                    </div>
+
+                    <!-- 空状态 -->
+                    <div id="empty-state" class="hidden text-center py-12">
+                        <div class="max-w-md mx-auto">
+                            <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">未找到匹配的产品</h3>
+                            <p class="text-gray-600 mb-6">请尝试调整筛选条件或搜索关键词</p>
+                            <button id="reset-search" class="bg-jytek-blue hover:bg-jytek-light-blue text-white px-6 py-2 rounded-lg transition-colors">
+                                重置搜索
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 分页 -->
+                <div id="pagination" class="hidden flex justify-center mt-8">
+                </div>
+
+                <!-- 产品对比栏 -->
+                <div id="compare-bar" class="hidden fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-4 z-40">
+                    <div class="max-w-7xl mx-auto flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <span class="text-sm font-medium">产品对比 (<span id="compare-count">0</span>/3)</span>
+                            <div id="compare-items" class="flex gap-2">
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button id="clear-compare" class="text-sm text-gray-600 hover:text-gray-900">清除</button>
+                            <button id="start-compare" class="bg-jytek-blue hover:bg-jytek-light-blue text-white px-4 py-2 rounded-lg text-sm">
+                                开始对比
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- AI助手弹窗 -->
+    <div id="ai-assistant-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[80vh] flex flex-col">
+                <div class="flex items-center justify-between p-6 border-b">
+                    <h3 class="text-lg font-semibold">AI产品助手</h3>
+                    <button id="close-ai-assistant" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div id="ai-chat-container" class="flex-1 p-6 overflow-y-auto">
+                    <div class="space-y-4">
+                        <div class="ai-message">
+                            <div class="flex items-start gap-3">
+                                <div class="w-8 h-8 bg-jytek-blue rounded-full flex items-center justify-center">
+                                    <i class="fas fa-robot text-white text-sm"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm text-gray-600">您好！我是简仪科技的AI产品助手。我可以帮您：</p>
+                                    <ul class="text-sm text-gray-600 mt-2 space-y-1">
+                                        <li>• 推荐适合的产品</li>
+                                        <li>• 解答技术问题</li>
+                                        <li>• 对比产品规格</li>
+                                        <li>• 提供解决方案建议</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 border-t">
+                    <div class="flex gap-2">
+                        <input type="text" id="ai-input" placeholder="请输入您的问题..." 
+                               class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-jytek-blue focus:border-transparent">
+                        <button id="send-ai-message" class="bg-jytek-blue hover:bg-jytek-light-blue text-white px-6 py-2 rounded-lg transition-colors">
+                            发送
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 产品详情模态框 -->
+    <div id="product-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+                <div class="flex items-center justify-between p-6 border-b">
+                    <h3 id="modal-product-name" class="text-xl font-semibold"></h3>
+                    <button id="close-product-modal" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div>
+                            <div class="bg-gray-100 rounded-lg p-8 mb-6">
+                                <div class="text-center text-gray-500">
+                                    <i class="fas fa-image text-4xl mb-2"></i>
+                                    <p>产品图片</p>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">产品型号:</span>
+                                    <span id="modal-part-number" class="font-medium"></span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">产品分类:</span>
+                                    <span id="modal-category" class="font-medium"></span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">价格:</span>
+                                    <span id="modal-price" class="font-medium text-jytek-blue"></span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">库存状态:</span>
+                                    <span id="modal-stock-status" class="font-medium"></span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">供货周期:</span>
+                                    <span id="modal-delivery-period" class="font-medium"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold mb-4">产品描述</h4>
+                            <p id="modal-description" class="text-gray-600 mb-6"></p>
+                            
+                            <h4 class="text-lg font-semibold mb-4">技术规格</h4>
+                            <div id="modal-specifications" class="mb-6"></div>
+                            
+                            <div class="flex gap-3">
+                                <button onclick="contactSales()" class="flex-1 bg-jytek-blue hover:bg-jytek-light-blue text-white py-2 px-4 rounded-lg transition-colors">
+                                    <i class="fas fa-envelope mr-2"></i>联系销售
+                                </button>
+                                <button onclick="downloadDatasheet()" class="flex-1 border border-jytek-blue text-jytek-blue hover:bg-jytek-blue hover:text-white py-2 px-4 rounded-lg transition-colors">
+                                    <i class="fas fa-download mr-2"></i>下载资料
+                                </button>
+                                <button onclick="askAI()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                                    <i class="fas fa-robot mr-2"></i>询问AI
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 产品对比模态框 -->
+    <div id="compare-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] overflow-y-auto">
+                <div class="flex items-center justify-between p-6 border-b">
+                    <h3 class="text-xl font-semibold">产品对比</h3>
+                    <button id="close-compare-modal" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div id="compare-content" class="p-6">
+                    <!-- 对比内容将在这里动态生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 移动端筛选面板 -->
+    <div id="mobile-filters" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 lg:hidden">
+        <div class="flex justify-end">
+            <div class="bg-white w-80 h-full overflow-y-auto">
+                <div class="p-4 border-b">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold">筛选条件</h3>
+                        <button id="close-mobile-filters" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="mobile-filters-content" class="p-4">
+                    <!-- 移动端筛选内容将复制桌面端的筛选面板 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/products.js"></script>
 </body>
 </html>

@@ -116,22 +116,68 @@ def search_products():
         data = request.get_json()
         keyword = data.get('keyword', '')
         category = data.get('category')
-        price_min = data.get('price_min')
-        price_max = data.get('price_max')
-        stock_status = data.get('stock_status')
+        price_ranges = data.get('priceRanges', [])
+        stock_status = data.get('stockStatus', [])
+        channels = data.get('channels', '')
+        resolution = data.get('resolution', '')
         
         # 基础搜索
         products = product_manager.search_products(keyword, category)
         
-        # 价格过滤
-        if price_min is not None:
-            products = [p for p in products if p.get('price', 0) >= price_min]
-        if price_max is not None:
-            products = [p for p in products if p.get('price', 0) <= price_max]
+        # 价格区间过滤
+        if price_ranges:
+            filtered_products = []
+            for product in products:
+                price = product.get('price', 0)
+                for price_range in price_ranges:
+                    if price_range == '0-5000' and price <= 5000:
+                        filtered_products.append(product)
+                        break
+                    elif price_range == '5000-15000' and 5000 < price <= 15000:
+                        filtered_products.append(product)
+                        break
+                    elif price_range == '15000-50000' and 15000 < price <= 50000:
+                        filtered_products.append(product)
+                        break
+                    elif price_range == '50000+' and price > 50000:
+                        filtered_products.append(product)
+                        break
+            products = filtered_products
         
         # 库存状态过滤
         if stock_status:
-            products = [p for p in products if p.get('stock_status') == stock_status]
+            products = [p for p in products if p.get('stock_status') in stock_status]
+        
+        # 通道数过滤
+        if channels:
+            filtered_products = []
+            for product in products:
+                specs = product.get('specifications', {})
+                channels_spec = specs.get('通道数', specs.get('Channels', ''))
+                if channels_spec:
+                    try:
+                        channel_num = int(''.join(filter(str.isdigit, str(channels_spec))))
+                        if channels == '1-8' and 1 <= channel_num <= 8:
+                            filtered_products.append(product)
+                        elif channels == '9-16' and 9 <= channel_num <= 16:
+                            filtered_products.append(product)
+                        elif channels == '17-32' and 17 <= channel_num <= 32:
+                            filtered_products.append(product)
+                        elif channels == '32+' and channel_num > 32:
+                            filtered_products.append(product)
+                    except:
+                        pass
+            products = filtered_products
+        
+        # 分辨率过滤
+        if resolution:
+            filtered_products = []
+            for product in products:
+                specs = product.get('specifications', {})
+                resolution_spec = specs.get('分辨率', specs.get('Resolution', ''))
+                if resolution_spec and resolution in str(resolution_spec):
+                    filtered_products.append(product)
+            products = filtered_products
         
         return jsonify({
             'success': True,
